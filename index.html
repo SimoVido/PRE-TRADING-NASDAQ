@@ -340,7 +340,7 @@ async function generateReport(){
       true
     );
     cot=parseJSON(cotR);setProg(1,100,true);
-    await sleep(3000);
+    await sleep(8000);
 
     // STEP 2 OPTIONS
     document.getElementById('d2').className='dot active';setProg(2,20,false);
@@ -350,7 +350,7 @@ async function generateReport(){
       true
     );
     opt=parseJSON(optR);setProg(2,100,true);
-    await sleep(3000);
+    await sleep(8000);
 
     // STEP 3 NEWS
     document.getElementById('d3').className='dot active';setProg(3,20,false);
@@ -360,7 +360,7 @@ async function generateReport(){
       true
     );
     news=parseJSON(newsR);setProg(3,100,true);
-    await sleep(3000);
+    await sleep(8000);
 
     // STEP 4 FED
     document.getElementById('d4').className='dot active';setProg(4,20,false);
@@ -370,7 +370,7 @@ async function generateReport(){
       true
     );
     fed=parseJSON(fedR);setProg(4,100,true);
-    await sleep(2000);
+    await sleep(8000);
 
     // STEP 5 SYNTHESIS
     document.getElementById('d5').className='dot active';setProg(5,20,false);
