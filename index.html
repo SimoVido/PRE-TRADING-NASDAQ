@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pre-Trading NQ — Analisi Giornaliera</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f0f0f;--bg2:#1a1a1a;--bg3:#242424;--bg4:#2e2e2e;
+  --text:#f0f0f0;--text2:#a0a0a0;--text3:#666;
+  --border:#2e2e2e;--border2:#3a3a3a;
+  --green:#22c55e;--red:#ef4444;--blue:#3b82f6;--amber:#f59e0b;--purple:#a855f7;
+  --radius:10px;--radius-sm:6px;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6;min-height:100vh}
+a{color:var(--blue);text-decoration:none}
+
+/* HEADER */
+.header{padding:20px 24px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--bg);z-index:100}
+.header h1{font-size:18px;font-weight:600;letter-spacing:-0.3px}
+.header h1 span{color:var(--text2);font-weight:400}
+.header-right{display:flex;align-items:center;gap:10px}
+.date-badge{font-size:12px;background:var(--bg3);border:1px solid var(--border2);border-radius:20px;padding:4px 12px;color:var(--text2)}
+.status-dot{width:8px;height:8px;border-radius:50%;background:var(--border2)}
+.status-dot.ready{background:var(--green)}
+
+/* NAV */
+.nav{display:flex;border-bottom:1px solid var(--border);padding:0 24px;overflow-x:auto;gap:0;background:var(--bg)}
+.nav::-webkit-scrollbar{display:none}
+.nav-btn{padding:10px 16px;font-size:13px;font-weight:500;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;color:var(--text2);white-space:nowrap;transition:all 0.15s}
+.nav-btn:hover{color:var(--text)}
+.nav-btn.active{color:var(--text);border-bottom-color:var(--text)}
+
+/* LAYOUT */
+.content{padding:20px 24px;max-width:900px;margin:0 auto}
+.tab-content{display:none}
+.tab-content.active{display:block}
+
+/* CARDS */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;margin-bottom:14px}
+.card-sm{background:var(--bg3);border-radius:var(--radius-sm);padding:10px 14px;margin-bottom:8px}
+.card-title{font-size:13px;font-weight:600;margin-bottom:12px;color:var(--text)}
+.section-title{font-size:15px;font-weight:600;margin-bottom:4px}
+.section-sub{font-size:12px;color:var(--text2);margin-bottom:16px}
+
+/* METRICS */
+.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:16px}
+.metric{background:var(--bg3);border-radius:var(--radius-sm);padding:12px 14px}
+.metric-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:4px}
+.metric-val{font-size:20px;font-weight:600;letter-spacing:-0.5px}
+.metric-sub{font-size:11px;color:var(--text2);margin-top:2px}
+
+/* BUTTONS */
+.btn-primary{width:100%;padding:13px;background:var(--text);color:var(--bg);border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:600;cursor:pointer;margin-bottom:16px;transition:opacity 0.15s;letter-spacing:-0.2px}
+.btn-primary:hover{opacity:0.85}
+.btn-primary:disabled{opacity:0.3;cursor:not-allowed}
+.btn-secondary{width:100%;padding:11px;background:transparent;color:var(--text2);border:1px solid var(--border2);border-radius:var(--radius-sm);font-size:13px;font-weight:500;cursor:pointer;transition:all 0.15s}
+.btn-secondary:hover{color:var(--text);border-color:var(--text2)}
+
+/* SPINNER */
+.spinner{display:inline-block;width:13px;height:13px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:spin 0.7s linear infinite;vertical-align:middle;margin-right:6px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* BADGES */
+.badge{font-size:11px;padding:3px 8px;border-radius:20px;font-weight:500;display:inline-block}
+.badge-green{background:rgba(34,197,94,0.15);color:var(--green)}
+.badge-red{background:rgba(239,68,68,0.15);color:var(--red)}
+.badge-blue{background:rgba(59,130,246,0.15);color:var(--blue)}
+.badge-amber{background:rgba(245,158,11,0.15);color:var(--amber)}
+.badge-purple{background:rgba(168,85,247,0.15);color:var(--purple)}
+.badge-gray{background:var(--bg3);color:var(--text2)}
+
+/* ROWS */
+.level-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px}
+.level-row:last-child{border-bottom:none}
+.level-label{color:var(--text2)}
+.level-val{font-weight:600;font-family:'SF Mono',Consolas,monospace;font-size:13px}
+
+/* COLORS */
+.up{color:var(--green)}
+.dn{color:var(--red)}
+.neutral{color:var(--amber)}
+
+/* ALERTS */
+.alert{border-radius:var(--radius-sm);padding:10px 14px;font-size:13px;margin-bottom:14px;line-height:1.5}
+.alert-info{background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.2);color:#93c5fd}
+.alert-warn{background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);color:#fcd34d}
+.alert-success{background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.2);color:#86efac}
+.alert-danger{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);color:#fca5a5}
+
+/* PROGRESS */
+.progress-wrap{margin-bottom:14px}
+.progress-label{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text2);margin-bottom:4px}
+.progress-label .dot{width:7px;height:7px;border-radius:50%;background:var(--border2);flex-shrink:0}
+.progress-label .dot.active{background:var(--blue)}
+.progress-label .dot.done{background:var(--green)}
+.progress-bar{height:3px;background:var(--bg4);border-radius:2px}
+.progress-fill{height:3px;border-radius:2px;background:var(--blue);transition:width 0.4s ease;width:0%}
+.progress-fill.done{background:var(--green)}
+
+/* FORMS */
+.form-group{margin-bottom:12px}
+.form-label{font-size:12px;color:var(--text2);margin-bottom:5px;display:block}
+select,input[type=text]{width:100%;padding:8px 10px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius-sm);color:var(--text);font-size:13px;font-family:inherit;appearance:none}
+select:focus,input:focus{outline:none;border-color:var(--text2)}
+textarea{width:100%;min-height:72px;padding:8px 10px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius-sm);color:var(--text);font-size:13px;font-family:inherit;resize:vertical;line-height:1.5}
+textarea:focus{outline:none;border-color:var(--text2)}
+
+/* API KEY */
+.apikey-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;margin-bottom:20px}
+.apikey-wrap h3{font-size:14px;font-weight:600;margin-bottom:6px}
+.apikey-wrap p{font-size:12px;color:var(--text2);margin-bottom:10px;line-height:1.5}
+.apikey-input-row{display:flex;gap:8px}
+.apikey-input-row input{flex:1}
+.apikey-input-row button{padding:8px 14px;background:var(--bg4);border:1px solid var(--border2);border-radius:var(--radius-sm);color:var(--text);font-size:13px;cursor:pointer;white-space:nowrap}
+.apikey-input-row button:hover{background:var(--bg3)}
+
+/* RESULT BLOCK */
+.result-text{font-size:13px;line-height:1.7;color:var(--text2);background:var(--bg3);border-radius:var(--radius-sm);padding:12px 14px;border-left:2px solid var(--border2)}
+
+/* SCENARIO CARD */
+.scenario-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:14px 18px;margin-bottom:10px}
+.scenario-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.scenario-name{font-weight:600;font-size:14px}
+.scenario-desc{font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:10px}
+.scenario-levels{display:flex;gap:16px;font-size:12px}
+.scenario-levels span{display:flex;flex-direction:column;gap:2px}
+.scenario-levels .lbl{color:var(--text3)}
+.scenario-levels .val{font-weight:600;font-family:monospace}
+
+/* NEWS CARD */
+.news-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:14px 18px;margin-bottom:10px}
+.news-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;gap:10px}
+.news-name{font-weight:600;font-size:14px}
+.news-values{display:flex;gap:12px;font-size:12px;margin-bottom:8px;flex-wrap:wrap}
+.news-values span{display:flex;flex-direction:column;gap:1px}
+.news-values .lbl{color:var(--text3)}
+.news-values .val{font-weight:600}
+.news-scenarios{font-size:12px;background:var(--bg3);border-radius:var(--radius-sm);padding:8px 12px;display:flex;flex-direction:column;gap:4px}
+.news-scenarios div{display:flex;gap:6px}
+.news-scenarios .slbl{min-width:90px;color:var(--text3)}
+
+/* COT CHART */
+.cot-bar-wrap{margin-top:8px}
+.cot-bar-label{display:flex;justify-content:space-between;font-size:11px;color:var(--text2);margin-bottom:3px}
+.cot-bar-track{height:6px;background:var(--bg4);border-radius:3px;position:relative}
+.cot-bar-fill{height:6px;border-radius:3px;position:absolute;left:50%;transition:width 0.5s,left 0.5s}
+
+/* SEPARATOR */
+.sep{height:1px;background:var(--border);margin:16px 0}
+
+/* RESPONSIVE */
+@media(max-width:600px){
+  .header{padding:14px 16px}
+  .content{padding:14px 16px}
+  .nav{padding:0 16px}
+  .metric-grid{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Pre-Trading <span>NQ Nasdaq</span></h1>
+  <div class="header-right">
+    <span class="date-badge" id="header-date">—</span>
+    <div class="status-dot" id="status-dot" title="Stato report"></div>
+  </div>
+</div>
+
+<nav class="nav">
+  <button class="nav-btn active" onclick="switchTab('overview',this)">Panoramica</button>
+  <button class="nav-btn" onclick="switchTab('cot',this)">COT</button>
+  <button class="nav-btn" onclick="switchTab('options',this)">Opzioni</button>
+  <button class="nav-btn" onclick="switchTab('news',this)">News</button>
+  <button class="nav-btn" onclick="switchTab('fed',this)">FED</button>
+  <button class="nav-btn" onclick="switchTab('psychology',this)">Psicologia</button>
+  <button class="nav-btn" onclick="switchTab('settings',this)">Impostazioni</button>
+</nav>
+
+<div class="content">
+
+  <!-- PANORAMICA -->
+  <div class="tab-content active" id="tab-overview">
+    <div id="apikey-banner" class="apikey-wrap" style="display:none">
+      <h3>Configura API Key Anthropic</h3>
+      <p>Inserisci la tua API key di Anthropic per abilitare la generazione automatica dei report. La chiave viene salvata solo nel tuo browser e non viene condivisa.</p>
+      <div class="apikey-input-row">
+        <input type="password" id="apikey-input" placeholder="sk-ant-...">
+        <button onclick="saveApiKey()">Salva</button>
+      </div>
+    </div>
+
+    <div class="section-title">Genera report di oggi</div>
+    <p class="section-sub">L'AI raccoglie COT, livelli opzionari CME, news macro e scenario FED.</p>
+
+    <div class="form-group">
+      <label class="form-label">Bias personale iniziale</label>
+      <select id="bias-select">
+        <option value="">Seleziona bias...</option>
+        <option>Long to short</option>
+        <option>Short to long</option>
+        <option>Long bias</option>
+        <option>Short bias</option>
+        <option>Neutro / range</option>
+      </select>
+    </div>
+
+    <button class="btn-primary" id="gen-btn" onclick="generateReport()">
+      Genera analisi pre-trading completa
+    </button>
+
+    <div id="progress-area" style="display:none;margin-bottom:16px">
+      <div class="progress-wrap">
+        <div class="progress-label"><div class="dot" id="d1"></div>1 — Dati COT istituzionali (NQ, ES, YM)</div>
+        <div class="progress-bar"><div class="progress-fill" id="p1"></div></div>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-label"><div class="dot" id="d2"></div>2 — Livelli opzionari CME Nasdaq</div>
+        <div class="progress-bar"><div class="progress-fill" id="p2"></div></div>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-label"><div class="dot" id="d3"></div>3 — News macroeconomiche US (3 stelle)</div>
+        <div class="progress-bar"><div class="progress-fill" id="p3"></div></div>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-label"><div class="dot" id="d4"></div>4 — Scenario FED e tassi</div>
+        <div class="progress-bar"><div class="progress-fill" id="p4"></div></div>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-label"><div class="dot" id="d5"></div>5 — Sintesi e scenari operativi</div>
+        <div class="progress-bar"><div class="progress-fill" id="p5"></div></div>
+      </div>
+    </div>
+
+    <div id="overview-result" style="display:none">
+      <div class="sep"></div>
+      <div class="section-title" style="margin-bottom:12px">Sintesi sessione</div>
+      <div class="metric-grid" id="metric-cards"></div>
+
+      <div id="psych-warn-block" style="display:none;margin-bottom:14px"></div>
+
+      <div class="sep"></div>
+      <div class="section-title" style="margin-bottom:4px">Scenari operativi</div>
+      <p class="section-sub">Livelli chiave e piani d'azione per la giornata</p>
+      <div id="scenarios-area"></div>
+
+      <div class="sep"></div>
+      <div class="section-title" style="margin-bottom:4px">Livelli chiave</div>
+      <div class="card" id="key-levels-card"></div>
+    </div>
+  </div>
+
+  <!-- COT -->
+  <div class="tab-content" id="tab-cot">
+    <div class="section-title">Posizionamento COT istituzionali</div>
+    <p class="section-sub">Non-commercial (istituzionali) vs Commercial. Confronto NQ / ES / YM.</p>
+    <div id="cot-content"><div class="alert alert-info">Genera il report dalla tab Panoramica.</div></div>
+  </div>
+
+  <!-- OPZIONI -->
+  <div class="tab-content" id="tab-options">
+    <div class="section-title">Livelli opzionari CME — NQ</div>
+    <p class="section-sub">Settlement weekly, resistenza e supporto market maker.</p>
+    <div id="options-content"><div class="alert alert-info">Genera il report dalla tab Panoramica.</div></div>
+  </div>
+
+  <!-- NEWS -->
+  <div class="tab-content" id="tab-news">
+    <div class="section-title">News macroeconomiche US</div>
+    <p class="section-sub">Solo eventi 3 stelle. Analisi contestuale e scenari di prezzo.</p>
+    <div id="news-content"><div class="alert alert-info">Genera il report dalla tab Panoramica.</div></div>
+  </div>
+
+  <!-- FED -->
+  <div class="tab-content" id="tab-fed">
+    <div class="section-title">Scenario FED</div>
+    <p class="section-sub">Inflazione, occupazione, aspettative tassi e impatto su NQ.</p>
+    <div id="fed-content"><div class="alert alert-info">Genera il report dalla tab Panoramica.</div></div>
+  </div>
+
+  <!-- PSICOLOGIA -->
+  <div class="tab-content" id="tab-psychology">
+    <div class="section-title">Note psicologiche</div>
+    <p class="section-sub">Compilale prima di generare il report — vengono integrate nell'analisi.</p>
+
+    <div class="card">
+      <div class="card-title">Sessione di ieri</div>
+      <div class="form-group">
+        <label class="form-label">Risultato</label>
+        <select id="y-result">
+          <option value="">—</option>
+          <option>Giornata positiva</option>
+          <option>Giornata negativa</option>
+          <option>Break even</option>
+          <option>Non ho tradato</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Note mentali (trade mancati, errori, osservazioni)</label>
+        <textarea id="y-mental" placeholder="Es: ho chiuso troppo presto, ho forzato l'entrata..."></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Note tecniche (livelli, struttura)</label>
+        <textarea id="y-technical" placeholder="Es: respinto da 19800, demand a 19400 ha tenuto..."></textarea>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Stato mentale oggi</div>
+      <div class="form-group">
+        <label class="form-label">Stato emotivo</label>
+        <select id="mental-state">
+          <option>Concentrato e sereno</option>
+          <option>Un po' ansioso</option>
+          <option>Overconfident (dopo win streak)</option>
+          <option>Revenge trading mode</option>
+          <option>Stanco / distratto</option>
+          <option>Ottimale</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Andamento settimana / mese</label>
+        <select id="week-state">
+          <option>Settimana positiva</option>
+          <option>Settimana negativa</option>
+          <option>Neutro</option>
+          <option>Primo giorno della settimana</option>
+          <option>Drawdown prolungato</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Note libere</label>
+        <textarea id="free-notes" placeholder="Qualsiasi cosa ritieni rilevante..."></textarea>
+      </div>
+    </div>
+
+    <button class="btn-secondary" onclick="savePsych()">Salva note</button>
+    <div id="psych-saved" style="display:none;text-align:center;font-size:12px;color:var(--green);margin-top:8px">Note salvate ✓</div>
+  </div>
+
+  <!-- IMPOSTAZIONI -->
+  <div class="tab-content" id="tab-settings">
+    <div class="section-title">Impostazioni</div>
+    <p class="section-sub">Configurazione API e preferenze.</p>
+
+    <div class="card">
+      <div class="card-title">API Key Anthropic</div>
+      <p style="font-size:12px;color:var(--text2);margin-bottom:10px">La chiave viene salvata solo nel tuo browser (localStorage). Non viene mai inviata a server esterni diversi da api.anthropic.com.</p>
+      <div class="form-group">
+        <label class="form-label">API Key</label>
+        <input type="password" id="settings-apikey" placeholder="sk-ant-...">
+      </div>
+      <button class="btn-secondary" onclick="saveApiKeyFromSettings()" style="margin-top:4px">Salva API Key</button>
+      <div id="settings-saved" style="display:none;font-size:12px;color:var(--green);margin-top:8px">Salvata ✓</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Info</div>
+      <div class="level-row"><span class="level-label">Versione app</span><span class="level-val" style="font-size:12px">1.0.0</span></div>
+      <div class="level-row"><span class="level-label">Strumento</span><span class="level-val" style="font-size:12px">NQ Nasdaq CFD</span></div>
+      <div class="level-row"><span class="level-label">Broker</span><span class="level-val" style="font-size:12px">FP Markets / cTrader</span></div>
+      <div class="level-row"><span class="level-label">Analisi volume</span><span class="level-val" style="font-size:12px">DeepCharts / DeepDOM</span></div>
+    </div>
+  </div>
+
+</div><!-- /content -->
+
+<script>
+// ─── DATE ───────────────────────────────────────────────────────────────────
+const today = new Date();
+const dayNames = ['Domenica','Lunedì','Martedì','Mercoledì','Giovedì','Venerdì','Sabato'];
+const monthNames = ['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
+document.getElementById('header-date').textContent =
+  `${dayNames[today.getDay()]} ${today.getDate()} ${monthNames[today.getMonth()]} ${today.getFullYear()}`;
+
+// ─── TABS ────────────────────────────────────────────────────────────────────
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  if(btn) btn.classList.add('active');
+}
+
+// ─── API KEY ─────────────────────────────────────────────────────────────────
+function getApiKey() { return localStorage.getItem('pt_apikey') || ''; }
+function saveApiKey() {
+  const k = document.getElementById('apikey-input').value.trim();
+  if(!k) return;
+  localStorage.setItem('pt_apikey', k);
+  document.getElementById('apikey-banner').style.display = 'none';
+}
+function saveApiKeyFromSettings() {
+  const k = document.getElementById('settings-apikey').value.trim();
+  if(!k) return;
+  localStorage.setItem('pt_apikey', k);
+  document.getElementById('settings-saved').style.display = 'block';
+  setTimeout(() => document.getElementById('settings-saved').style.display = 'none', 2000);
+}
+window.addEventListener('load', () => {
+  const k = getApiKey();
+  if(!k) document.getElementById('apikey-banner').style.display = 'block';
+  else document.getElementById('settings-apikey').value = k;
+});
+
+// ─── PSYCH SAVE ──────────────────────────────────────────────────────────────
+function savePsych() {
+  document.getElementById('psych-saved').style.display = 'block';
+  setTimeout(() => document.getElementById('psych-saved').style.display = 'none', 2000);
+}
+
+// ─── PROGRESS ────────────────────────────────────────────────────────────────
+function setProg(n, pct, done) {
+  const fill = document.getElementById('p'+n);
+  const dot  = document.getElementById('d'+n);
+  if(fill){ fill.style.width = pct+'%'; if(done) fill.classList.add('done'); }
+  if(dot) { dot.className = 'dot' + (done ? ' done' : ' active'); }
+}
+function activateNext(n) {
+  const dot = document.getElementById('d'+n);
+  if(dot) dot.className = 'dot active';
+}
+
+// ─── API CALL ─────────────────────────────────────────────────────────────────
+async function callClaude(system, user, useSearch) {
+  const key = getApiKey();
+  if(!key) throw new Error('API key non configurata. Vai in Impostazioni.');
+  const body = {
+    model: 'claude-sonnet-4-20250514',
+    max_tokens: 1000,
+    system,
+    messages: [{role:'user', content: user}]
+  };
+  if(useSearch) body.tools = [{type:'web_search_20250305', name:'web_search'}];
+  const resp = await fetch('https://api.anthropic.com/v1/messages', {
+    method:'POST',
+    headers:{'Content-Type':'application/json','x-api-key': key, 'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+    body: JSON.stringify(body)
+  });
+  if(!resp.ok) { const e = await resp.json(); throw new Error(e.error?.message || 'Errore API'); }
+  const data = await resp.json();
+  let text = '';
+  (data.content||[]).forEach(b => { if(b.type==='text') text += b.text; });
+  return text;
+}
+
+function parseJSON(raw) {
+  try {
+    const clean = raw.replace(/```json|```/g,'').trim();
+    const start = clean.indexOf('{');
+    const end   = clean.lastIndexOf('}');
+    return JSON.parse(clean.slice(start, end+1));
+  } catch(e) { return {error: raw.substring(0,400)}; }
+}
+
+// ─── MAIN GENERATE ───────────────────────────────────────────────────────────
+async function generateReport() {
+  if(!getApiKey()) {
+    document.getElementById('apikey-banner').style.display = 'block';
+    return;
+  }
+  const btn = document.getElementById('gen-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>Generazione in corso...';
+  document.getElementById('progress-area').style.display = 'block';
+  document.getElementById('overview-result').style.display = 'none';
+  document.getElementById('status-dot').className = 'status-dot';
+
+  const todayStr = `${dayNames[today.getDay()]} ${today.getDate()} ${monthNames[today.getMonth()]} ${today.getFullYear()}`;
+  const psychData = {
+    yesterdayResult:    document.getElementById('y-result').value,
+    yesterdayMental:    document.getElementById('y-mental').value,
+    yesterdayTechnical: document.getElementById('y-technical').value,
+    mentalState:        document.getElementById('mental-state').value,
+    weekState:          document.getElementById('week-state').value,
+    freeNotes:          document.getElementById('free-notes').value,
+    bias:               document.getElementById('bias-select').value
+  };
+
+  let cot={}, opt={}, news={}, fed={}, synth={};
+
+  try {
+    // ── STEP 1: COT ──────────────────────────────────────────────────────────
+    activateNext(1); setProg(1,30,false);
+    const cotRaw = await callClaude(
+      'Sei un analista COT. Rispondi SOLO con JSON puro, senza testo aggiuntivo, senza markdown.',
+      `Oggi è ${todayStr}. Cerca i dati COT legacy CFTC più recenti per NQ (Nasdaq 100), ES (S&P 500), YM (Dow Jones).
+Fonti: CFTC.gov, barchart.com/futures/commitment-of-traders, tradingster.com/cot.
+Per ciascuno: posizione net non-commercial, posizione net commercial, variazione settimana, trend (es: "aumento 4 settimane"), segnale.
+Rispondi SOLO con questo JSON:
+{"nq":{"nonCommercialNet":0,"commercialNet":0,"weekChange":0,"trend":"","signal":"bullish"},"es":{"nonCommercialNet":0,"commercialNet":0,"weekChange":0,"trend":"","signal":""},"ym":{"nonCommercialNet":0,"commercialNet":0,"weekChange":0,"trend":"","signal":""},"dataDate":"","summary":""}`,
+      true
+    );
+    cot = parseJSON(cotRaw);
+    setProg(1,100,true);
+
+    // ── STEP 2: OPTIONS ──────────────────────────────────────────────────────
+    activateNext(2); setProg(2,30,false);
+    const optRaw = await callClaude(
+      'Sei un analista di opzioni NQ. Rispondi SOLO con JSON puro.',
+      `Oggi è ${todayStr}. Devo calcolare i livelli opzionari weekly per NQ Nasdaq.
+1) Vai su https://www.cmegroup.com/markets/equities/nasdaq/e-mini-nasdaq-100.quotes.options.html
+2) Vai su Settlements > Options > Weekly > seleziona expiration settimana corrente > trade date = giorno di trading precedente a oggi
+3) Trova il settlement price nella pagina Quotes
+4) Nella tabella Settlements trova lo strike più vicino al settlement
+5) Leggi il valore della colonna Settle per Calls (sinistra) e Puts (destra). Se lo strike esatto non esiste, interpola tra i due adiacenti.
+6) Calcola: resistenza = settlement + calls_settle + puts_settle; supporto = settlement - calls_settle - puts_settle
+Rispondi SOLO con JSON:
+{"settlement":0,"nearestStrike":0,"callsSettle":0,"putsSettle":0,"resistance":0,"support":0,"weeklyExpiry":"","dataNote":""}`,
+      true
+    );
+    opt = parseJSON(optRaw);
+    setProg(2,100,true);
+
+    // ── STEP 3: NEWS ─────────────────────────────────────────────────────────
+    activateNext(3); setProg(3,30,false);
+    const newsRaw = await callClaude(
+      'Sei un analista macro. Rispondi SOLO con JSON puro.',
+      `Oggi è ${todayStr}. Cerca su https://it.investing.com/economic-calendar o fonti equivalenti le news US ad alto impatto (3 stelle) di oggi.
+Per ogni evento: nome, orario CET, valore precedente, valore previsto, valore attuale (se già uscito, altrimenti stringa vuota).
+Includi analisi contestuale e scenari NQ per ciascun dato.
+Contesto macro attuale: dazi Trump, aspettative FED, mercato del lavoro, inflazione.
+Rispondi SOLO con JSON:
+{"events":[{"name":"","time":"","previous":"","forecast":"","actual":"","analysis":"","scenarios":{"better":"","worse":"","inline":""}}],"generalMacroContext":""}`,
+      true
+    );
+    news = parseJSON(newsRaw);
+    setProg(3,100,true);
+
+    // ── STEP 4: FED ──────────────────────────────────────────────────────────
+    activateNext(4); setProg(4,30,false);
+    const fedRaw = await callClaude(
+      'Sei un economista specializzato in politica monetaria FED. Rispondi SOLO con JSON puro.',
+      `Oggi è ${todayStr}. Cerca su FRED St. Louis, CME FedWatch, Federal Reserve website:
+1) Tasso fed funds attuale
+2) Ultimo CPI e PCE
+3) Tasso disoccupazione
+4) Prossima riunione FOMC e probabilità taglio (CME FedWatch)
+5) Forward guidance recente dei membri FED
+6) Come questo scenario impatta NQ Nasdaq (correlazione tassi-tech)
+Rispondi SOLO con JSON:
+{"currentRate":"","nextMeeting":"","cutProbability":"","cpi":"","pce":"","unemployment":"","fedStance":"","outlookNQ":"","keyRisks":"","summary":""}`,
+      true
+    );
+    fed = parseJSON(fedRaw);
+    setProg(4,100,true);
+
+    // ── STEP 5: SYNTHESIS ────────────────────────────────────────────────────
+    activateNext(5); setProg(5,30,false);
+    const synthRaw = await callClaude(
+      'Sei un trader professionista e coach. Rispondi SOLO con JSON puro.',
+      `Sintetizza per il trading di oggi (${todayStr}) su NQ Nasdaq.
+COT: ${JSON.stringify(cot)}
+Opzioni: ${JSON.stringify(opt)}
+News: ${JSON.stringify(news)}
+FED: ${JSON.stringify(fed)}
+Psicologia: ${JSON.stringify(psychData)}
+Produci sintesi operativa:
+- bias del giorno con motivazione
+- 3 scenari con livelli (entry zone, target, stop)
+- avvertenze psicologiche personalizzate
+- livelli chiave della giornata
+Rispondi SOLO con JSON:
+{"bias":"","biasReason":"","scenarios":[{"name":"","probability":"","description":"","entryZone":"","target":"","stop":""}],"psychWarnings":"","keyLevels":{"r1":"","r2":"","s1":"","s2":"","pivot":""},"dayRating":""}`,
+      false
+    );
+    synth = parseJSON(synthRaw);
+    setProg(5,100,true);
+
+    renderAll(cot, opt, news, fed, synth);
+    document.getElementById('status-dot').className = 'status-dot ready';
+
+  } catch(err) {
+    document.getElementById('progress-area').insertAdjacentHTML('beforeend',
+      `<div class="alert alert-danger" style="margin-top:12px">Errore: ${err.message}</div>`);
+  }
+
+  btn.disabled = false;
+  btn.innerHTML = 'Rigenera analisi';
+}
+
+// ─── RENDER ──────────────────────────────────────────────────────────────────
+function fmt(n, decimals=2) {
+  if(!n && n!==0) return '—';
+  return Number(n).toLocaleString('it-IT',{minimumFractionDigits:decimals,maximumFractionDigits:decimals});
+}
+function signColor(n) { return n>0?'up':n<0?'dn':'neutral'; }
+function signalBadge(s) {
+  if(!s) return '<span class="badge badge-gray">—</span>';
+  const sl = s.toLowerCase();
+  if(sl.includes('bull')) return `<span class="badge badge-green">${s}</span>`;
+  if(sl.includes('bear')) return `<span class="badge badge-red">${s}</span>`;
+  return `<span class="badge badge-amber">${s}</span>`;
+}
+
+function renderAll(cot, opt, news, fed, synth) {
+  // ── OVERVIEW METRICS
+  const bias = synth.bias || '—';
+  const biasColor = bias.toLowerCase().includes('long') ? 'up' : bias.toLowerCase().includes('short') ? 'dn' : 'neutral';
+  document.getElementById('metric-cards').innerHTML = `
+    <div class="metric"><div class="metric-label">Bias</div><div class="metric-val ${biasColor}" style="font-size:15px">${bias}</div><div class="metric-sub">${(synth.biasReason||'').substring(0,40)}</div></div>
+    <div class="metric"><div class="metric-label">Settlement NQ</div><div class="metric-val" style="font-size:15px">${fmt(opt.settlement,2)}</div><div class="metric-sub">Opzioni weekly</div></div>
+    <div class="metric"><div class="metric-label">Resistenza MM</div><div class="metric-val up" style="font-size:15px">${fmt(opt.resistance,2)}</div><div class="metric-sub">Market maker</div></div>
+    <div class="metric"><div class="metric-label">Supporto MM</div><div class="metric-val dn" style="font-size:15px">${fmt(opt.support,2)}</div><div class="metric-sub">Market maker</div></div>
+    <div class="metric"><div class="metric-label">Fed Rate</div><div class="metric-val" style="font-size:15px">${fed.currentRate||'—'}</div><div class="metric-sub">${fed.cutProbability||''}</div></div>
+    <div class="metric"><div class="metric-label">COT NQ</div><div class="metric-val" style="font-size:15px">${signalBadge(cot.nq?.signal)}</div><div class="metric-sub">Non-commercial</div></div>
+  `;
+
+  // psych warnings
+  if(synth.psychWarnings) {
+    document.getElementById('psych-warn-block').style.display='block';
+    document.getElementById('psych-warn-block').innerHTML =
+      `<div class="alert alert-warn">⚠ ${synth.psychWarnings}</div>`;
+  }
+
+  // scenarios
+  const sa = document.getElementById('scenarios-area');
+  if(synth.scenarios?.length) {
+    sa.innerHTML = synth.scenarios.map(s => `
+      <div class="scenario-card">
+        <div class="scenario-header">
+          <span class="scenario-name">${s.name||'Scenario'}</span>
+          <span class="badge badge-blue">${s.probability||''}</span>
+        </div>
+        <div class="scenario-desc">${s.description||''}</div>
+        <div class="scenario-levels">
+          <span><span class="lbl">Entry zone</span><span class="val">${s.entryZone||'—'}</span></span>
+          <span><span class="lbl">Target</span><span class="val up">${s.target||'—'}</span></span>
+          <span><span class="lbl">Stop</span><span class="val dn">${s.stop||'—'}</span></span>
+        </div>
+      </div>`).join('');
+  } else {
+    sa.innerHTML = `<div class="alert alert-warn">Scenari non disponibili.</div>`;
+  }
+
+  // key levels
+  const kl = synth.keyLevels || {};
+  document.getElementById('key-levels-card').innerHTML = `
+    <div class="level-row"><span class="level-label">Resistenza 1</span><span class="level-val up">${kl.r1||'—'}</span></div>
+    <div class="level-row"><span class="level-label">Resistenza 2</span><span class="level-val up">${kl.r2||'—'}</span></div>
+    <div class="level-row"><span class="level-label">Pivot / Settlement</span><span class="level-val">${kl.pivot||fmt(opt.settlement,2)}</span></div>
+    <div class="level-row"><span class="level-label">Supporto 1</span><span class="level-val dn">${kl.s1||'—'}</span></div>
+    <div class="level-row"><span class="level-label">Supporto 2</span><span class="level-val dn">${kl.s2||'—'}</span></div>
+  `;
+
+  document.getElementById('overview-result').style.display = 'block';
+
+  // ── COT TAB
+  const cotC = document.getElementById('cot-content');
+  if(cot.error) {
+    cotC.innerHTML = `<div class="alert alert-warn">${cot.error.substring(0,300)}</div>`;
+  } else {
+    const renderCotCard = (label, d, color) => {
+      if(!d) return '';
+      const net = Number(d.nonCommercialNet)||0;
+      const maxAbs = 100000;
+      const pct = Math.min(Math.abs(net)/maxAbs*50, 50);
+      const fillLeft = net>0 ? `left:50%;width:${pct}%` : `left:${50-pct}%;width:${pct}%`;
+      const fillColor = net>0 ? 'var(--green)' : 'var(--red)';
+      return `<div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <span class="card-title" style="margin:0">${label}</span>
+          ${signalBadge(d.signal)}
+        </div>
+        <div class="level-row"><span class="level-label">Non-commercial net</span><span class="level-val ${signColor(net)}">${net>0?'+':''}${net.toLocaleString('it-IT')}</span></div>
+        <div class="level-row"><span class="level-label">Commercial net</span><span class="level-val ${signColor(d.commercialNet)}">${(d.commercialNet||0).toLocaleString('it-IT')}</span></div>
+        <div class="level-row"><span class="level-label">Variazione settimana</span><span class="level-val">${(d.weekChange||0).toLocaleString('it-IT')}</span></div>
+        <div class="level-row"><span class="level-label">Trend</span><span class="level-val" style="font-size:12px">${d.trend||'—'}</span></div>
+        <div class="cot-bar-wrap">
+          <div class="cot-bar-label"><span>Short</span><span>Neutro</span><span>Long</span></div>
+          <div class="cot-bar-track">
+            <div class="cot-bar-fill" style="${fillLeft};background:${fillColor}"></div>
+          </div>
+        </div>
+      </div>`;
+    };
+    cotC.innerHTML =
+      (cot.dataDate ? `<div class="alert alert-info" style="margin-bottom:14px">Dati riferiti a: ${cot.dataDate}</div>` : '') +
+      renderCotCard('NQ — Nasdaq 100', cot.nq) +
+      renderCotCard('ES — S&P 500', cot.es) +
+      renderCotCard('YM — Dow Jones', cot.ym) +
+      (cot.summary ? `<div class="result-text" style="margin-top:4px">${cot.summary}</div>` : '');
+  }
+
+  // ── OPTIONS TAB
+  const optC = document.getElementById('options-content');
+  if(opt.error) {
+    optC.innerHTML = `<div class="alert alert-warn">${opt.error.substring(0,300)}</div>`;
+  } else {
+    const sum = (Number(opt.callsSettle)||0) + (Number(opt.putsSettle)||0);
+    optC.innerHTML = `
+      ${opt.weeklyExpiry ? `<div class="alert alert-info">Scadenza weekly: ${opt.weeklyExpiry}${opt.dataNote ? ' — '+opt.dataNote : ''}</div>` : ''}
+      <div class="card">
+        <div class="card-title">Calcolo livelli market maker</div>
+        <div class="level-row"><span class="level-label">Settlement opzionario</span><span class="level-val">${fmt(opt.settlement,2)}</span></div>
+        <div class="level-row"><span class="level-label">Strike più vicino</span><span class="level-val">${fmt(opt.nearestStrike,0)}</span></div>
+        <div class="level-row"><span class="level-label">Calls settle (sinistra)</span><span class="level-val">${fmt(opt.callsSettle,2)}</span></div>
+        <div class="level-row"><span class="level-label">Puts settle (destra)</span><span class="level-val">${fmt(opt.putsSettle,2)}</span></div>
+        <div class="level-row"><span class="level-label">Somma calls + puts</span><span class="level-val">${fmt(sum,2)}</span></div>
+      </div>
+      <div class="metric-grid">
+        <div class="metric"><div class="metric-label">Resistenza MM</div><div class="metric-val up">${fmt(opt.resistance,2)}</div><div class="metric-sub">Settlement + ${fmt(sum,2)}</div></div>
+        <div class="metric"><div class="metric-label">Settlement</div><div class="metric-val">${fmt(opt.settlement,2)}</div><div class="metric-sub">Pivot opzionario</div></div>
+        <div class="metric"><div class="metric-label">Supporto MM</div><div class="metric-val dn">${fmt(opt.support,2)}</div><div class="metric-sub">Settlement - ${fmt(sum,2)}</div></div>
+      </div>`;
+  }
+
+  // ── NEWS TAB
+  const newsC = document.getElementById('news-content');
+  if(news.error) {
+    newsC.innerHTML = `<div class="alert alert-warn">${news.error.substring(0,300)}</div>`;
+  } else {
+    const evHtml = (news.events||[]).map(ev => `
+      <div class="news-card">
+        <div class="news-header">
+          <span class="news-name">${ev.name||''}</span>
+          <div style="display:flex;gap:6px;align-items:center;flex-shrink:0">
+            <span class="badge badge-red">★★★</span>
+            <span style="font-size:12px;color:var(--text2)">${ev.time||''}</span>
+          </div>
+        </div>
+        <div class="news-values">
+          <span><span class="lbl">Precedente</span><span class="val">${ev.previous||'—'}</span></span>
+          <span><span class="lbl">Previsto</span><span class="val">${ev.forecast||'—'}</span></span>
+          <span><span class="lbl">Attuale</span><span class="val ${ev.actual?'up':''}">${ev.actual||'—'}</span></span>
+        </div>
+        ${ev.analysis ? `<div class="result-text" style="margin-bottom:8px">${ev.analysis}</div>` : ''}
+        ${ev.scenarios ? `<div class="news-scenarios">
+          <div><span class="slbl">Dato migliore →</span><span style="color:var(--green)">${ev.scenarios.better||'—'}</span></div>
+          <div><span class="slbl">Dato peggiore →</span><span style="color:var(--red)">${ev.scenarios.worse||'—'}</span></div>
+          <div><span class="slbl">In linea →</span><span>${ev.scenarios.inline||'—'}</span></div>
+        </div>` : ''}
+      </div>`).join('');
+    newsC.innerHTML = (evHtml || '<div class="alert alert-info">Nessun evento ad alto impatto per oggi.</div>') +
+      (news.generalMacroContext ? `<div class="sep"></div><div class="card-title" style="margin-bottom:8px">Contesto macro generale</div><div class="result-text">${news.generalMacroContext}</div>` : '');
+  }
+
+  // ── FED TAB
+  const fedC = document.getElementById('fed-content');
+  if(fed.error) {
+    fedC.innerHTML = `<div class="alert alert-warn">${fed.error.substring(0,300)}</div>`;
+  } else {
+    fedC.innerHTML = `
+      <div class="metric-grid">
+        <div class="metric"><div class="metric-label">Fed Funds</div><div class="metric-val">${fed.currentRate||'—'}</div></div>
+        <div class="metric"><div class="metric-label">CPI</div><div class="metric-val">${fed.cpi||'—'}</div></div>
+        <div class="metric"><div class="metric-label">PCE</div><div class="metric-val">${fed.pce||'—'}</div></div>
+        <div class="metric"><div class="metric-label">Disoccupazione</div><div class="metric-val">${fed.unemployment||'—'}</div></div>
+      </div>
+      <div class="card">
+        <div class="level-row"><span class="level-label">Prossima FOMC</span><span class="level-val" style="font-size:12px">${fed.nextMeeting||'—'}</span></div>
+        <div class="level-row"><span class="level-label">Prob. taglio</span><span class="level-val">${fed.cutProbability||'—'}</span></div>
+        <div class="level-row"><span class="level-label">Stance</span><span class="level-val" style="font-size:12px">${fed.fedStance||'—'}</span></div>
+      </div>
+      ${fed.outlookNQ ? `<div class="card-title" style="margin-bottom:6px">Impatto su NQ</div><div class="result-text" style="margin-bottom:14px">${fed.outlookNQ}</div>` : ''}
+      ${fed.keyRisks ? `<div class="card-title" style="margin-bottom:6px">Rischi chiave</div><div class="result-text" style="margin-bottom:14px">${fed.keyRisks}</div>` : ''}
+      ${fed.summary ? `<div class="card-title" style="margin-bottom:6px">Sintesi scenario</div><div class="result-text">${fed.summary}</div>` : ''}
+    `;
+  }
+}
+</script>
+</body>
+</html>
