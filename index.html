@@ -40,7 +40,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .mc{background:var(--bg3);border-radius:var(--rsm);padding:11px 13px}
 .mc .lbl{margin-bottom:4px}.mc .val{font-size:18px;font-weight:700;line-height:1.2}.mc .sub{font-size:10px;color:var(--text2);margin-top:2px}
 .badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600}
-.bgg{background:var(--gd);color:var(--green)}.brr{background:var(--rd);color:var(--red)}.bbb{background:var(--bd);color:var(--blue)}.baa{background:var(--ad);color:var(--amber)}.bgr{background:var(--bg4);color:var(--text2)}
+.bgg{background:var(--gd);color:var(--green)}.brr{background:var(--rd);color:var(--red)}.baa{background:var(--ad);color:var(--amber)}.bgr{background:var(--bg4);color:var(--text2)}
 .al{border-radius:var(--rsm);padding:10px 13px;font-size:12px;margin-bottom:12px;line-height:1.5}
 .ai{background:var(--bd);border:1px solid var(--bb);color:#93c5fd}.aw{background:var(--ad);border:1px solid var(--ab);color:#fcd34d}
 .as{background:var(--gd);border:1px solid var(--gb);color:#86efac}.ae{background:var(--rd);border:1px solid var(--rb);color:#fca5a5}
@@ -57,13 +57,14 @@ textarea{width:100%;min-height:58px;padding:7px 10px;background:var(--bg3);borde
 .btns:hover{color:var(--text);border-color:var(--text2)}
 .spin{display:inline-block;width:12px;height:12px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:rot .7s linear infinite;vertical-align:middle;margin-right:5px}
 @keyframes rot{to{transform:rotate(360deg)}}
-.pw{margin-bottom:8px}.pr{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--text2);margin-bottom:3px}
-.pd{width:6px;height:6px;border-radius:50%;background:var(--bg5);flex-shrink:0}
-.pd.run{background:var(--blue)}.pd.ok{background:var(--green)}.pd.err{background:var(--red)}
-.pbar{height:2px;background:var(--bg5);border-radius:2px}
-.pfill{height:2px;border-radius:2px;background:var(--blue);width:0;transition:width .5s ease}
+.pw{margin-bottom:10px}
+.pr{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--text2);margin-bottom:3px}
+.pd{width:7px;height:7px;border-radius:50%;background:var(--bg5);flex-shrink:0}
+.pd.run{background:var(--blue);animation:pulse 1s infinite}.pd.ok{background:var(--green)}.pd.err{background:var(--red)}
+.pbar{height:3px;background:var(--bg5);border-radius:3px}
+.pfill{height:3px;border-radius:3px;background:var(--blue);width:0;transition:width .6s ease}
 .pfill.ok{background:var(--green)}.pfill.err{background:var(--red)}
-.pnote{font-size:10px;color:var(--text3);margin-top:2px;min-height:14px}
+.pnote{font-size:10px;color:var(--text3);margin-top:3px;min-height:14px}
 .og3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
 .lvlb{border-radius:var(--rsm);padding:12px;text-align:center}
 .lvlr{background:var(--rd);border:1px solid var(--rb)}.lvln{background:var(--bg3);border:1px solid var(--border2)}.lvls{background:var(--gd);border:1px solid var(--gb)}
@@ -106,7 +107,7 @@ textarea{width:100%;min-height:58px;padding:7px 10px;background:var(--bg3);borde
 .sep{height:1px;background:var(--border);margin:16px 0}
 .dbg{background:#0d0d0d;border:1px solid #1a2a1a;border-radius:var(--rsm);padding:10px 13px;margin-bottom:8px}
 .dbg summary{font-size:11px;color:#4a7a4a;cursor:pointer;user-select:none}
-.dbg pre{font-size:10px;color:#4a7a4a;overflow-x:auto;white-space:pre-wrap;word-break:break-all;margin-top:8px;max-height:250px;overflow-y:auto}
+.dbg pre{font-size:10px;color:#4a7a4a;overflow-x:auto;white-space:pre-wrap;word-break:break-all;margin-top:8px;max-height:300px;overflow-y:auto}
 @media(max-width:600px){.content{padding:14px 16px}.nav{padding:0 16px}.og3,.cg3{grid-template-columns:1fr}.sg{grid-template-columns:1fr}.sols{flex-direction:column}}
 </style>
 </head>
@@ -130,8 +131,7 @@ textarea{width:100%;min-height:58px;padding:7px 10px;background:var(--bg3);borde
 <div class="tab active" id="t-panoramica">
   <div id="apibanner" class="card" style="display:none">
     <div class="ctitle">Configura API Key Anthropic</div>
-    <p style="font-size:12px;color:var(--text2);margin-bottom:10px">Inserisci la tua API key. Salvata solo nel browser.</p>
-    <div style="display:flex;gap:8px"><input type="password" id="apiin" placeholder="sk-ant-..."><button onclick="saveKey()" style="padding:7px 14px;background:var(--bg4);border:1px solid var(--border2);border-radius:var(--rsm);color:var(--text);cursor:pointer;font-size:12px;white-space:nowrap">Salva</button></div>
+    <div style="display:flex;gap:8px;margin-top:8px"><input type="password" id="apiin" placeholder="sk-ant-..."><button onclick="saveKey()" style="padding:7px 14px;background:var(--bg4);border:1px solid var(--border2);border-radius:var(--rsm);color:var(--text);cursor:pointer;font-size:12px;white-space:nowrap">Salva</button></div>
   </div>
   <div class="card">
     <div class="ctitle">Livelli Opzionari CME — NQ (inserisci manualmente ogni settimana)</div>
@@ -155,17 +155,16 @@ textarea{width:100%;min-height:58px;padding:7px 10px;background:var(--bg3);borde
       <div class="fg"><label class="fl">Stato emotivo</label><select id="ms"><option>Concentrato e sereno</option><option>Un po' ansioso</option><option>Overconfident</option><option>Revenge trading mode</option><option>Stanco / distratto</option></select></div>
       <div class="fg"><label class="fl">Settimana</label><select id="ws"><option>Settimana positiva</option><option>Settimana negativa</option><option>Neutro</option><option>Primo giorno settimana</option><option>Drawdown prolungato</option></select></div>
     </div>
-    <div class="fg"><label class="fl">Note tecniche ieri</label><textarea id="yt" placeholder="VAH, VAL, gap aperti, livelli chiave..."></textarea></div>
+    <div class="fg"><label class="fl">Note tecniche ieri</label><textarea id="yt" placeholder="VAH, VAL, gap, livelli chiave..."></textarea></div>
     <div class="fg"><label class="fl">Note mentali ieri</label><textarea id="ym" placeholder="Errori, trade mancati, osservazioni..."></textarea></div>
   </div>
   <button class="btnp" id="gbtn" onclick="generate()">Genera analisi pre-trading completa</button>
-  <div style="font-size:11px;color:var(--text3);text-align:center;margin-bottom:12px;display:none" id="tnote">⏱ Generazione ~2 minuti — non chiudere la pagina.</div>
+  <div style="font-size:11px;color:var(--text3);text-align:center;margin-bottom:12px;display:none" id="tnote">⏱ Circa 90 secondi — non chiudere la pagina</div>
   <div id="parea" style="display:none;margin-bottom:14px">
-    <div class="pw"><div class="pr"><div class="pd" id="d1"></div>1 — COT CFTC (NQ ES YM) — web search</div><div class="pbar"><div class="pfill" id="p1"></div></div><div class="pnote" id="n1"></div></div>
-    <div class="pw"><div class="pr"><div class="pd" id="d2"></div>2 — Livelli opzionari CME — calcolo locale</div><div class="pbar"><div class="pfill" id="p2"></div></div></div>
-    <div class="pw"><div class="pr"><div class="pd" id="d3"></div>3 — News macro US + Radar — web search</div><div class="pbar"><div class="pfill" id="p3"></div></div><div class="pnote" id="n3"></div></div>
-    <div class="pw"><div class="pr"><div class="pd" id="d4"></div>4 — Scenario FED</div><div class="pbar"><div class="pfill" id="p4"></div></div></div>
-    <div class="pw"><div class="pr"><div class="pd" id="d5"></div>5 — Sintesi operativa</div><div class="pbar"><div class="pfill" id="p5"></div></div></div>
+    <div class="pw"><div class="pr"><div class="pd" id="d1"></div>1 — COT + News macro (una sola ricerca web)</div><div class="pbar"><div class="pfill" id="p1"></div></div><div class="pnote" id="n1"></div></div>
+    <div class="pw"><div class="pr"><div class="pd" id="d2"></div>2 — Livelli opzionari CME (calcolo locale)</div><div class="pbar"><div class="pfill" id="p2"></div></div></div>
+    <div class="pw"><div class="pr"><div class="pd" id="d3"></div>3 — Scenario FED</div><div class="pbar"><div class="pfill" id="p3"></div></div></div>
+    <div class="pw"><div class="pr"><div class="pd" id="d4"></div>4 — Sintesi operativa</div><div class="pbar"><div class="pfill" id="p4"></div></div></div>
   </div>
   <div id="ovres" style="display:none">
     <div class="sep"></div>
@@ -186,58 +185,50 @@ textarea{width:100%;min-height:58px;padding:7px 10px;background:var(--bg3);borde
   </div>
 </div>
 
-<div class="tab" id="t-cot"><div class="sh">COT — Commitment of Traders</div><div class="ssub">Non-Commercial vs Commercial · NQ ES YM · fonte CFTC.gov</div><div id="cotc"><div class="al ai">Genera il report dalla tab Panoramica.</div></div></div>
-
-<div class="tab" id="t-opzioni"><div class="sh">Livelli Opzionari CME — NQ</div><div class="ssub">Inserisci i dati settimanali. Calcolo automatico.</div>
+<div class="tab" id="t-cot"><div class="sh">COT — Commitment of Traders</div><div class="ssub">Non-Commercial vs Commercial · NQ ES YM · CFTC</div><div id="cotc"><div class="al ai">Genera il report dalla tab Panoramica.</div></div></div>
+<div class="tab" id="t-opzioni"><div class="sh">Livelli Opzionari CME — NQ</div><div class="ssub">Calcolo automatico da Settlement + Calls + Puts</div>
   <div class="card"><div class="ctitle">Dati settimana corrente</div>
     <div class="og3">
-      <div class="fg"><label class="fl">Settlement NQ</label><input type="number" id="o-s" placeholder="es. 19350" step="0.25" oninput="syncOpt()"></div>
-      <div class="fg"><label class="fl">Calls Settle</label><input type="number" id="o-c" placeholder="es. 118" step="0.25" oninput="syncOpt()"></div>
-      <div class="fg"><label class="fl">Puts Settle</label><input type="number" id="o-p" placeholder="es. 120" step="0.25" oninput="syncOpt()"></div>
+      <div class="fg"><label class="fl">Settlement NQ</label><input type="number" id="o-s" step="0.25" oninput="syncOpt()"></div>
+      <div class="fg"><label class="fl">Calls Settle</label><input type="number" id="o-c" step="0.25" oninput="syncOpt()"></div>
+      <div class="fg"><label class="fl">Puts Settle</label><input type="number" id="o-p" step="0.25" oninput="syncOpt()"></div>
     </div>
   </div>
   <div id="optdetail"><div class="al ai">Inserisci i valori sopra.</div></div>
 </div>
-
 <div class="tab" id="t-news"><div class="sh">News Macro US</div><div class="ssub">Solo eventi *** — oggi e radar settimana</div><div id="newsc"><div class="al ai">Genera il report dalla tab Panoramica.</div></div></div>
-
-<div class="tab" id="t-fed"><div class="sh">Scenario FED</div><div class="ssub">Inflazione, occupazione, aspettative tassi</div><div id="fedc"><div class="al ai">Genera il report dalla tab Panoramica.</div></div></div>
-
+<div class="tab" id="t-fed"><div class="sh">Scenario FED</div><div class="ssub">Inflazione, occupazione, tassi</div><div id="fedc"><div class="al ai">Genera il report dalla tab Panoramica.</div></div></div>
 <div class="tab" id="t-psicologia">
   <div class="sh">Note Psicologiche</div><div class="ssub">Compilale prima di generare per avvertenze personalizzate</div>
-  <div class="card"><div class="ctitle">Sessione di ieri</div>
+  <div class="card"><div class="ctitle">Ieri</div>
     <div class="fg"><label class="fl">Risultato</label><select id="ps-yr"><option value="">—</option><option>Positiva</option><option>Negativa</option><option>Break even</option><option>Non ho tradato</option></select></div>
     <div class="fg"><label class="fl">Note mentali</label><textarea id="ps-ym" placeholder="Trade mancati, errori..."></textarea></div>
-    <div class="fg"><label class="fl">Note tecniche</label><textarea id="ps-yt" placeholder="Livelli importanti..."></textarea></div>
   </div>
   <div class="card"><div class="ctitle">Oggi</div>
     <div class="fg"><label class="fl">Stato emotivo</label><select id="ps-ms"><option>Concentrato e sereno</option><option>Un po' ansioso</option><option>Overconfident</option><option>Revenge trading mode</option><option>Stanco / distratto</option></select></div>
     <div class="fg"><label class="fl">Andamento settimana</label><select id="ps-ws"><option>Settimana positiva</option><option>Settimana negativa</option><option>Neutro</option><option>Primo giorno settimana</option><option>Drawdown prolungato</option></select></div>
-    <div class="fg"><label class="fl">Note libere</label><textarea id="ps-free" placeholder="Qualsiasi cosa rilevante..."></textarea></div>
   </div>
-  <button class="btns" onclick="savePsych()">Salva</button>
-  <div id="psaved" style="display:none;font-size:11px;color:var(--green);text-align:center;margin-top:4px">Salvate v</div>
+  <button class="btns" onclick="tmp('psaved')">Salva</button>
+  <div id="psaved" style="display:none;font-size:11px;color:var(--green);text-align:center;margin-top:4px">Salvate</div>
 </div>
-
-<div class="tab" id="t-debug"><div class="sh">Debug — Risposte Raw API</div><div class="ssub">Cosa ha risposto il modello per ogni step</div><div id="debugpanel"><div class="al ai">Genera il report per vedere le risposte raw.</div></div></div>
-
+<div class="tab" id="t-debug"><div class="sh">Debug — Risposte Raw</div><div class="ssub">Cosa ha risposto il modello per ogni step</div><div id="debugpanel"><div class="al ai">Genera il report per vedere le risposte raw.</div></div></div>
 <div class="tab" id="t-settings"><div class="sh">Impostazioni</div>
   <div class="card"><div class="ctitle">API Key Anthropic</div>
-    <p style="font-size:11px;color:var(--text2);margin-bottom:10px">Salvata solo nel browser.</p>
     <div class="fg"><label class="fl">API Key</label><input type="password" id="set-ak" placeholder="sk-ant-..."></div>
     <button class="btns" onclick="saveKeyS()">Salva</button>
-    <div id="sset" style="display:none;font-size:11px;color:var(--green);margin-top:4px">Salvata v</div>
+    <div id="sset" style="display:none;font-size:11px;color:var(--green);margin-top:4px">Salvata</div>
   </div>
   <div class="card"><div class="ctitle">Info</div>
     <div class="dr"><span class="dk">Strumento</span><span class="dv">NQ Nasdaq CFD</span></div>
     <div class="dr"><span class="dk">Broker</span><span class="dv">FP Markets / cTrader</span></div>
-    <div class="dr"><span class="dk">Versione</span><span class="dv">2.3.0</span></div>
+    <div class="dr"><span class="dk">Versione</span><span class="dv">2.4.0 — 1 sola chiamata web</span></div>
   </div>
 </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script>
+// DATE
 const T=new Date();
 const DN=['Domenica','Lunedi','Martedi','Mercoledi','Giovedi','Venerdi','Sabato'];
 const MN=['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
@@ -249,7 +240,7 @@ const FRI=DN[fri.getDay()]+' '+fri.getDate()+' '+MN[fri.getMonth()];
 const tmr=new Date(T);tmr.setDate(T.getDate()+1);
 const TMR=DN[tmr.getDay()]+' '+tmr.getDate()+' '+MN[tmr.getMonth()];
 
-let ST={cot:{},news:{},fed:{},synth:{}};
+let ST={combined:{},fed:{},synth:{}};
 let OPT={s:0,c:0,p:0,r:0,sup:0};
 let lvChart=null;
 let RAW={};
@@ -259,7 +250,6 @@ const getKey=()=>localStorage.getItem('pt_k')||'';
 function saveKey(){const k=document.getElementById('apiin').value.trim();if(k){localStorage.setItem('pt_k',k);document.getElementById('apibanner').style.display='none';}}
 function saveKeyS(){const k=document.getElementById('set-ak').value.trim();if(k){localStorage.setItem('pt_k',k);tmp('sset');}}
 window.addEventListener('load',()=>{const k=getKey();if(!k)document.getElementById('apibanner').style.display='block';else document.getElementById('set-ak').value=k;});
-function savePsych(){tmp('psaved');}
 function tmp(id){const e=document.getElementById(id);e.style.display='block';setTimeout(()=>e.style.display='none',2000);}
 
 function calcOpt(){
@@ -271,126 +261,187 @@ function calcOpt(){
   document.getElementById('rm').textContent=f(OPT.r);
   document.getElementById('sm').textContent=f(OPT.s);
   document.getElementById('supm').textContent=f(OPT.sup);
-  ['s','c','p'].forEach(x=>document.getElementById('o-'+x).value=OPT[x]||'');
+  ['s','c','p'].forEach(x=>{const el=document.getElementById('o-'+x);if(el)el.value=OPT[x]||'';});
   renderOptDetail();
 }
-function syncOpt(){['s','c','p'].forEach(x=>document.getElementById('inp-'+x).value=document.getElementById('o-'+x).value);calcOpt();}
+function syncOpt(){['s','c','p'].forEach(x=>{const a=document.getElementById('o-'+x),b=document.getElementById('inp-'+x);if(a&&b)b.value=a.value;});calcOpt();}
 function renderOptDetail(){
   const el=document.getElementById('optdetail');
   if(!OPT.s){el.innerHTML='<div class="al ai">Inserisci i valori sopra.</div>';return;}
   const f=n=>n.toLocaleString('it-IT',{minimumFractionDigits:2,maximumFractionDigits:2});
-  el.innerHTML='<div class="og3" style="margin-bottom:14px"><div class="lvlb lvlr"><div class="lvll">RESISTENZA MM</div><div class="lvlv">'+f(OPT.r)+'</div><div style="font-size:10px;color:var(--red);margin-top:3px">'+f(OPT.s)+' + '+f(OPT.c)+' + '+f(OPT.p)+'</div></div><div class="lvlb lvln"><div class="lvll">SETTLEMENT</div><div class="lvlv" style="color:var(--text)">'+f(OPT.s)+'</div></div><div class="lvlb lvls"><div class="lvll">SUPPORTO MM</div><div class="lvlv">'+f(OPT.sup)+'</div><div style="font-size:10px;color:var(--green);margin-top:3px">'+f(OPT.s)+' - '+f(OPT.c)+' - '+f(OPT.p)+'</div></div></div><div class="inset" style="font-size:12px;color:var(--text2);line-height:1.7">Sopra Settlement bullish verso R ('+f(OPT.r)+'). Sotto bearish verso S ('+f(OPT.sup)+'). Entro 50pt da R/S monitorare DeepDOM.</div>';
+  el.innerHTML='<div class="og3" style="margin-bottom:14px"><div class="lvlb lvlr"><div class="lvll">RESISTENZA MM</div><div class="lvlv">'+f(OPT.r)+'</div><div style="font-size:10px;color:var(--red);margin-top:3px">'+f(OPT.s)+' + '+f(OPT.c)+' + '+f(OPT.p)+'</div></div><div class="lvlb lvln"><div class="lvll">SETTLEMENT</div><div class="lvlv" style="color:var(--text)">'+f(OPT.s)+'</div></div><div class="lvlb lvls"><div class="lvll">SUPPORTO MM</div><div class="lvlv">'+f(OPT.sup)+'</div><div style="font-size:10px;color:var(--green);margin-top:3px">'+f(OPT.s)+' - '+f(OPT.c)+' - '+f(OPT.p)+'</div></div></div><div class="inset" style="font-size:12px;color:var(--text2);line-height:1.7">Sopra Settlement: bullish verso R ('+f(OPT.r)+'). Sotto: bearish verso S ('+f(OPT.sup)+'). Entro 50pt da R/S monitorare DeepDOM.</div>';
 }
 
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 const fmt=(n,d=2)=>(n==null||isNaN(n))?'—':Number(n).toLocaleString('it-IT',{minimumFractionDigits:d,maximumFractionDigits:d});
-function sbadge(s){if(!s)return'<span class="badge bgr">—</span>';const l=s.toLowerCase();if(l.includes('bull'))return'<span class="badge bgg">'+s+'</span>';if(l.includes('bear'))return'<span class="badge brr">'+s+'</span>';return'<span class="badge baa">'+s+'</span>';}
-function sgn(n){return n>0?'up':n<0?'dn':'mu';}
+function sbadge(s){if(!s)return'<span class="badge bgr">—</span>';const l=(s||'').toLowerCase();if(l.includes('bull'))return'<span class="badge bgg">'+s+'</span>';if(l.includes('bear'))return'<span class="badge brr">'+s+'</span>';return'<span class="badge baa">'+s+'</span>';}
+function sgnc(n){return n>0?'up':n<0?'dn':'mu';}
 
 function pJSON(raw){
   if(!raw)return{_err:'Risposta vuota'};
   let c=raw.replace(/```json\s*/gi,'').replace(/```\s*/g,'').trim();
   const s=c.indexOf('{'),e=c.lastIndexOf('}');
-  if(s<0||e<s)return{_err:'Nessun JSON trovato',_raw:raw.substring(0,800)};
+  if(s<0||e<s)return{_err:'Nessun JSON trovato ('+raw.length+' chars)',_raw:raw.substring(0,600)};
   const snip=c.slice(s,e+1);
   for(const suf of['','}',' }','}}','}}}',' }}',' }}}',' }}}']){try{return JSON.parse(snip+suf);}catch(_){}}
-  return{_err:'JSON malformato',_raw:snip.substring(0,800)};
+  return{_err:'JSON malformato',_raw:snip.substring(0,600)};
 }
 
 function prog(n,state,note){
   const f=document.getElementById('p'+n),d=document.getElementById('d'+n),no=document.getElementById('n'+n);
-  const cls={'active':'run','done':'ok','err':'err'}[state]||'';
-  if(d)d.className='pd '+cls;
-  if(f){f.className='pfill'+(state==='done'?' ok':state==='err'?' err':'');f.style.width=state==='active'?'20%':'100%';}
+  if(d)d.className='pd '+(state==='active'?'run':state==='done'?'ok':state==='err'?'err':'');
+  if(f){f.className='pfill'+(state==='done'?' ok':state==='err'?' err':'');f.style.width=state==='active'?'15%':'100%';}
   if(no&&note!==undefined)no.textContent=note;
 }
 
 function getPS(){return{ieri:document.getElementById('yr')?.value||'',stato:document.getElementById('ms')?.value||'',settimana:document.getElementById('ws')?.value||'',bias:document.getElementById('bias')?.value||'',noteT:document.getElementById('yt')?.value||'',noteM:document.getElementById('ym')?.value||''};}
 
-// API con retry su 429
-// TIMING: COT(web) → 35s → News(web) → 35s → FED → 15s → Synth
+// ═══════════════════════════════════════════════════════════
+// ARCHITETTURA v2.4.0 — UNA SOLA chiamata web_search
+// Step 1: combined (COT + News) — web_search=true — 1 sola chiamata
+// Step 2: opzioni — locale
+// Step 3: FED — no web_search
+// Step 4: sintesi — no web_search
+// Totale: 1 web_search → nessun rischio 429 tra chiamate
+// ═══════════════════════════════════════════════════════════
+
 async function callClaude(sys,usr,ws,attempt){
   attempt=attempt||0;
   const k=getKey();if(!k)throw new Error('API key non configurata');
-  const body={model:'claude-haiku-4-5-20251001',max_tokens:ws?1800:1000,system:sys,messages:[{role:'user',content:usr}]};
+  // web_search=true: 2000 token output per avere spazio
+  // web_search=false: 1200 token
+  const body={model:'claude-haiku-4-5-20251001',max_tokens:ws?3000:1200,system:sys,messages:[{role:'user',content:usr}]};
   if(ws)body.tools=[{type:'web_search_20250305',name:'web_search'}];
   const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':k,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify(body)});
   if(r.status===429){
-    if(attempt>=2)throw new Error('429 rate limit — riprova tra qualche minuto');
-    await sleep(35000+attempt*15000);
+    if(attempt>=3)throw new Error('429 persistente — attendi 2 minuti e riprova');
+    const w=40000+(attempt*20000);
+    console.warn('429, retry in '+w+'ms');
+    await sleep(w);
     return callClaude(sys,usr,ws,attempt+1);
   }
-  if(!r.ok){const e=await r.json();throw new Error(r.status+' — '+(e.error&&e.error.message||'Errore API'));}
+  if(!r.ok){const e=await r.json();throw new Error(r.status+' — '+(e.error&&e.error.message||'Errore'));}
   const data=await r.json();
   let txt='';(data.content||[]).forEach(b=>{if(b.type==='text')txt+=b.text;});
   return{text:txt,data};
 }
 
-function pCOT(){return'Cerca i dati COT CFTC piu recenti "Traders in Financial Futures Futures Only" per:\n- NQ E-mini Nasdaq-100 codice #209742 CME\n- ES S&P 500 Consolidated codice #13874+ CME\n- YM DJIA x$5 codice #124603 CBOT\nFonti: https://tradingster.com/cot/futures/fin/ o https://www.cftc.gov/dea/futures/financial_lf.htm\n\nPer ciascun indice fornisci i valori numerici REALI: leveragedFundsLong, leveragedFundsShort, leveragedFundsNet (Long-Short con segno), assetManagerLong, assetManagerShort, assetManagerNet (con segno), openInterest, weeklyChangeLF (var LF net vs settimana prec), signal (bearish se leveragedFundsNet<0 bullish se >0), trend (max 10 parole).\nIncludi: reportDate, nextUpdateDate, integratedAnalysis (max 60 parole italiano cross-index).\n\nRISPOSTA: SOLO il JSON seguente zero testo prima o dopo:\n{"reportDate":"","nextUpdateDate":"","nq":{"leveragedFundsLong":0,"leveragedFundsShort":0,"leveragedFundsNet":0,"assetManagerLong":0,"assetManagerShort":0,"assetManagerNet":0,"openInterest":0,"weeklyChangeLF":0,"signal":"","trend":""},"es":{"leveragedFundsLong":0,"leveragedFundsShort":0,"leveragedFundsNet":0,"assetManagerLong":0,"assetManagerShort":0,"assetManagerNet":0,"openInterest":0,"weeklyChangeLF":0,"signal":"","trend":""},"ym":{"leveragedFundsLong":0,"leveragedFundsShort":0,"leveragedFundsNet":0,"assetManagerLong":0,"assetManagerShort":0,"assetManagerNet":0,"openInterest":0,"weeklyChangeLF":0,"signal":"","trend":""},"integratedAnalysis":""}';}
+// PROMPT COMBINATO: COT + News in una sola ricerca
+function pCombined(){
+  return 'Oggi e '+DS+'. Fai DUE ricerche e restituisci UN SOLO JSON con tutti i dati.
 
-function pNews(){return'Oggi e '+DS+'. Cerca su https://www.investing.com/economic-calendar/ eventi macro USA alta importanza (3 stelle rosso).\n\nPARTE A OGGI '+DS+': Elenca TUTTI eventi USA con 3 stelle OGGI. Se nessuno noEventsToday=true.\nPARTE B '+TMR+' fino a '+FRI+': Elenca TUTTI eventi USA 3 stelle giorni successivi fino a venerdi.\n\nPer ogni evento: name, date, timeCET, timeET, previous, forecast, actual (vuoto se non uscito), analysisIT (max 40 parole), scenarioPositive (max 15 parole NQ), scenarioNegative (max 15 parole NQ), scenarioBaseline (max 15 parole).\ngeopoliticalAlert: alert attivi Iran/Hormuz/tariffe/ecc, vuoto se nessuno.\n\nRISPOSTA: SOLO il JSON seguente zero testo prima o dopo:\n{"todayEvents":[{"name":"","date":"","timeCET":"","timeET":"","previous":"","forecast":"","actual":"","analysisIT":"","scenarioPositive":"","scenarioNegative":"","scenarioBaseline":""}],"weekEvents":[{"name":"","date":"","timeCET":"","timeET":"","previous":"","forecast":"","actual":"","analysisIT":"","scenarioPositive":"","scenarioNegative":"","scenarioBaseline":""}],"noEventsToday":false,"geopoliticalAlert":""}';}
+'+
+  'RICERCA 1 — COT CFTC piu recenti "Traders in Financial Futures Futures Only":
+'+
+  'NQ #209742 CME, ES #13874+ CME, YM #124603 CBOT
+'+
+  'Fonti: tradingster.com/cot/futures/fin/ o cftc.gov/dea/futures/financial_lf.htm
+'+
+  'Per ognuno: leveragedFundsLong, leveragedFundsShort, leveragedFundsNet (Long-Short), assetManagerLong, assetManagerShort, assetManagerNet, openInterest, weeklyChangeLF, signal (bearish/bullish), trend (max 8 parole)
 
-function pFED(){return'Dati macro FED aggiornati al '+DS+'.\nRISPOSTA: SOLO il JSON seguente zero testo prima o dopo:\n{"currentRate":"","nextFOMCDate":"","holdProbabilityNext":"","hikeProbability2026":"","cpiHeadline":"","cpiCore":"","pceCore":"","unemployment":"","nfpLast":"","ismPricesPaid":"","importPrices":"","fedStance":"","outlookNQ":"","keyRisks":""}\nCompila con valori reali. fedStance max 30 parole italiano. outlookNQ meccanismo tassi NQ max 50 parole. keyRisks max 25 parole.';}
+'+
+  'RICERCA 2 — Calendario economico US oggi e settimana:
+'+
+  'Cerca su investing.com/economic-calendar eventi USA a 3 stelle (alta importanza).
+'+
+  'todayEvents: SOLO eventi US 3 stelle di OGGI '+DS+' (se nessuno: array vuoto, noEventsToday:true)
+'+
+  'weekEvents: eventi US 3 stelle da '+TMR+' a '+FRI+'
+'+
+  'Per ogni evento: name, date, timeCET, timeET, previous, forecast, actual (vuoto se non uscito), analysisIT (max 30 parole), scenarioPositive (max 12 parole NQ), scenarioNegative (max 12 parole NQ)
+'+
+  'geopoliticalAlert: alert attivi Iran/Hormuz/tariffe (vuoto se nessuno)
+
+'+
+  'RISPOSTA: SOLO questo JSON, zero testo fuori:
+'+
+  '{"reportDate":"","nq":{"leveragedFundsLong":0,"leveragedFundsShort":0,"leveragedFundsNet":0,"assetManagerLong":0,"assetManagerShort":0,"assetManagerNet":0,"openInterest":0,"weeklyChangeLF":0,"signal":"","trend":""},"es":{"leveragedFundsLong":0,"leveragedFundsShort":0,"leveragedFundsNet":0,"assetManagerLong":0,"assetManagerShort":0,"assetManagerNet":0,"openInterest":0,"weeklyChangeLF":0,"signal":"","trend":""},"ym":{"leveragedFundsLong":0,"leveragedFundsShort":0,"leveragedFundsNet":0,"assetManagerLong":0,"assetManagerShort":0,"assetManagerNet":0,"openInterest":0,"weeklyChangeLF":0,"signal":"","trend":""},"cotAnalysis":"","todayEvents":[{"name":"","date":"","timeCET":"","timeET":"","previous":"","forecast":"","actual":"","analysisIT":"","scenarioPositive":"","scenarioNegative":""}],"weekEvents":[{"name":"","date":"","timeCET":"","timeET":"","previous":"","forecast":"","actual":"","analysisIT":"","scenarioPositive":"","scenarioNegative":""}],"noEventsToday":false,"geopoliticalAlert":""}';
+}
+
+function pFED(){
+  return 'Dati macro FED aggiornati al '+DS+'. SOLO JSON zero testo fuori:
+'+
+  '{"currentRate":"","nextFOMCDate":"","holdProbabilityNext":"","hikeProbability2026":"","cpiHeadline":"","cpiCore":"","pceCore":"","unemployment":"","nfpLast":"","ismPricesPaid":"","importPrices":"","fedStance":"","outlookNQ":"","keyRisks":""}';
+}
 
 function pSynth(ps){
   const r=OPT.r||0,sup=OPT.sup||0,sett=OPT.s||0;
-  return'Trader professionista NQ Nasdaq. Sintesi operativa per OGGI '+DS+'.\n\nINPUT:\nCOT NQ: LF='+(ST.cot.nq&&ST.cot.nq.leveragedFundsNet||'ND')+' AM='+(ST.cot.nq&&ST.cot.nq.assetManagerNet||'ND')+' signal='+(ST.cot.nq&&ST.cot.nq.signal||'ND')+'\nCOT ES='+(ST.cot.es&&ST.cot.es.signal||'ND')+' YM='+(ST.cot.ym&&ST.cot.ym.signal||'ND')+'\nNQ: Settlement='+(sett||'non ins')+' R-MM='+(r||'non calc')+' S-MM='+(sup||'non calc')+'\nNews oggi: '+(ST.news.todayEvents&&ST.news.todayEvents.length||0)+' eventi'+(ST.news.todayEvents&&ST.news.todayEvents[0]&&ST.news.todayEvents[0].name?' — '+ST.news.todayEvents[0].name+' '+ST.news.todayEvents[0].timeCET:'')+'\nGeo: '+(ST.news.geopoliticalAlert||'nessuna')+'\nFED: '+(ST.fed.currentRate||'ND')+' hold='+(ST.fed.holdProbabilityNext||'ND')+' hike2026='+(ST.fed.hikeProbability2026||'ND')+'\nPsico: ieri='+(ps.ieri||'ND')+' stato='+(ps.stato||'ND')+' settimana='+(ps.settimana||'ND')+' bias='+(ps.bias||'ND')+'\n\nRISPOSTA: SOLO il JSON seguente zero testo prima o dopo:\n{"bias":"","biasReason":"","scenarios":[{"name":"","probability":"","descriptionIT":"","entryZone":"","target1":0,"target2":0,"stopLoss":0,"triggerIT":""},{"name":"","probability":"","descriptionIT":"","entryZone":"","target1":0,"target2":0,"stopLoss":0,"triggerIT":""},{"name":"","probability":"","descriptionIT":"","entryZone":"","target1":0,"target2":0,"stopLoss":0,"triggerIT":""}],"psychWarnings":["","","",""],"keyLevels":{"r2":0,"r1":'+r+',"pivot":'+sett+',"s1":'+sup+',"s2":0,"s3":0}}\nBias es SHORT CAUTELOSO. biasReason 50 parole italiano. 3 scenari italiano con livelli NQ realistici. 4 psychWarnings personalizzati max 20 parole.';}
+  const c=ST.combined;
+  const nq=c.nq||{};const es=c.es||{};const ym=c.ym||{};
+  const ev0=c.todayEvents&&c.todayEvents[0]||{};
+  return 'Trader NQ Nasdaq. Sintesi operativa OGGI '+DS+'. SOLO JSON zero testo fuori.
+
+'+
+  'COT NQ: LF='+( nq.leveragedFundsNet||'ND')+' AM='+(nq.assetManagerNet||'ND')+' signal='+(nq.signal||'ND')+'
+'+
+  'COT ES signal='+(es.signal||'ND')+' YM signal='+(ym.signal||'ND')+'
+'+
+  'Opzioni NQ: S='+(sett||'ND')+' R='+(r||'ND')+' Sup='+(sup||'ND')+'
+'+
+  'News oggi: '+(c.todayEvents&&c.todayEvents.length||0)+' eventi'+(ev0.name?' — '+ev0.name+' '+ev0.timeCET:'')+'
+'+
+  'Geo: '+(c.geopoliticalAlert||'nessuna')+'
+'+
+  'FED: '+(ST.fed.currentRate||'ND')+' hold='+(ST.fed.holdProbabilityNext||'ND')+' hike='+(ST.fed.hikeProbability2026||'ND')+'
+'+
+  'Psico: ieri='+(ps.ieri||'ND')+' stato='+(ps.stato||'ND')+' settimana='+(ps.settimana||'ND')+' bias='+(ps.bias||'ND')+'
+
+'+
+  '{"bias":"","biasReason":"","scenarios":[{"name":"","probability":"","descriptionIT":"","entryZone":"","target1":0,"target2":0,"stopLoss":0,"triggerIT":""},{"name":"","probability":"","descriptionIT":"","entryZone":"","target1":0,"target2":0,"stopLoss":0,"triggerIT":""},{"name":"","probability":"","descriptionIT":"","entryZone":"","target1":0,"target2":0,"stopLoss":0,"triggerIT":""}],"psychWarnings":["","","",""],"keyLevels":{"r2":0,"r1":'+r+',"pivot":'+sett+',"s1":'+sup+',"s2":0,"s3":0}}
+
+'+
+  'bias (es SHORT / CAUTELOSO), biasReason 50 parole italiano, 3 scenari NQ realistici, 4 psychWarnings personalizzati max 18 parole.';
+}
 
 async function generate(){
   if(!getKey()){document.getElementById('apibanner').style.display='block';return;}
   const btn=document.getElementById('gbtn');
-  btn.disabled=true;btn.innerHTML='<span class="spin"></span>Generazione...';
+  btn.disabled=true;btn.innerHTML='<span class="spin"></span>Generazione in corso...';
   document.getElementById('parea').style.display='block';
   document.getElementById('tnote').style.display='block';
   document.getElementById('ovres').style.display='none';
   document.getElementById('sdot').className='sdot run';
-  ST={cot:{},news:{},fed:{},synth:{}};RAW={};
+  ST={combined:{},fed:{},synth:{}};RAW={};
   const ps=getPS();
 
-  // STEP 1 COT — web search
-  prog(1,'active','Ricerca COT su CFTC...');
+  // STEP 1 — COT + News COMBINATI (unica chiamata web_search)
+  prog(1,'active','Ricerca COT CFTC + news macro US...');
   try{
-    const res=await callClaude('Rispondi SOLO con JSON valido zero testo extra prima o dopo.',pCOT(),true);
-    RAW.cot=res.text;ST.cot=pJSON(res.text);
-    const ok=!ST.cot._err&&ST.cot.nq&&ST.cot.nq.openInterest&&ST.cot.nq.openInterest!==0;
-    prog(1,'done',ok?'v Dati al '+ST.cot.reportDate+' - NQ LF '+Number(ST.cot.nq.leveragedFundsNet).toLocaleString('it-IT'):'Dati parziali - vedi Debug');
-  }catch(e){ST.cot={_err:e.message};RAW.cotErr=e.message;prog(1,'err','x '+e.message.substring(0,70));}
+    const res=await callClaude('Rispondi SOLO con JSON valido. Zero testo prima o dopo il JSON.',pCombined(),true);
+    RAW.combined=res.text;
+    ST.combined=pJSON(res.text);
+    const ok=!ST.combined._err&&ST.combined.nq&&ST.combined.nq.openInterest&&ST.combined.nq.openInterest!==0;
+    const nev=(ST.combined.todayEvents&&ST.combined.todayEvents.length)||0;
+    const wev=(ST.combined.weekEvents&&ST.combined.weekEvents.length)||0;
+    prog(1,'done',ok?'COT al '+ST.combined.reportDate+' - NQ LF '+Number(ST.combined.nq.leveragedFundsNet).toLocaleString('it-IT')+' | News oggi: '+nev+', settimana: '+wev:'Dati parziali — vedi Debug');
+  }catch(e){ST.combined={_err:e.message};RAW.combinedErr=e.message;prog(1,'err','x '+e.message.substring(0,80));}
 
-  // STEP 2 Opzioni — locale, piu sleep per rispettare rate limit (35s totali tra COT e News)
+  // STEP 2 — Opzioni (locale)
   prog(2,'active');
   calcOpt();renderOptDetail();
-  await sleep(35000);
+  await sleep(500);
   prog(2,'done');
 
-  // STEP 3 NEWS — web search
-  prog(3,'active','Ricerca news macro US...');
+  // Pausa 30s tra la web_search e le chiamate successive (precauzione)
+  await sleep(30000);
+
+  // STEP 3 — FED (no web_search)
+  prog(3,'active');
   try{
-    const res=await callClaude('Rispondi SOLO con JSON valido zero testo extra prima o dopo.',pNews(),true);
-    RAW.news=res.text;ST.news=pJSON(res.text);
-    const n=ST.news.todayEvents&&ST.news.todayEvents.length||0,w=ST.news.weekEvents&&ST.news.weekEvents.length||0;
-    prog(3,'done',ST.news._err?'Parsing fallito - vedi Debug':'v Oggi: '+n+' eventi, Settimana: '+w);
-  }catch(e){ST.news={_err:e.message};RAW.newsErr=e.message;prog(3,'err','x '+e.message.substring(0,70));}
+    const res=await callClaude('Rispondi SOLO con JSON valido. Zero testo prima o dopo.',pFED(),false);
+    RAW.fed=res.text;ST.fed=pJSON(res.text);
+    prog(3,'done',ST.fed._err?'Parsing fallito':'v Rate: '+ST.fed.currentRate+' hold: '+ST.fed.holdProbabilityNext);
+  }catch(e){ST.fed={_err:e.message};prog(3,'err','x '+e.message.substring(0,80));}
 
-  // Pausa 35s prima di FED
-  await sleep(35000);
+  await sleep(10000);
 
-  // STEP 4 FED — no web search
+  // STEP 4 — Sintesi (no web_search)
   prog(4,'active');
   try{
-    const res=await callClaude('Rispondi SOLO con JSON valido zero testo extra prima o dopo.',pFED(),false);
-    RAW.fed=res.text;ST.fed=pJSON(res.text);
-    prog(4,'done',ST.fed._err?'Parsing fallito':'v '+ST.fed.currentRate);
-  }catch(e){ST.fed={_err:e.message};prog(4,'err','x '+e.message.substring(0,70));}
-
-  await sleep(15000);
-
-  // STEP 5 SINTESI — no web search
-  prog(5,'active');
-  try{
-    const res=await callClaude('Trader professionista NQ. Rispondi SOLO con JSON valido zero testo extra.',pSynth(ps),false);
+    const res=await callClaude('Trader NQ. Rispondi SOLO con JSON valido. Zero testo prima o dopo.',pSynth(ps),false);
     RAW.synth=res.text;ST.synth=pJSON(res.text);
-    prog(5,'done',ST.synth._err?'Parsing fallito':'v Bias: '+ST.synth.bias);
-  }catch(e){ST.synth={_err:e.message};prog(5,'err','x '+e.message.substring(0,70));}
+    prog(4,'done',ST.synth._err?'Parsing fallito':'v Bias: '+ST.synth.bias);
+  }catch(e){ST.synth={_err:e.message};prog(4,'err','x '+e.message.substring(0,80));}
 
   renderAll(ps);renderDebug();
   document.getElementById('sdot').className='sdot ok';
@@ -399,11 +450,11 @@ async function generate(){
 }
 
 function renderDebug(){
-  const items=[{k:'cot',l:'Step 1 COT'},{k:'news',l:'Step 3 News'},{k:'fed',l:'Step 4 FED'},{k:'synth',l:'Step 5 Sintesi'}];
+  const items=[{k:'combined',l:'Step 1 — COT+News (web search)'},{k:'fed',l:'Step 3 — FED'},{k:'synth',l:'Step 4 — Sintesi'}];
   document.getElementById('debugpanel').innerHTML=items.map(it=>{
     const raw=RAW[it.k]||RAW[it.k+'Err']||'(vuoto)';
-    const err=ST[it.k]&&ST[it.k]._err;
-    return'<details class="dbg"'+(err?' open':'')+"><summary>"+(err?'x':'v')+' '+it.l+(err?' - '+ST[it.k]._err:'')+' ('+(raw.length||0)+' chars)</summary><pre>'+esc(raw.substring(0,3000))+'</pre></details>';
+    const s=ST[it.k]||{};const err=s._err;
+    return'<details class="dbg"'+(err?' open':'')+"><summary>"+(err?'x ':'v ')+it.l+(err?' — '+err:' ('+raw.length+' chars)')+'</summary><pre>'+esc(raw.substring(0,4000))+'</pre></details>';
   }).join('');
 }
 function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
@@ -414,16 +465,43 @@ function renderOverview(ps){
   const b=ST.synth.bias||'—';
   const il=b.toLowerCase().includes('long'),is=b.toLowerCase().includes('short');
   const bc=il?'bgg':is?'brr':'baa',bco=il?'up':is?'dn':'neu';
-  document.getElementById('ovmet').innerHTML='<div class="mc"><div class="lbl">Bias del giorno</div><div class="val '+bco+'" style="font-size:13px">'+b+'</div></div><div class="mc"><div class="lbl">Settlement NQ</div><div class="val" style="font-size:15px">'+(OPT.s?fmt(OPT.s):'—')+'</div><div class="sub">CME Options</div></div><div class="mc"><div class="lbl">Resistenza MM</div><div class="val up">'+(OPT.r?fmt(OPT.r):'—')+'</div><div class="sub">S+C+P</div></div><div class="mc"><div class="lbl">Supporto MM</div><div class="val dn">'+(OPT.sup?fmt(OPT.sup):'—')+'</div><div class="sub">S-C-P</div></div><div class="mc"><div class="lbl">Fed Rate</div><div class="val" style="font-size:14px">'+(ST.fed.currentRate||'—')+'</div><div class="sub">'+(ST.fed.holdProbabilityNext?'Hold '+ST.fed.holdProbabilityNext:'')+'</div></div><div class="mc"><div class="lbl">COT NQ</div><div class="val" style="margin-top:4px">'+sbadge(ST.cot.nq&&ST.cot.nq.signal)+'</div><div class="sub">LF '+(ST.cot.nq&&ST.cot.nq.leveragedFundsNet!=null?(Number(ST.cot.nq.leveragedFundsNet)>0?'+':'')+Number(ST.cot.nq.leveragedFundsNet).toLocaleString('it-IT'):'—')+'</div></div>';
+  const nq=ST.combined.nq||{};
+
+  document.getElementById('ovmet').innerHTML=
+    '<div class="mc"><div class="lbl">Bias del giorno</div><div class="val '+bco+'" style="font-size:13px">'+b+'</div></div>'+
+    '<div class="mc"><div class="lbl">Settlement NQ</div><div class="val" style="font-size:15px">'+(OPT.s?fmt(OPT.s):'—')+'</div><div class="sub">CME Options</div></div>'+
+    '<div class="mc"><div class="lbl">Resistenza MM</div><div class="val up">'+(OPT.r?fmt(OPT.r):'—')+'</div><div class="sub">S+C+P</div></div>'+
+    '<div class="mc"><div class="lbl">Supporto MM</div><div class="val dn">'+(OPT.sup?fmt(OPT.sup):'—')+'</div><div class="sub">S-C-P</div></div>'+
+    '<div class="mc"><div class="lbl">Fed Rate</div><div class="val" style="font-size:14px">'+(ST.fed.currentRate||'—')+'</div><div class="sub">'+(ST.fed.holdProbabilityNext?'Hold '+ST.fed.holdProbabilityNext:'')+'</div></div>'+
+    '<div class="mc"><div class="lbl">COT NQ Signal</div><div class="val" style="margin-top:4px">'+sbadge(nq.signal)+'</div><div class="sub">LF '+(nq.leveragedFundsNet!=null?(Number(nq.leveragedFundsNet)>0?'+':'')+Number(nq.leveragedFundsNet).toLocaleString('it-IT'):'—')+'</div></div>';
+
   const wl=ST.synth.psychWarnings;
   document.getElementById('ovpsych').innerHTML=wl&&wl.length?'<div style="font-size:13px;font-weight:600;margin-bottom:8px;margin-top:4px">Avvertenze Psicologiche</div><ul class="psyl">'+wl.map(w=>'<li>'+w+'</li>').join('')+'</ul>':'';
-  document.getElementById('ovbias').innerHTML='<div style="margin-bottom:12px"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><span class="badge '+bc+'" style="font-size:12px;padding:4px 14px">BIAS: '+b+'</span></div><div style="font-size:13px;color:var(--text2);line-height:1.7">'+(ST.synth.biasReason||'')+'</div></div>';
-  const sc2=ST.synth.scenarios||[];
-  document.getElementById('ovscen').innerHTML=sc2.length?sc2.map((s,i)=>'<div class="so"><div class="soh"><span class="son">'+(s.name||'Scenario '+(i+1))+'</span><span class="badge '+(i===0?'brr':i===2?'bgg':'baa')+'">'+(s.probability||'')+'</span></div><div class="sod">'+(s.descriptionIT||'')+'</div><div class="sotr">Trigger: '+(s.triggerIT||'')+'</div><div class="sols"><div class="sli"><span class="lbl">Entry Zone</span><span class="v">'+(s.entryZone||'—')+'</span></div><div class="sli"><span class="lbl">Target 1</span><span class="v up">'+(s.target1?fmt(s.target1,0):'—')+'</span></div><div class="sli"><span class="lbl">Target 2</span><span class="v up">'+(s.target2?fmt(s.target2,0):'—')+'</span></div><div class="sli"><span class="lbl">Stop Loss</span><span class="v dn">'+(s.stopLoss?fmt(s.stopLoss,0):'—')+'</span></div></div></div>').join(''):'<div class="al aw">Scenari non disponibili.</div>';
+
+  document.getElementById('ovbias').innerHTML=
+    '<div style="margin-bottom:12px"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><span class="badge '+bc+'" style="font-size:12px;padding:4px 14px">BIAS: '+b+'</span></div>'+
+    '<div style="font-size:13px;color:var(--text2);line-height:1.7">'+(ST.synth.biasReason||'')+'</div></div>';
+
+  const sc=ST.synth.scenarios||[];
+  document.getElementById('ovscen').innerHTML=sc.length?sc.map((s,i)=>
+    '<div class="so"><div class="soh"><span class="son">'+(s.name||'Scenario '+(i+1))+'</span><span class="badge '+(i===0?'brr':i===2?'bgg':'baa')+'">'+(s.probability||'')+'</span></div>'+
+    '<div class="sod">'+(s.descriptionIT||'')+'</div><div class="sotr">Trigger: '+(s.triggerIT||'')+'</div>'+
+    '<div class="sols"><div class="sli"><span class="lbl">Entry Zone</span><span class="v">'+(s.entryZone||'—')+'</span></div>'+
+    '<div class="sli"><span class="lbl">Target 1</span><span class="v up">'+(s.target1?fmt(s.target1,0):'—')+'</span></div>'+
+    '<div class="sli"><span class="lbl">Target 2</span><span class="v up">'+(s.target2?fmt(s.target2,0):'—')+'</span></div>'+
+    '<div class="sli"><span class="lbl">Stop Loss</span><span class="v dn">'+(s.stopLoss?fmt(s.stopLoss,0):'—')+'</span></div></div></div>'
+  ).join(''):'<div class="al aw">Scenari non disponibili.</div>';
+
   const kl=ST.synth.keyLevels||{};
   if(!kl.pivot&&OPT.s)kl.pivot=OPT.s;if(!kl.r1&&OPT.r)kl.r1=OPT.r;if(!kl.s1&&OPT.sup)kl.s1=OPT.sup;
   renderLvChart(kl);
-  document.getElementById('lvlist').innerHTML='<div class="dr"><span class="dk">R2</span><span class="dv up">'+(kl.r2?fmt(kl.r2,0):'—')+'</span></div><div class="dr"><span class="dk">R1</span><span class="dv up">'+(kl.r1?fmt(kl.r1,0):'—')+'</span></div><div class="dr"><span class="dk">Settlement</span><span class="dv">'+(kl.pivot?fmt(kl.pivot,0):'—')+'</span></div><div class="dr"><span class="dk">S1</span><span class="dv dn">'+(kl.s1?fmt(kl.s1,0):'—')+'</span></div><div class="dr"><span class="dk">S2</span><span class="dv dn">'+(kl.s2?fmt(kl.s2,0):'—')+'</span></div><div class="dr"><span class="dk">S3</span><span class="dv dn">'+(kl.s3?fmt(kl.s3,0):'—')+'</span></div>';
+  document.getElementById('lvlist').innerHTML=
+    '<div class="dr"><span class="dk">R2</span><span class="dv up">'+(kl.r2?fmt(kl.r2,0):'—')+'</span></div>'+
+    '<div class="dr"><span class="dk">R1</span><span class="dv up">'+(kl.r1?fmt(kl.r1,0):'—')+'</span></div>'+
+    '<div class="dr"><span class="dk">Settlement</span><span class="dv">'+(kl.pivot?fmt(kl.pivot,0):'—')+'</span></div>'+
+    '<div class="dr"><span class="dk">S1</span><span class="dv dn">'+(kl.s1?fmt(kl.s1,0):'—')+'</span></div>'+
+    '<div class="dr"><span class="dk">S2</span><span class="dv dn">'+(kl.s2?fmt(kl.s2,0):'—')+'</span></div>'+
+    '<div class="dr"><span class="dk">S3</span><span class="dv dn">'+(kl.s3?fmt(kl.s3,0):'—')+'</span></div>';
   document.getElementById('ovres').style.display='block';
 }
 
@@ -435,77 +513,102 @@ function renderLvChart(kl){
 }
 
 function renderCOT(){
-  const el=document.getElementById('cotc'),cot=ST.cot;
-  if(cot._err){el.innerHTML='<div class="al ae">Errore: '+cot._err+'</div><div class="al aw">Vai tab Debug per vedere la risposta raw.</div>';return;}
-  const nb=(label,d)=>{
-    if(!d)return'';
+  const el=document.getElementById('cotc'),c=ST.combined;
+  if(!c||c._err){el.innerHTML='<div class="al ae">Errore: '+(c&&c._err||'Dati mancanti')+'</div><div class="al aw">Vai tab Debug per la risposta raw.</div>';return;}
+
+  const detail=(label,d)=>{
+    if(!d)return'<div class="al aw">Dati non disponibili.</div>';
     const lf=Number(d.leveragedFundsNet)||0,am=Number(d.assetManagerNet)||0,wc=Number(d.weeklyChangeLF)||0;
-    return'<div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><span style="font-size:13px;font-weight:700">'+label+'</span>'+sbadge(d.signal)+'</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px"><div class="inset"><div class="lbl">Non-Commercial (LF) netto</div><div style="font-size:20px;font-weight:700;'+(lf<0?'color:var(--red)':'color:var(--green)');
+    return '<div class="card">'+
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><span style="font-size:13px;font-weight:700">'+label+'</span>'+sbadge(d.signal)+'</div>'+
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">'+
+      '<div class="inset"><div class="lbl">Non-Commercial LF netto</div><div style="font-size:20px;font-weight:700;'+(lf<0?'color:var(--red)':'color:var(--green)')+'">'+( lf>0?'+':'')+lf.toLocaleString('it-IT')+'</div><div style="font-size:10px;color:var(--text3)">OI '+Number(d.openInterest||0).toLocaleString('it-IT')+' · '+(lf<0?'NET SHORT':'NET LONG')+'</div></div>'+
+      '<div class="inset"><div class="lbl">Commercial AM netto</div><div style="font-size:20px;font-weight:700;'+(am>0?'color:var(--green)':'color:var(--red)')+'">'+( am>0?'+':'')+am.toLocaleString('it-IT')+'</div><div style="font-size:10px;color:var(--text3)">'+(am>0?'NET LONG':'NET SHORT')+'</div></div></div>'+
+      '<div class="dr"><span class="dk">Non-Comm Long</span><span class="dv up">'+Number(d.leveragedFundsLong||0).toLocaleString('it-IT')+'</span></div>'+
+      '<div class="dr"><span class="dk">Non-Comm Short</span><span class="dv dn">'+Number(d.leveragedFundsShort||0).toLocaleString('it-IT')+'</span></div>'+
+      '<div class="dr"><span class="dk">Commercial Long</span><span class="dv">'+Number(d.assetManagerLong||0).toLocaleString('it-IT')+'</span></div>'+
+      '<div class="dr"><span class="dk">Commercial Short</span><span class="dv">'+Number(d.assetManagerShort||0).toLocaleString('it-IT')+'</span></div>'+
+      '<div class="dr"><span class="dk">Var. sett. LF</span><span class="dv '+(wc>0?'up':wc<0?'dn':'mu')+'">'+( wc>0?'+':'')+wc.toLocaleString('it-IT')+'</span></div>'+
+      '<div class="dr"><span class="dk">Open Interest</span><span class="dv">'+Number(d.openInterest||0).toLocaleString('it-IT')+'</span></div>'+
+      '<div class="dr"><span class="dk">Trend</span><span class="dv" style="font-size:11px;max-width:220px;text-align:right">'+(d.trend||'—')+'</span></div>'+
+      '</div>';
   };
-  // rendering semplificato
-  el.innerHTML=(cot.reportDate?'<div class="al ai">CFTC Futures Only - dati al <strong>'+cot.reportDate+'</strong>'+(cot.nextUpdateDate?' - prossimo: '+cot.nextUpdateDate:'')+'</div>':'')+
+
+  el.innerHTML=
+    (c.reportDate?'<div class="al ai">CFTC Futures Only · dati al <strong>'+c.reportDate+'</strong></div>':'')+
     '<div class="cg3">'+
-    ['nq','es','ym'].map(k=>{const d=cot[k]||{};const lf=Number(d.leveragedFundsNet)||0;return'<div class="ci"><div class="cin">'+k.toUpperCase()+' LF Net</div><div class="civ '+(lf<0?'dn':'up')+'">'+(lf>0?'+':'')+lf.toLocaleString('it-IT')+'</div><div class="cis">'+(lf<0?'NET SHORT':'NET LONG')+'</div></div>';}).join('')+
-    ['nq','es','ym'].map(k=>{const d=cot[k]||{};const am=Number(d.assetManagerNet)||0;return'<div class="ci"><div class="cin">'+k.toUpperCase()+' AM Net</div><div class="civ '+(am>0?'up':'dn')+'">'+(am>0?'+':'')+am.toLocaleString('it-IT')+'</div><div class="cis">'+(am>0?'NET LONG':'NET SHORT')+'</div></div>';}).join('')+
+    ['nq','es','ym'].map(k=>{const d=c[k]||{};const lf=Number(d.leveragedFundsNet)||0;return'<div class="ci"><div class="cin">'+k.toUpperCase()+' LF Net</div><div class="civ '+(lf<0?'dn':'up')+'">'+(lf>0?'+':'')+lf.toLocaleString('it-IT')+'</div><div class="cis '+(lf<0?'dn':'up')+'">'+(lf<0?'NET SHORT':'NET LONG')+'</div></div>';}).join('')+
+    ['nq','es','ym'].map(k=>{const d=c[k]||{};const am=Number(d.assetManagerNet)||0;return'<div class="ci"><div class="cin">'+k.toUpperCase()+' AM Net</div><div class="civ '+(am>0?'up':'dn')+'">'+(am>0?'+':'')+am.toLocaleString('it-IT')+'</div><div class="cis '+(am>0?'up':'dn')+'">'+(am>0?'NET LONG':'NET SHORT')+'</div></div>';}).join('')+
     '</div>'+
-    '<div class="card"><div class="ctitle">AM Net vs LF Net (valore assoluto)</div><div style="position:relative;height:200px"><canvas id="cotch"></canvas></div></div>'+
-    (cot.integratedAnalysis?'<div class="inset" style="font-size:12px;color:var(--text2);line-height:1.7;margin-bottom:14px"><strong style="color:var(--text)">Analisi integrata:</strong> '+cot.integratedAnalysis+'</div>':'')+
-    '<div class="sep"></div><div class="ctabs"><button class="ctab active" onclick="ctab(\'nq\',this)">NQ #209742</button><button class="ctab" onclick="ctab(\'es\',this)">ES #13874+</button><button class="ctab" onclick="ctab(\'ym\',this)">YM #124603</button></div>'+
-    '<div class="cpanel active" id="cp-nq">'+cotDetail('E-mini Nasdaq-100 CME #209742',cot.nq)+'</div>'+
-    '<div class="cpanel" id="cp-es">'+cotDetail('S&P 500 Consolidated CME #13874+',cot.es)+'</div>'+
-    '<div class="cpanel" id="cp-ym">'+cotDetail('DJIA x$5 CBOT #124603',cot.ym)+'</div>';
+    '<div class="card"><div class="ctitle">AM Net vs LF Net (assoluto)</div><div style="position:relative;height:200px"><canvas id="cotch"></canvas></div></div>'+
+    (c.cotAnalysis?'<div class="inset" style="font-size:12px;color:var(--text2);line-height:1.7;margin-bottom:14px"><strong style="color:var(--text)">Analisi integrata:</strong> '+c.cotAnalysis+'</div>':'')+
+    '<div class="sep"></div><div class="ctabs">'+
+    '<button class="ctab active" onclick="ctab('nq',this)">NQ #209742</button>'+
+    '<button class="ctab" onclick="ctab('es',this)">ES #13874+</button>'+
+    '<button class="ctab" onclick="ctab('ym',this)">YM #124603</button></div>'+
+    '<div class="cpanel active" id="cp-nq">'+detail('E-mini Nasdaq-100 CME #209742',c.nq)+'</div>'+
+    '<div class="cpanel" id="cp-es">'+detail('S&P 500 Consolidated CME #13874+',c.es)+'</div>'+
+    '<div class="cpanel" id="cp-ym">'+detail('DJIA x$5 CBOT #124603',c.ym)+'</div>';
+
   setTimeout(()=>{
     const ctx=document.getElementById('cotch');if(!ctx)return;
-    new Chart(ctx,{type:'bar',data:{labels:['NQ','ES (div10)','YM'],datasets:[{label:'Asset Manager Net',data:[Math.abs(cot.nq&&cot.nq.assetManagerNet||0),Math.abs(cot.es&&cot.es.assetManagerNet||0)/10,Math.abs(cot.ym&&cot.ym.assetManagerNet||0)],backgroundColor:'rgba(34,197,94,0.7)',borderRadius:4},{label:'Lev Funds Net abs',data:[Math.abs(cot.nq&&cot.nq.leveragedFundsNet||0),Math.abs(cot.es&&cot.es.leveragedFundsNet||0)/10,Math.abs(cot.ym&&cot.ym.leveragedFundsNet||0)],backgroundColor:'rgba(239,68,68,0.7)',borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#909090',font:{size:11}}}},scales:{x:{ticks:{color:'#909090'},grid:{color:'#1c1c1c'}},y:{ticks:{color:'#505050',font:{size:10},callback:v=>v.toLocaleString('it-IT')},grid:{color:'#1c1c1c'}}}}});
+    new Chart(ctx,{type:'bar',data:{labels:['NQ','ES (div10)','YM'],datasets:[
+      {label:'Asset Manager Net',data:[Math.abs(c.nq&&c.nq.assetManagerNet||0),Math.abs(c.es&&c.es.assetManagerNet||0)/10,Math.abs(c.ym&&c.ym.assetManagerNet||0)],backgroundColor:'rgba(34,197,94,0.7)',borderRadius:4},
+      {label:'Lev Funds Net abs',data:[Math.abs(c.nq&&c.nq.leveragedFundsNet||0),Math.abs(c.es&&c.es.leveragedFundsNet||0)/10,Math.abs(c.ym&&c.ym.leveragedFundsNet||0)],backgroundColor:'rgba(239,68,68,0.7)',borderRadius:4}
+    ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#909090',font:{size:11}}}},scales:{x:{ticks:{color:'#909090'},grid:{color:'#1c1c1c'}},y:{ticks:{color:'#505050',font:{size:10},callback:v=>v.toLocaleString('it-IT')},grid:{color:'#1c1c1c'}}}}});
   },150);
-}
-function cotDetail(label,d){
-  if(!d)return'<div class="al aw">Dati non disponibili.</div>';
-  const lf=Number(d.leveragedFundsNet)||0,am=Number(d.assetManagerNet)||0,wc=Number(d.weeklyChangeLF)||0;
-  return'<div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><span style="font-size:13px;font-weight:700">'+label+'</span>'+sbadge(d.signal)+'</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px"><div class="inset"><div class="lbl">Non-Commercial LF netto</div><div style="font-size:20px;font-weight:700;'+(lf<0?'color:var(--red)':'color:var(--green)');
-  // This approach is getting complex, let me use a simpler joined string
-}
-
-// Patch: redefine cotDetail properly
-function cotDetail(label,d){
-  if(!d)return'<div class="al aw">Dati non disponibili.</div>';
-  const lf=Number(d.leveragedFundsNet)||0,am=Number(d.assetManagerNet)||0,wc=Number(d.weeklyChangeLF)||0;
-  return['<div class="card">',
-    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">',
-    '<span style="font-size:13px;font-weight:700">'+label+'</span>'+sbadge(d.signal)+'</div>',
-    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">',
-    '<div class="inset"><div class="lbl">Non-Commercial LF netto</div><div style="font-size:20px;font-weight:700;'+(lf<0?'color:var(--red)':'color:var(--green)')+'">',
-    (lf>0?'+':'')+lf.toLocaleString('it-IT')+'</div><div style="font-size:10px;color:var(--text3)">OI '+Number(d.openInterest||0).toLocaleString('it-IT')+' '+(lf<0?'NET SHORT':'NET LONG')+'</div></div>',
-    '<div class="inset"><div class="lbl">Commercial AM netto</div><div style="font-size:20px;font-weight:700;'+(am>0?'color:var(--green)':'color:var(--red)')+'">',
-    (am>0?'+':'')+am.toLocaleString('it-IT')+'</div><div style="font-size:10px;color:var(--text3)">'+(am>0?'NET LONG':'NET SHORT')+'</div></div></div>',
-    '<div class="dr"><span class="dk">Non-Comm Long</span><span class="dv up">'+Number(d.leveragedFundsLong||0).toLocaleString('it-IT')+'</span></div>',
-    '<div class="dr"><span class="dk">Non-Comm Short</span><span class="dv dn">'+Number(d.leveragedFundsShort||0).toLocaleString('it-IT')+'</span></div>',
-    '<div class="dr"><span class="dk">Commercial Long</span><span class="dv">'+Number(d.assetManagerLong||0).toLocaleString('it-IT')+'</span></div>',
-    '<div class="dr"><span class="dk">Commercial Short</span><span class="dv">'+Number(d.assetManagerShort||0).toLocaleString('it-IT')+'</span></div>',
-    '<div class="dr"><span class="dk">Var sett LF</span><span class="dv '+(wc>0?'up':wc<0?'dn':'mu')+'">'+(wc>0?'+':'')+wc.toLocaleString('it-IT')+'</span></div>',
-    '<div class="dr"><span class="dk">Trend</span><span class="dv" style="font-size:11px;max-width:220px;text-align:right">'+(d.trend||'—')+'</span></div>',
-    '</div>'].join('');
 }
 
 function ctab(n,b){document.querySelectorAll('.cpanel').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.ctab').forEach(t=>t.classList.remove('active'));document.getElementById('cp-'+n).classList.add('active');b.classList.add('active');}
 
 function renderNews(){
-  const el=document.getElementById('newsc'),news=ST.news;
-  if(news._err){el.innerHTML='<div class="al ae">Errore: '+news._err+'</div><div class="al aw">Vai tab Debug per vedere la risposta raw.</div>';return;}
-  const ec=ev=>'<div class="nc"><div class="nh"><div><div class="nn">'+ev.name+'</div><div class="nt">'+ev.date+' '+ev.timeCET+' ('+ev.timeET+')</div></div><span class="badge brr">***</span></div>'+(ev.previous||ev.forecast||ev.actual?'<table class="dtbl"><thead><tr><th>Precedente</th><th>Atteso</th><th>Attuale</th></tr></thead><tbody><tr><td>'+(ev.previous||'—')+'</td><td>'+(ev.forecast||'—')+'</td><td class="'+(ev.actual?'up':'')+'">'+(ev.actual||'—')+'</td></tr></tbody></table>':'')+(ev.analysisIT?'<div class="inset" style="font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:10px">'+ev.analysisIT+'</div>':'')+(ev.scenarioPositive||ev.scenarioNegative||ev.scenarioBaseline?'<div class="sg"><div class="sb sbull"><div class="sl">Migliore</div><div class="st">'+(ev.scenarioPositive||'—')+'</div></div><div class="sb sneu"><div class="sl">In linea</div><div class="st">'+(ev.scenarioBaseline||'—')+'</div></div><div class="sb sbear"><div class="sl">Peggiore</div><div class="st">'+(ev.scenarioNegative||'—')+'</div></div></div>':'')+'</div>';
-  const tevs=news.todayEvents||[],wevs=news.weekEvents||[];
-  let h='<div class="sh" style="margin-bottom:4px">News Macro US Oggi - '+DS2+'</div><div class="ssub">Solo eventi 3 stelle US</div>';
-  h+=(news.noEventsToday||tevs.length===0)?'<div class="al ai">Nessun evento 3 stelle US per oggi.</div>':tevs.map(ec).join('');
-  if(news.geopoliticalAlert)h+='<div class="al aw" style="margin-top:6px"><strong>Alert geopolitico:</strong> '+news.geopoliticalAlert+'</div>';
-  h+='<div class="sep"></div><div class="sh" style="margin-bottom:4px">Radar Macro Settimana - '+TMR+' fino '+FRI+'</div><div class="ssub">Tutti gli eventi 3 stelle US</div>';
-  h+=wevs.length===0?'<div class="al ai">Nessun evento 3 stelle per il resto della settimana.</div>':wevs.map(ev=>'<div class="wc"><div class="wd">'+ev.date+'</div><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;gap:10px"><div><div class="wn">'+ev.name+'</div><div class="wt">'+ev.timeCET+' ('+ev.timeET+')</div></div><span class="badge brr">***</span></div>'+(ev.previous||ev.forecast?'<table class="dtbl" style="margin-bottom:8px"><thead><tr><th>Precedente</th><th>Previsto</th><th>Attuale</th></tr></thead><tbody><tr><td>'+(ev.previous||'—')+'</td><td>'+(ev.forecast||'—')+'</td><td class="'+(ev.actual?'up':'')+'">'+(ev.actual||'—')+'</td></tr></tbody></table>':'')+(ev.analysisIT?'<div style="font-size:11px;color:var(--text2);line-height:1.5">'+ev.analysisIT+'</div>':'')+'</div>').join('');
+  const el=document.getElementById('newsc'),c=ST.combined;
+  if(!c||c._err){el.innerHTML='<div class="al ae">Errore nei dati combinati. Vedi tab Debug.</div>';return;}
+
+  const ec=ev=>'<div class="nc"><div class="nh"><div><div class="nn">'+ev.name+'</div><div class="nt">'+ev.date+' · '+ev.timeCET+' ('+ev.timeET+')</div></div><span class="badge brr">***</span></div>'+
+    (ev.previous||ev.forecast||ev.actual?'<table class="dtbl"><thead><tr><th>Precedente</th><th>Atteso</th><th>Attuale</th></tr></thead><tbody><tr><td>'+(ev.previous||'—')+'</td><td>'+(ev.forecast||'—')+'</td><td class="'+(ev.actual?'up':'')+'">'+(ev.actual||'—')+'</td></tr></tbody></table>':'')+
+    (ev.analysisIT?'<div class="inset" style="font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:10px">'+ev.analysisIT+'</div>':'')+
+    (ev.scenarioPositive||ev.scenarioNegative?'<div class="sg"><div class="sb sbull"><div class="sl">Migliore NQ</div><div class="st">'+(ev.scenarioPositive||'—')+'</div></div><div class="sb sneu"><div class="sl">In linea</div><div class="st">Reazione contenuta</div></div><div class="sb sbear"><div class="sl">Peggiore NQ</div><div class="st">'+(ev.scenarioNegative||'—')+'</div></div></div>':'')+
+    '</div>';
+
+  const tevs=c.todayEvents||[],wevs=c.weekEvents||[];
+  let h='<div class="sh" style="margin-bottom:4px">News Macro US Oggi — '+DS2+'</div><div class="ssub">Solo eventi *** US</div>';
+  h+=(c.noEventsToday||tevs.length===0)?'<div class="al ai">Nessun evento 3 stelle US per oggi. Mercato si muovera su geopolitica o sentiment.</div>':tevs.map(ec).join('');
+  if(c.geopoliticalAlert)h+='<div class="al aw" style="margin-top:6px"><strong>Alert geopolitico:</strong> '+c.geopoliticalAlert+'</div>';
+  h+='<div class="sep"></div><div class="sh" style="margin-bottom:4px">Radar Macro Settimana — '+TMR+' fino '+FRI+'</div><div class="ssub">Tutti gli eventi *** US prossimi giorni</div>';
+  h+=wevs.length===0?'<div class="al ai">Nessun evento 3 stelle per il resto della settimana.</div>':wevs.map(ev=>
+    '<div class="wc"><div class="wd">'+ev.date+'</div><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;gap:10px"><div><div class="wn">'+ev.name+'</div><div class="wt">'+ev.timeCET+' ('+ev.timeET+')</div></div><span class="badge brr">***</span></div>'+
+    (ev.previous||ev.forecast?'<table class="dtbl" style="margin-bottom:8px"><thead><tr><th>Precedente</th><th>Previsto</th><th>Attuale</th></tr></thead><tbody><tr><td>'+(ev.previous||'—')+'</td><td>'+(ev.forecast||'—')+'</td><td class="'+(ev.actual?'up':'')+'">'+(ev.actual||'—')+'</td></tr></tbody></table>':'')+
+    (ev.analysisIT?'<div style="font-size:11px;color:var(--text2);line-height:1.5;margin-bottom:6px">'+ev.analysisIT+'</div>':'')+
+    (ev.scenarioPositive||ev.scenarioNegative?'<div style="display:flex;gap:6px;flex-wrap:wrap"><span class="badge bgg" style="font-size:10px">+'+( ev.scenarioPositive||'')+'</span><span class="badge brr" style="font-size:10px">-'+(ev.scenarioNegative||'')+'</span></div>':'')+
+    '</div>'
+  ).join('');
   el.innerHTML=h;
 }
 
 function renderFED(){
   const el=document.getElementById('fedc'),fed=ST.fed;
-  if(fed._err){el.innerHTML='<div class="al ae">'+fed._err+'</div>';return;}
-  el.innerHTML='<div class="mg" style="margin-bottom:14px"><div class="mc"><div class="lbl">Fed Funds Rate</div><div class="val">'+(fed.currentRate||'—')+'</div></div><div class="mc"><div class="lbl">Prossimo FOMC</div><div class="val" style="font-size:13px">'+(fed.nextFOMCDate||'—')+'</div></div><div class="mc"><div class="lbl">Hold Probability</div><div class="val up">'+(fed.holdProbabilityNext||'—')+'</div><div class="sub">CME FedWatch</div></div><div class="mc"><div class="lbl">Hike entro 2026</div><div class="val dn">'+(fed.hikeProbability2026||'—')+'</div></div></div><div class="card"><div class="ctitle">Indicatori macro</div><table class="fitbl"><thead><tr><th>Indicatore</th><th>Dato</th><th>Trend</th></tr></thead><tbody><tr><td>CPI Headline YoY</td><td><strong>'+(fed.cpiHeadline||'—')+'</strong></td><td class="tup">Inflazione</td></tr><tr><td>CPI Core YoY</td><td><strong>'+(fed.cpiCore||'—')+'</strong></td><td class="tup">Persistente</td></tr><tr><td>PCE Core YoY</td><td><strong>'+(fed.pceCore||'—')+'</strong></td><td class="tup">Sopra target</td></tr><tr><td>NFP</td><td><strong>'+(fed.nfpLast||'—')+'</strong></td><td class="tneu">Solido</td></tr><tr><td>ISM Prices Paid</td><td><strong>'+(fed.ismPricesPaid||'—')+'</strong></td><td class="tup">Stagflationary</td></tr><tr><td>Import Prices MoM</td><td><strong>'+(fed.importPrices||'—')+'</strong></td><td class="tup">Oil shock</td></tr><tr><td>Disoccupazione</td><td><strong>'+(fed.unemployment||'—')+'</strong></td><td class="tneu">Stabile</td></tr></tbody></table></div>'+(fed.fedStance||fed.outlookNQ?'<div class="card"><div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">'+(fed.fedStance?'<div><div class="ctitle">Stance FED</div><div style="font-size:12px;color:var(--text2);line-height:1.7">'+fed.fedStance+'</div></div>':'')+(fed.outlookNQ?'<div><div class="ctitle">Meccanismo NQ</div><div style="font-size:12px;color:var(--text2);line-height:1.7">'+fed.outlookNQ+'</div></div>':'')+'</div></div>':'')+(fed.keyRisks?'<div class="al aw"><strong>Rischi:</strong> '+fed.keyRisks+'</div>':'');
+  if(!fed||fed._err){el.innerHTML='<div class="al ae">'+(fed&&fed._err||'Dati mancanti')+'</div>';return;}
+  el.innerHTML=
+    '<div class="mg" style="margin-bottom:14px">'+
+    '<div class="mc"><div class="lbl">Fed Funds Rate</div><div class="val">'+(fed.currentRate||'—')+'</div></div>'+
+    '<div class="mc"><div class="lbl">Prossimo FOMC</div><div class="val" style="font-size:13px">'+(fed.nextFOMCDate||'—')+'</div></div>'+
+    '<div class="mc"><div class="lbl">Hold Prob.</div><div class="val up">'+(fed.holdProbabilityNext||'—')+'</div><div class="sub">CME FedWatch</div></div>'+
+    '<div class="mc"><div class="lbl">Hike 2026</div><div class="val dn">'+(fed.hikeProbability2026||'—')+'</div></div></div>'+
+    '<div class="card"><div class="ctitle">Indicatori macro chiave</div><table class="fitbl"><thead><tr><th>Indicatore</th><th>Dato</th><th>Trend</th></tr></thead><tbody>'+
+    '<tr><td>CPI Headline YoY</td><td><strong>'+(fed.cpiHeadline||'—')+'</strong></td><td class="tup">Inflazione</td></tr>'+
+    '<tr><td>CPI Core YoY</td><td><strong>'+(fed.cpiCore||'—')+'</strong></td><td class="tup">Persistente</td></tr>'+
+    '<tr><td>PCE Core YoY</td><td><strong>'+(fed.pceCore||'—')+'</strong></td><td class="tup">Sopra target</td></tr>'+
+    '<tr><td>NFP</td><td><strong>'+(fed.nfpLast||'—')+'</strong></td><td class="tneu">Solido</td></tr>'+
+    '<tr><td>ISM Prices Paid</td><td><strong>'+(fed.ismPricesPaid||'—')+'</strong></td><td class="tup">Stagflationary</td></tr>'+
+    '<tr><td>Import Prices MoM</td><td><strong>'+(fed.importPrices||'—')+'</strong></td><td class="tup">Oil shock</td></tr>'+
+    '<tr><td>Disoccupazione</td><td><strong>'+(fed.unemployment||'—')+'</strong></td><td class="tneu">Stabile</td></tr>'+
+    '</tbody></table></div>'+
+    (fed.fedStance||fed.outlookNQ?'<div class="card"><div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">'+
+    (fed.fedStance?'<div><div class="ctitle">Stance FED</div><div style="font-size:12px;color:var(--text2);line-height:1.7">'+fed.fedStance+'</div></div>':'')+
+    (fed.outlookNQ?'<div><div class="ctitle">Meccanismo NQ</div><div style="font-size:12px;color:var(--text2);line-height:1.7">'+fed.outlookNQ+'</div></div>':'')+
+    '</div></div>':'')+
+    (fed.keyRisks?'<div class="al aw"><strong>Rischi:</strong> '+fed.keyRisks+'</div>':'');
 }
 </script>
 </body>
