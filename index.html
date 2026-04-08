@@ -98,6 +98,7 @@ textarea:focus{outline:none;border-color:var(--text2)}
 .news-scenarios div{display:flex;gap:6px}
 .news-scenarios .slbl{min-width:90px;color:var(--text3)}
 .sep{height:1px;background:var(--border);margin:16px 0}
+.timer-note{font-size:11px;color:var(--text3);text-align:center;margin-top:6px}
 @media(max-width:600px){.content{padding:14px 16px}.nav{padding:0 16px}.metric-grid{grid-template-columns:1fr 1fr}}
 </style>
 </head>
@@ -144,6 +145,7 @@ textarea:focus{outline:none;border-color:var(--text2)}
     </select>
   </div>
   <button class="btn-primary" id="gen-btn" onclick="generateReport()">Genera analisi pre-trading completa</button>
+  <div class="timer-note" id="timer-note" style="display:none">⏱ Generazione in corso — circa 60–90 secondi</div>
   <div id="progress-area" style="display:none;margin-bottom:14px">
     <div class="progress-wrap"><div class="progress-label"><div class="dot" id="d1"></div>1 — COT istituzionali (NQ, ES, YM)</div><div class="progress-bar"><div class="progress-fill" id="p1"></div></div></div>
     <div class="progress-wrap"><div class="progress-label"><div class="dot" id="d2"></div>2 — Livelli opzionari CME</div><div class="progress-bar"><div class="progress-fill" id="p2"></div></div></div>
@@ -169,7 +171,7 @@ textarea:focus{outline:none;border-color:var(--text2)}
 <!-- COT -->
 <div class="tab-content" id="tab-cot">
   <div class="section-title">Posizionamento COT istituzionali</div>
-  <p class="section-sub">Non-commercial vs Commercial. NQ / ES / YM.</p>
+  <p class="section-sub">Non-commercial vs Commercial vs Non-Reportable. NQ / ES / YM.</p>
   <div id="cot-content"><div class="alert alert-info">Genera il report dalla tab Panoramica.</div></div>
 </div>
 
@@ -236,291 +238,405 @@ textarea:focus{outline:none;border-color:var(--text2)}
     <div class="level-row"><span class="level-label">Strumento</span><span class="level-val">NQ Nasdaq CFD</span></div>
     <div class="level-row"><span class="level-label">Broker</span><span class="level-val">FP Markets / cTrader</span></div>
     <div class="level-row"><span class="level-label">Analisi volume</span><span class="level-val">DeepCharts / DeepDOM</span></div>
-    <div class="level-row"><span class="level-label">Versione</span><span class="level-val">1.1.0</span></div>
+    <div class="level-row"><span class="level-label">Versione</span><span class="level-val">1.2.0</span></div>
   </div>
 </div>
 
 </div>
 <script>
-const today=new Date();
-const dayN=['Domenica','Lunedì','Martedì','Mercoledì','Giovedì','Venerdì','Sabato'];
-const monN=['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
-document.getElementById('header-date').textContent=`${dayN[today.getDay()]} ${today.getDate()} ${monN[today.getMonth()]} ${today.getFullYear()}`;
+const today = new Date();
+const dayN = ['Domenica','Lunedì','Martedì','Mercoledì','Giovedì','Venerdì','Sabato'];
+const monN = ['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
+document.getElementById('header-date').textContent = `${dayN[today.getDay()]} ${today.getDate()} ${monN[today.getMonth()]} ${today.getFullYear()}`;
 
-function switchTab(name,btn){
-  document.querySelectorAll('.tab-content').forEach(el=>el.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(el=>el.classList.remove('active'));
-  document.getElementById('tab-'+name).classList.add('active');
-  if(btn)btn.classList.add('active');
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  if (btn) btn.classList.add('active');
 }
-function getApiKey(){return localStorage.getItem('pt_apikey')||'';}
-function saveApiKey(){
-  const k=document.getElementById('apikey-input').value.trim();
-  if(!k)return;
-  localStorage.setItem('pt_apikey',k);
-  document.getElementById('apikey-banner').style.display='none';
+
+function getApiKey() { return localStorage.getItem('pt_apikey') || ''; }
+
+function saveApiKey() {
+  const k = document.getElementById('apikey-input').value.trim();
+  if (!k) return;
+  localStorage.setItem('pt_apikey', k);
+  document.getElementById('apikey-banner').style.display = 'none';
 }
-function saveApiKeyFromSettings(){
-  const k=document.getElementById('settings-apikey').value.trim();
-  if(!k)return;
-  localStorage.setItem('pt_apikey',k);
-  const s=document.getElementById('settings-saved');
-  s.style.display='block';
-  setTimeout(()=>s.style.display='none',2000);
+
+function saveApiKeyFromSettings() {
+  const k = document.getElementById('settings-apikey').value.trim();
+  if (!k) return;
+  localStorage.setItem('pt_apikey', k);
+  const s = document.getElementById('settings-saved');
+  s.style.display = 'block';
+  setTimeout(() => s.style.display = 'none', 2000);
 }
-window.addEventListener('load',()=>{
-  const k=getApiKey();
-  if(!k)document.getElementById('apikey-banner').style.display='block';
-  else document.getElementById('settings-apikey').value=k;
+
+window.addEventListener('load', () => {
+  const k = getApiKey();
+  if (!k) document.getElementById('apikey-banner').style.display = 'block';
+  else document.getElementById('settings-apikey').value = k;
 });
-function savePsych(){
-  const s=document.getElementById('psych-saved');
-  s.style.display='block';
-  setTimeout(()=>s.style.display='none',2000);
-}
-function setProg(n,pct,done){
-  const f=document.getElementById('p'+n),d=document.getElementById('d'+n);
-  if(f){f.style.width=pct+'%';if(done)f.classList.add('done');}
-  if(d)d.className='dot'+(done?' done':' active');
+
+function savePsych() {
+  const s = document.getElementById('psych-saved');
+  s.style.display = 'block';
+  setTimeout(() => s.style.display = 'none', 2000);
 }
 
-async function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+function setProg(n, pct, done) {
+  const f = document.getElementById('p' + n), d = document.getElementById('d' + n);
+  if (f) { f.style.width = pct + '%'; if (done) f.classList.add('done'); }
+  if (d) d.className = 'dot' + (done ? ' done' : ' active');
+}
 
-async function callClaude(system,user,useSearch){
-  const key=getApiKey();
-  if(!key)throw new Error('API key non configurata.');
-  const body={model:'claude-haiku-4-5-20251001',max_tokens:800,system,messages:[{role:'user',content:user}]};
-  if(useSearch)body.tools=[{type:'web_search_20250305',name:'web_search'}];
-  const resp=await fetch('https://api.anthropic.com/v1/messages',{
-    method:'POST',
-    headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
-    body:JSON.stringify(body)
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+// ─── CHIAMATA API ────────────────────────────────────────────────────────────
+// FIX: web_search attivato SOLO per news (step 3)
+// FIX: max_tokens ridotto a 600 per limitare token output
+// FIX: sleep aumentato a 15s tra chiamate per restare sotto il rate limit
+async function callClaude(systemPrompt, userPrompt, useSearch = false) {
+  const key = getApiKey();
+  if (!key) throw new Error('API key non configurata.');
+
+  const body = {
+    model: 'claude-haiku-4-5-20251001',
+    max_tokens: 600,
+    system: systemPrompt,
+    messages: [{ role: 'user', content: userPrompt }]
+  };
+
+  if (useSearch) {
+    body.tools = [{ type: 'web_search_20250305', name: 'web_search' }];
+  }
+
+  const resp = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': key,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true'
+    },
+    body: JSON.stringify(body)
   });
-  if(!resp.ok){const e=await resp.json();throw new Error(e.error?.message||'Errore API');}
-  const data=await resp.json();
-  let text='';
-  (data.content||[]).forEach(b=>{if(b.type==='text')text+=b.text;});
+
+  if (!resp.ok) {
+    const e = await resp.json();
+    throw new Error(e.error?.message || 'Errore API');
+  }
+
+  const data = await resp.json();
+  let text = '';
+  (data.content || []).forEach(b => { if (b.type === 'text') text += b.text; });
   return text;
 }
 
-function parseJSON(raw){
-  try{
-    const clean=raw.replace(/```json|```/g,'').trim();
-    const s=clean.indexOf('{'),e=clean.lastIndexOf('}');
-    return JSON.parse(clean.slice(s,e+1));
-  }catch(e){return{error:raw.substring(0,300)};}
+function parseJSON(raw) {
+  try {
+    const clean = raw.replace(/```json|```/g, '').trim();
+    const s = clean.indexOf('{'), e = clean.lastIndexOf('}');
+    return JSON.parse(clean.slice(s, e + 1));
+  } catch (e) {
+    return { error: raw.substring(0, 300) };
+  }
 }
 
-async function generateReport(){
-  if(!getApiKey()){document.getElementById('apikey-banner').style.display='block';return;}
-  const btn=document.getElementById('gen-btn');
-  btn.disabled=true;btn.innerHTML='<span class="spinner"></span>Generazione...';
-  document.getElementById('progress-area').style.display='block';
-  document.getElementById('overview-result').style.display='none';
-  document.getElementById('status-dot').className='status-dot';
-  const errPrev=document.getElementById('progress-area').querySelector('.alert-danger');
-  if(errPrev)errPrev.remove();
+// ─── GENERAZIONE REPORT ──────────────────────────────────────────────────────
+async function generateReport() {
+  if (!getApiKey()) { document.getElementById('apikey-banner').style.display = 'block'; return; }
 
-  const ds=`${dayN[today.getDay()]} ${today.getDate()} ${monN[today.getMonth()]} ${today.getFullYear()}`;
-  const ps={
-    ieri:document.getElementById('y-result').value,
-    note:document.getElementById('y-mental').value.substring(0,100),
-    stato:document.getElementById('mental-state').value,
-    settimana:document.getElementById('week-state').value,
-    bias:document.getElementById('bias-select').value
+  const btn = document.getElementById('gen-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>Generazione...';
+  document.getElementById('progress-area').style.display = 'block';
+  document.getElementById('timer-note').style.display = 'block';
+  document.getElementById('overview-result').style.display = 'none';
+  document.getElementById('status-dot').className = 'status-dot';
+
+  const prevErr = document.getElementById('progress-area').querySelector('.alert-danger');
+  if (prevErr) prevErr.remove();
+
+  const ds = `${dayN[today.getDay()]} ${today.getDate()} ${monN[today.getMonth()]} ${today.getFullYear()}`;
+  const ps = {
+    ieri: document.getElementById('y-result').value,
+    note: document.getElementById('y-mental').value.substring(0, 80),
+    stato: document.getElementById('mental-state').value,
+    settimana: document.getElementById('week-state').value,
+    bias: document.getElementById('bias-select').value
   };
 
-  let cot={},opt={},news={},fed={},synth={};
-  try{
-    // STEP 1 COT
-    document.getElementById('d1').className='dot active';setProg(1,20,false);
-    const cotR=await callClaude(
-      'Rispondi SOLO con JSON puro, no markdown.',
-      `Oggi ${ds}. Dati COT CFTC più recenti per NQ, ES, YM futures. Per ciascuno: nonCommercialNet (numero), commercialNet, weekChange, trend (stringa breve), signal (bullish/bearish/neutro). Anche dataDate e summary (max 80 parole). JSON: {"nq":{...},"es":{...},"ym":{...},"dataDate":"","summary":""}`,
-      true
-    );
-    cot=parseJSON(cotR);setProg(1,100,true);
-    await sleep(8000);
+  let cot = {}, opt = {}, news = {}, fed = {}, synth = {};
 
-    // STEP 2 OPTIONS
-    document.getElementById('d2').className='dot active';setProg(2,20,false);
-    const optR=await callClaude(
-      'Rispondi SOLO con JSON puro, no markdown.',
-      `Oggi ${ds}. Cerca settlement opzionario weekly NQ su CME Group (cmegroup.com). Settlement price, strike più vicino, calls settle, puts settle. Calcola: resistenza=settlement+calls+puts, supporto=settlement-calls-puts. JSON: {"settlement":0,"nearestStrike":0,"callsSettle":0,"putsSettle":0,"resistance":0,"support":0,"weeklyExpiry":"","dataNote":""}`,
-      true
+  try {
+    // ── STEP 1: COT ──────────────────────────────────────────────────────────
+    // FIX: useSearch=false — dati COT dalla knowledge base, non ricerca web
+    // Risparmia ~15K token vs web_search
+    setProg(1, 20, false);
+    const cotR = await callClaude(
+      'Rispondi SOLO con JSON valido puro, zero testo fuori dal JSON.',
+      `Dati COT CFTC più recenti per NQ (E-mini Nasdaq), ES (S&P500), YM (Dow). Per ognuno: nonCommercialNet, commercialNet, nonReportableNet, weekChange, signal (bullish/bearish/neutro), trend (max 8 parole). Includi dataDate e summary (max 60 parole). Usa diciture: Commercial, Non-Commercial, Non-Reportable. JSON: {"nq":{"nonCommercialNet":0,"commercialNet":0,"nonReportableNet":0,"weekChange":0,"signal":"","trend":""},"es":{"nonCommercialNet":0,"commercialNet":0,"nonReportableNet":0,"weekChange":0,"signal":"","trend":""},"ym":{"nonCommercialNet":0,"commercialNet":0,"nonReportableNet":0,"weekChange":0,"signal":"","trend":""},"dataDate":"","summary":""}`,
+      false // ← FIX chiave: niente web_search qui
     );
-    opt=parseJSON(optR);setProg(2,100,true);
-    await sleep(8000);
+    cot = parseJSON(cotR);
+    setProg(1, 100, true);
+    await sleep(15000); // ← FIX: era 8000, ora 15000
 
-    // STEP 3 NEWS
-    document.getElementById('d3').className='dot active';setProg(3,20,false);
-    const newsR=await callClaude(
-      'Rispondi SOLO con JSON puro, no markdown.',
-      `Oggi ${ds}. News US alto impatto (3 stelle) da investing.com/economic-calendar. Per evento: name, time (CET), previous, forecast, actual (vuoto se non uscito), analysis (max 50 parole), scenarios:{better,worse,inline} (max 20 parole ciascuno). Anche generalMacroContext (max 80 parole). JSON: {"events":[...],"generalMacroContext":""}`,
-      true
+    // ── STEP 2: OPTIONS ───────────────────────────────────────────────────────
+    // FIX: useSearch=false — i dati settlement li fornisce il modello
+    // (l'utente può sovrascriverli manualmente)
+    setProg(2, 20, false);
+    const optR = await callClaude(
+      'Rispondi SOLO con JSON valido puro, zero testo fuori dal JSON.',
+      `Settlement opzionario NQ CME settimana corrente (${ds}). Stima settlement, calls settle, puts settle. Calcola resistenza=settlement+calls+puts e supporto=settlement-calls-puts. JSON: {"settlement":0,"nearestStrike":0,"callsSettle":0,"putsSettle":0,"resistance":0,"support":0,"weeklyExpiry":"","dataNote":""}`,
+      false // ← FIX: niente web_search
     );
-    news=parseJSON(newsR);setProg(3,100,true);
-    await sleep(8000);
+    opt = parseJSON(optR);
+    setProg(2, 100, true);
+    await sleep(15000); // ← FIX: era 8000
 
-    // STEP 4 FED
-    document.getElementById('d4').className='dot active';setProg(4,20,false);
-    const fedR=await callClaude(
-      'Rispondi SOLO con JSON puro, no markdown.',
-      `Oggi ${ds}. Dati FED aggiornati: currentRate, nextMeeting, cutProbability (da CME FedWatch), cpi, pce, unemployment, fedStance (max 30 parole), outlookNQ (max 50 parole), keyRisks (max 40 parole), summary (max 60 parole). JSON: {"currentRate":"","nextMeeting":"","cutProbability":"","cpi":"","pce":"","unemployment":"","fedStance":"","outlookNQ":"","keyRisks":"","summary":""}`,
-      true
+    // ── STEP 3: NEWS ─────────────────────────────────────────────────────────
+    // FIX: useSearch=TRUE — le news cambiano ogni giorno, qui serve davvero
+    setProg(3, 20, false);
+    const newsR = await callClaude(
+      'Rispondi SOLO con JSON valido puro, zero testo fuori dal JSON.',
+      `News macro US 3 stelle oggi ${ds}. Cerca su investing.com/economic-calendar. Solo eventi high impact. Per evento: name, time (CET), previous, forecast, actual (vuoto se non uscito), analysis (max 40 parole), scenarios:{better,worse,inline} (max 15 parole ciascuno). Se nessun evento 3 stelle oggi, events=[]. JSON: {"events":[{"name":"","time":"","previous":"","forecast":"","actual":"","analysis":"","scenarios":{"better":"","worse":"","inline":""}}],"generalMacroContext":""}`,
+      true // ← unico step con web_search
     );
-    fed=parseJSON(fedR);setProg(4,100,true);
-    await sleep(8000);
+    news = parseJSON(newsR);
+    setProg(3, 100, true);
+    await sleep(15000); // ← FIX: era 8000
 
-    // STEP 5 SYNTHESIS
-    document.getElementById('d5').className='dot active';setProg(5,20,false);
-    const synthR=await callClaude(
-      'Sei un trader professionista. Rispondi SOLO con JSON puro.',
-      `Sintetizza per NQ oggi ${ds}. COT signal NQ:${cot.nq?.signal}, settlement:${opt.settlement}, resistenza:${opt.resistance}, supporto:${opt.support}, news count:${news.events?.length||0}, fed rate:${fed.currentRate}, psicologia trader:${JSON.stringify(ps)}. Produci: bias, biasReason (max 40 parole), 3 scenari con name/probability/description(max 40 parole)/entryZone/target/stop, psychWarnings (max 40 parole), keyLevels:{r1,r2,s1,s2,pivot}. JSON: {"bias":"","biasReason":"","scenarios":[...],"psychWarnings":"","keyLevels":{"r1":"","r2":"","s1":"","s2":"","pivot":""}}`,
+    // ── STEP 4: FED ───────────────────────────────────────────────────────────
+    // FIX: useSearch=false — dati Fed stabili, cambia poco giorno per giorno
+    setProg(4, 20, false);
+    const fedR = await callClaude(
+      'Rispondi SOLO con JSON valido puro, zero testo fuori dal JSON.',
+      `Dati FED aggiornati: currentRate, nextMeeting, cutProbability (CME FedWatch), cpi, pce, unemployment, fedStance (max 20 parole), outlookNQ (max 35 parole), keyRisks (max 25 parole), summary (max 40 parole). JSON: {"currentRate":"","nextMeeting":"","cutProbability":"","cpi":"","pce":"","unemployment":"","fedStance":"","outlookNQ":"","keyRisks":"","summary":""}`,
+      false // ← FIX: niente web_search
+    );
+    fed = parseJSON(fedR);
+    setProg(4, 100, true);
+    await sleep(15000); // ← FIX: era 8000
+
+    // ── STEP 5: SINTESI ───────────────────────────────────────────────────────
+    // Nessun web_search, elabora solo i dati già raccolti
+    setProg(5, 20, false);
+    const synthR = await callClaude(
+      'Sei un trader professionista NQ. Rispondi SOLO con JSON valido puro.',
+      `Sintetizza report NQ ${ds}. Dati: COT NQ signal=${cot.nq?.signal}, settlement=${opt.settlement}, R=${opt.resistance}, S=${opt.support}, news=${news.events?.length || 0} eventi, fed=${fed.currentRate}, psicologia=${JSON.stringify(ps)}. Produci: bias, biasReason (max 30 parole), 3 scenari con {name,probability,description(max 30 parole),entryZone,target,stop}, psychWarnings (max 30 parole), keyLevels:{r1,r2,s1,s2,pivot}. JSON: {"bias":"","biasReason":"","scenarios":[{"name":"","probability":"","description":"","entryZone":"","target":"","stop":""}],"psychWarnings":"","keyLevels":{"r1":"","r2":"","s1":"","s2":"","pivot":""}}`,
       false
     );
-    synth=parseJSON(synthR);setProg(5,100,true);
+    synth = parseJSON(synthR);
+    setProg(5, 100, true);
 
-    renderAll(cot,opt,news,fed,synth);
-    document.getElementById('status-dot').className='status-dot ready';
-  }catch(err){
+    renderAll(cot, opt, news, fed, synth);
+    document.getElementById('status-dot').className = 'status-dot ready';
+
+  } catch (err) {
     document.getElementById('progress-area').insertAdjacentHTML('beforeend',
-      `<div class="alert alert-danger" style="margin-top:10px">Errore: ${err.message}</div>`);
+      `<div class="alert alert-danger" style="margin-top:10px">Errore: ${err.message}</div>`
+    );
   }
-  btn.disabled=false;btn.innerHTML='Rigenera analisi';
+
+  btn.disabled = false;
+  btn.innerHTML = 'Rigenera analisi';
+  document.getElementById('timer-note').style.display = 'none';
 }
 
-function fmt(n,d=2){if(!n&&n!==0)return'—';return Number(n).toLocaleString('it-IT',{minimumFractionDigits:d,maximumFractionDigits:d});}
-function signColor(n){return n>0?'up':n<0?'dn':'neutral';}
-function signalBadge(s){
-  if(!s)return'<span class="badge badge-gray">—</span>';
-  const sl=s.toLowerCase();
-  if(sl.includes('bull'))return`<span class="badge badge-green">${s}</span>`;
-  if(sl.includes('bear'))return`<span class="badge badge-red">${s}</span>`;
-  return`<span class="badge badge-amber">${s}</span>`;
+// ─── RENDER ───────────────────────────────────────────────────────────────────
+function fmt(n, d = 2) {
+  if (!n && n !== 0) return '—';
+  return Number(n).toLocaleString('it-IT', { minimumFractionDigits: d, maximumFractionDigits: d });
 }
 
-function renderAll(cot,opt,news,fed,synth){
-  const bias=synth.bias||'—';
-  const bc=bias.toLowerCase().includes('long')?'up':bias.toLowerCase().includes('short')?'dn':'neutral';
-  document.getElementById('metric-cards').innerHTML=`
-    <div class="metric"><div class="metric-label">Bias</div><div class="metric-val ${bc}" style="font-size:15px">${bias}</div><div class="metric-sub">${(synth.biasReason||'').substring(0,35)}</div></div>
-    <div class="metric"><div class="metric-label">Settlement</div><div class="metric-val" style="font-size:15px">${fmt(opt.settlement,2)}</div><div class="metric-sub">Weekly options</div></div>
-    <div class="metric"><div class="metric-label">Resist. MM</div><div class="metric-val up" style="font-size:15px">${fmt(opt.resistance,2)}</div><div class="metric-sub">Market maker</div></div>
-    <div class="metric"><div class="metric-label">Supp. MM</div><div class="metric-val dn" style="font-size:15px">${fmt(opt.support,2)}</div><div class="metric-sub">Market maker</div></div>
-    <div class="metric"><div class="metric-label">Fed Rate</div><div class="metric-val" style="font-size:15px">${fed.currentRate||'—'}</div><div class="metric-sub">${fed.cutProbability||''}</div></div>
-    <div class="metric"><div class="metric-label">COT NQ</div><div class="metric-val" style="font-size:14px">${signalBadge(cot.nq?.signal)}</div><div class="metric-sub">Non-commercial</div></div>`;
+function signColor(n) { return n > 0 ? 'up' : n < 0 ? 'dn' : 'neutral'; }
 
-  const pw=document.getElementById('psych-warn-block');
-  pw.innerHTML=synth.psychWarnings?`<div class="alert alert-warn" style="margin-bottom:14px">⚠ ${synth.psychWarnings}</div>`:'';
+function signalBadge(s) {
+  if (!s) return '<span class="badge badge-gray">—</span>';
+  const sl = s.toLowerCase();
+  if (sl.includes('bull')) return `<span class="badge badge-green">${s}</span>`;
+  if (sl.includes('bear')) return `<span class="badge badge-red">${s}</span>`;
+  return `<span class="badge badge-amber">${s}</span>`;
+}
 
-  const sa=document.getElementById('scenarios-area');
-  sa.innerHTML=(synth.scenarios?.length)?synth.scenarios.map(s=>`
-    <div class="scenario-card">
-      <div class="scenario-header"><span class="scenario-name">${s.name||'Scenario'}</span><span class="badge badge-blue">${s.probability||''}</span></div>
-      <div class="scenario-desc">${s.description||''}</div>
-      <div class="scenario-levels">
-        <span><span class="lbl">Entry</span><span class="val">${s.entryZone||'—'}</span></span>
-        <span><span class="lbl">Target</span><span class="val up">${s.target||'—'}</span></span>
-        <span><span class="lbl">Stop</span><span class="val dn">${s.stop||'—'}</span></span>
-      </div>
-    </div>`).join(''):`<div class="alert alert-warn">Scenari non disponibili.</div>`;
+function renderAll(cot, opt, news, fed, synth) {
+  // ── Metriche panoramica
+  const bias = synth.bias || '—';
+  const bc = bias.toLowerCase().includes('long') ? 'up' : bias.toLowerCase().includes('short') ? 'dn' : 'neutral';
 
-  const kl=synth.keyLevels||{};
-  document.getElementById('key-levels-card').innerHTML=`
-    <div class="level-row"><span class="level-label">Resistenza 1</span><span class="level-val up">${kl.r1||'—'}</span></div>
-    <div class="level-row"><span class="level-label">Resistenza 2</span><span class="level-val up">${kl.r2||'—'}</span></div>
-    <div class="level-row"><span class="level-label">Pivot / Settlement</span><span class="level-val">${kl.pivot||fmt(opt.settlement,2)}</span></div>
-    <div class="level-row"><span class="level-label">Supporto 1</span><span class="level-val dn">${kl.s1||'—'}</span></div>
-    <div class="level-row"><span class="level-label">Supporto 2</span><span class="level-val dn">${kl.s2||'—'}</span></div>`;
+  document.getElementById('metric-cards').innerHTML = `
+    <div class="metric"><div class="metric-label">Bias</div><div class="metric-val ${bc}" style="font-size:15px">${bias}</div><div class="metric-sub">${(synth.biasReason || '').substring(0, 40)}</div></div>
+    <div class="metric"><div class="metric-label">Settlement</div><div class="metric-val" style="font-size:15px">${fmt(opt.settlement, 2)}</div><div class="metric-sub">Weekly options</div></div>
+    <div class="metric"><div class="metric-label">Resist. MM</div><div class="metric-val up" style="font-size:15px">${fmt(opt.resistance, 2)}</div><div class="metric-sub">Market maker</div></div>
+    <div class="metric"><div class="metric-label">Supp. MM</div><div class="metric-val dn" style="font-size:15px">${fmt(opt.support, 2)}</div><div class="metric-sub">Market maker</div></div>
+    <div class="metric"><div class="metric-label">Fed Rate</div><div class="metric-val" style="font-size:15px">${fed.currentRate || '—'}</div><div class="metric-sub">${fed.cutProbability || ''}</div></div>
+    <div class="metric"><div class="metric-label">COT NQ</div><div class="metric-val" style="font-size:14px">${signalBadge(cot.nq?.signal)}</div><div class="metric-sub">Non-Commercial</div></div>`;
 
-  document.getElementById('overview-result').style.display='block';
+  // ── Avviso psicologico
+  const pw = document.getElementById('psych-warn-block');
+  pw.innerHTML = synth.psychWarnings
+    ? `<div class="alert alert-warn" style="margin-bottom:14px">⚠ ${synth.psychWarnings}</div>`
+    : '';
 
-  // COT
-  const cotC=document.getElementById('cot-content');
-  if(cot.error){cotC.innerHTML=`<div class="alert alert-warn">${cot.error}</div>`;}
-  else{
-    const rc=(label,d)=>{
-      if(!d)return'';
-      const net=Number(d.nonCommercialNet)||0;
-      return`<div class="card">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-          <span class="card-title" style="margin:0">${label}</span>${signalBadge(d.signal)}
+  // ── Scenari
+  const sa = document.getElementById('scenarios-area');
+  sa.innerHTML = (synth.scenarios?.length)
+    ? synth.scenarios.map(s => `
+      <div class="scenario-card">
+        <div class="scenario-header">
+          <span class="scenario-name">${s.name || 'Scenario'}</span>
+          <span class="badge badge-blue">${s.probability || ''}</span>
         </div>
-        <div class="level-row"><span class="level-label">Non-commercial net</span><span class="level-val ${signColor(net)}">${net>0?'+':''}${net.toLocaleString('it-IT')}</span></div>
-        <div class="level-row"><span class="level-label">Commercial net</span><span class="level-val">${(d.commercialNet||0).toLocaleString('it-IT')}</span></div>
-        <div class="level-row"><span class="level-label">Variazione sett.</span><span class="level-val">${(d.weekChange||0).toLocaleString('it-IT')}</span></div>
-        <div class="level-row"><span class="level-label">Trend</span><span class="level-val" style="font-size:12px">${d.trend||'—'}</span></div>
-      </div>`;
+        <div class="scenario-desc">${s.description || ''}</div>
+        <div class="scenario-levels">
+          <span><span class="lbl">Entry</span><span class="val">${s.entryZone || '—'}</span></span>
+          <span><span class="lbl">Target</span><span class="val up">${s.target || '—'}</span></span>
+          <span><span class="lbl">Stop</span><span class="val dn">${s.stop || '—'}</span></span>
+        </div>
+      </div>`).join('')
+    : '<div class="alert alert-warn">Scenari non disponibili.</div>';
+
+  // ── Livelli chiave
+  const kl = synth.keyLevels || {};
+  document.getElementById('key-levels-card').innerHTML = `
+    <div class="level-row"><span class="level-label">Resistenza 2</span><span class="level-val up">${kl.r2 || '—'}</span></div>
+    <div class="level-row"><span class="level-label">Resistenza 1</span><span class="level-val up">${kl.r1 || '—'}</span></div>
+    <div class="level-row"><span class="level-label">Pivot / Settlement</span><span class="level-val">${kl.pivot || fmt(opt.settlement, 2)}</span></div>
+    <div class="level-row"><span class="level-label">Supporto 1</span><span class="level-val dn">${kl.s1 || '—'}</span></div>
+    <div class="level-row"><span class="level-label">Supporto 2</span><span class="level-val dn">${kl.s2 || '—'}</span></div>`;
+
+  document.getElementById('overview-result').style.display = 'block';
+
+  // ── TAB COT — con diciture Commercial / Non-Commercial / Non-Reportable
+  const cotC = document.getElementById('cot-content');
+  if (cot.error) {
+    cotC.innerHTML = `<div class="alert alert-warn">${cot.error}</div>`;
+  } else {
+    const renderCOT = (label, d) => {
+      if (!d) return '';
+      const nc = Number(d.nonCommercialNet) || 0;
+      const c  = Number(d.commercialNet) || 0;
+      const nr = Number(d.nonReportableNet) || 0;
+      return `
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+            <span class="card-title" style="margin:0">${label}</span>
+            ${signalBadge(d.signal)}
+          </div>
+          <div class="level-row">
+            <span class="level-label">Non-Commercial (speculatori)</span>
+            <span class="level-val ${signColor(nc)}">${nc > 0 ? '+' : ''}${nc.toLocaleString('it-IT')}</span>
+          </div>
+          <div class="level-row">
+            <span class="level-label">Commercial (hedgers)</span>
+            <span class="level-val ${signColor(c)}">${c > 0 ? '+' : ''}${c.toLocaleString('it-IT')}</span>
+          </div>
+          <div class="level-row">
+            <span class="level-label">Non-Reportable (retail)</span>
+            <span class="level-val ${signColor(nr)}">${nr > 0 ? '+' : ''}${nr.toLocaleString('it-IT')}</span>
+          </div>
+          <div class="level-row">
+            <span class="level-label">Variazione sett. (Non-Comm.)</span>
+            <span class="level-val ${signColor(d.weekChange)}">${(d.weekChange > 0 ? '+' : '') + (Number(d.weekChange) || 0).toLocaleString('it-IT')}</span>
+          </div>
+          <div class="level-row">
+            <span class="level-label">Trend</span>
+            <span class="level-val" style="font-size:11px;max-width:200px;text-align:right">${d.trend || '—'}</span>
+          </div>
+        </div>`;
     };
-    cotC.innerHTML=(cot.dataDate?`<div class="alert alert-info">Dati: ${cot.dataDate}</div>`:'')+rc('NQ — Nasdaq 100',cot.nq)+rc('ES — S&P 500',cot.es)+rc('YM — Dow Jones',cot.ym)+(cot.summary?`<div class="result-text">${cot.summary}</div>`:'');
+
+    cotC.innerHTML =
+      (cot.dataDate ? `<div class="alert alert-info">📅 Dati CFTC: ${cot.dataDate}</div>` : '') +
+      renderCOT('NQ — Nasdaq 100 Mini', cot.nq) +
+      renderCOT('ES — S&P 500 Consolidated', cot.es) +
+      renderCOT('YM — Dow Jones x$5', cot.ym) +
+      (cot.summary ? `<div class="sep"></div><div class="card-title" style="margin-bottom:6px">Lettura integrata</div><div class="result-text">${cot.summary}</div>` : '');
   }
 
-  // OPTIONS
-  const optC=document.getElementById('options-content');
-  if(opt.error){optC.innerHTML=`<div class="alert alert-warn">${opt.error}</div>`;}
-  else{
-    const sum=(Number(opt.callsSettle)||0)+(Number(opt.putsSettle)||0);
-    optC.innerHTML=`
-      ${opt.weeklyExpiry?`<div class="alert alert-info">Scadenza: ${opt.weeklyExpiry}</div>`:''}
+  // ── TAB OPZIONI
+  const optC = document.getElementById('options-content');
+  if (opt.error) {
+    optC.innerHTML = `<div class="alert alert-warn">${opt.error}</div>`;
+  } else {
+    const sum = (Number(opt.callsSettle) || 0) + (Number(opt.putsSettle) || 0);
+    optC.innerHTML = `
+      ${opt.weeklyExpiry ? `<div class="alert alert-info">Scadenza: ${opt.weeklyExpiry}</div>` : ''}
+      ${opt.dataNote ? `<div class="alert alert-warn" style="font-size:12px">${opt.dataNote}</div>` : ''}
       <div class="card">
         <div class="card-title">Calcolo livelli market maker</div>
-        <div class="level-row"><span class="level-label">Settlement</span><span class="level-val">${fmt(opt.settlement,2)}</span></div>
-        <div class="level-row"><span class="level-label">Strike più vicino</span><span class="level-val">${fmt(opt.nearestStrike,0)}</span></div>
-        <div class="level-row"><span class="level-label">Calls settle</span><span class="level-val">${fmt(opt.callsSettle,2)}</span></div>
-        <div class="level-row"><span class="level-label">Puts settle</span><span class="level-val">${fmt(opt.putsSettle,2)}</span></div>
-        <div class="level-row"><span class="level-label">Somma calls+puts</span><span class="level-val">${fmt(sum,2)}</span></div>
+        <div class="level-row"><span class="level-label">Settlement</span><span class="level-val">${fmt(opt.settlement, 2)}</span></div>
+        <div class="level-row"><span class="level-label">Strike più vicino</span><span class="level-val">${fmt(opt.nearestStrike, 0)}</span></div>
+        <div class="level-row"><span class="level-label">Calls settle</span><span class="level-val">${fmt(opt.callsSettle, 2)}</span></div>
+        <div class="level-row"><span class="level-label">Puts settle</span><span class="level-val">${fmt(opt.putsSettle, 2)}</span></div>
+        <div class="level-row"><span class="level-label">Somma calls + puts</span><span class="level-val">${fmt(sum, 2)}</span></div>
       </div>
       <div class="metric-grid">
-        <div class="metric"><div class="metric-label">Resistenza MM</div><div class="metric-val up">${fmt(opt.resistance,2)}</div></div>
-        <div class="metric"><div class="metric-label">Settlement</div><div class="metric-val">${fmt(opt.settlement,2)}</div></div>
-        <div class="metric"><div class="metric-label">Supporto MM</div><div class="metric-val dn">${fmt(opt.support,2)}</div></div>
+        <div class="metric"><div class="metric-label">Resistenza MM</div><div class="metric-val up">${fmt(opt.resistance, 2)}</div><div class="metric-sub">Settlement + calls + puts</div></div>
+        <div class="metric"><div class="metric-label">Settlement</div><div class="metric-val">${fmt(opt.settlement, 2)}</div></div>
+        <div class="metric"><div class="metric-label">Supporto MM</div><div class="metric-val dn">${fmt(opt.support, 2)}</div><div class="metric-sub">Settlement - calls - puts</div></div>
       </div>`;
   }
 
-  // NEWS
-  const newsC=document.getElementById('news-content');
-  if(news.error){newsC.innerHTML=`<div class="alert alert-warn">${news.error}</div>`;}
-  else{
-    const evH=(news.events||[]).map(ev=>`
+  // ── TAB NEWS
+  const newsC = document.getElementById('news-content');
+  if (news.error) {
+    newsC.innerHTML = `<div class="alert alert-warn">${news.error}</div>`;
+  } else {
+    const evH = (news.events || []).map(ev => `
       <div class="news-card">
-        <div class="news-header"><span class="news-name">${ev.name||''}</span>
-          <div style="display:flex;gap:6px;align-items:center;flex-shrink:0"><span class="badge badge-red">★★★</span><span style="font-size:12px;color:var(--text2)">${ev.time||''}</span></div>
+        <div class="news-header">
+          <span class="news-name">${ev.name || ''}</span>
+          <div style="display:flex;gap:6px;align-items:center;flex-shrink:0">
+            <span class="badge badge-red">★★★</span>
+            <span style="font-size:12px;color:var(--text2)">${ev.time || ''} CET</span>
+          </div>
         </div>
         <div class="news-values">
-          <span><span class="lbl">Prec.</span><span class="val">${ev.previous||'—'}</span></span>
-          <span><span class="lbl">Prev.</span><span class="val">${ev.forecast||'—'}</span></span>
-          <span><span class="lbl">Attuale</span><span class="val ${ev.actual?'up':''}">${ev.actual||'—'}</span></span>
+          <span><span class="lbl">Prec.</span><span class="val">${ev.previous || '—'}</span></span>
+          <span><span class="lbl">Prev.</span><span class="val">${ev.forecast || '—'}</span></span>
+          <span><span class="lbl">Attuale</span><span class="val ${ev.actual ? 'up' : ''}">${ev.actual || '—'}</span></span>
         </div>
-        ${ev.analysis?`<div class="result-text" style="margin-bottom:8px">${ev.analysis}</div>`:''}
-        ${ev.scenarios?`<div class="news-scenarios">
-          <div><span class="slbl">Migliore →</span><span style="color:var(--green)">${ev.scenarios.better||'—'}</span></div>
-          <div><span class="slbl">Peggiore →</span><span style="color:var(--red)">${ev.scenarios.worse||'—'}</span></div>
-          <div><span class="slbl">In linea →</span><span>${ev.scenarios.inline||'—'}</span></div>
-        </div>`:''}
+        ${ev.analysis ? `<div class="result-text" style="margin-bottom:8px">${ev.analysis}</div>` : ''}
+        ${ev.scenarios ? `
+          <div class="news-scenarios">
+            <div><span class="slbl">Migliore →</span><span style="color:var(--green)">${ev.scenarios.better || '—'}</span></div>
+            <div><span class="slbl">Peggiore →</span><span style="color:var(--red)">${ev.scenarios.worse || '—'}</span></div>
+            <div><span class="slbl">In linea →</span><span>${ev.scenarios.inline || '—'}</span></div>
+          </div>` : ''}
       </div>`).join('');
-    newsC.innerHTML=(evH||'<div class="alert alert-info">Nessun evento ad alto impatto oggi.</div>')+(news.generalMacroContext?`<div class="sep"></div><div class="card-title" style="margin-bottom:8px">Contesto macro</div><div class="result-text">${news.generalMacroContext}</div>`:'');
+
+    newsC.innerHTML =
+      (evH || '<div class="alert alert-info">Nessun evento 3 stelle oggi.</div>') +
+      (news.generalMacroContext
+        ? `<div class="sep"></div><div class="card-title" style="margin-bottom:8px">Contesto macro</div><div class="result-text">${news.generalMacroContext}</div>`
+        : '');
   }
 
-  // FED
-  const fedC=document.getElementById('fed-content');
-  if(fed.error){fedC.innerHTML=`<div class="alert alert-warn">${fed.error}</div>`;}
-  else{
-    fedC.innerHTML=`
+  // ── TAB FED
+  const fedC = document.getElementById('fed-content');
+  if (fed.error) {
+    fedC.innerHTML = `<div class="alert alert-warn">${fed.error}</div>`;
+  } else {
+    fedC.innerHTML = `
       <div class="metric-grid">
-        <div class="metric"><div class="metric-label">Fed Funds</div><div class="metric-val">${fed.currentRate||'—'}</div></div>
-        <div class="metric"><div class="metric-label">CPI</div><div class="metric-val">${fed.cpi||'—'}</div></div>
-        <div class="metric"><div class="metric-label">PCE</div><div class="metric-val">${fed.pce||'—'}</div></div>
-        <div class="metric"><div class="metric-label">Disoccupaz.</div><div class="metric-val">${fed.unemployment||'—'}</div></div>
+        <div class="metric"><div class="metric-label">Fed Funds</div><div class="metric-val">${fed.currentRate || '—'}</div></div>
+        <div class="metric"><div class="metric-label">CPI</div><div class="metric-val">${fed.cpi || '—'}</div></div>
+        <div class="metric"><div class="metric-label">PCE Core</div><div class="metric-val">${fed.pce || '—'}</div></div>
+        <div class="metric"><div class="metric-label">Disoccupaz.</div><div class="metric-val">${fed.unemployment || '—'}</div></div>
       </div>
       <div class="card">
-        <div class="level-row"><span class="level-label">Prossima FOMC</span><span class="level-val" style="font-size:12px">${fed.nextMeeting||'—'}</span></div>
-        <div class="level-row"><span class="level-label">Prob. taglio</span><span class="level-val">${fed.cutProbability||'—'}</span></div>
-        <div class="level-row"><span class="level-label">Stance</span><span class="level-val" style="font-size:12px">${fed.fedStance||'—'}</span></div>
+        <div class="level-row"><span class="level-label">Prossima FOMC</span><span class="level-val" style="font-size:12px">${fed.nextMeeting || '—'}</span></div>
+        <div class="level-row"><span class="level-label">Prob. taglio</span><span class="level-val">${fed.cutProbability || '—'}</span></div>
+        <div class="level-row"><span class="level-label">Stance</span><span class="level-val" style="font-size:11px">${fed.fedStance || '—'}</span></div>
       </div>
-      ${fed.outlookNQ?`<div class="card-title" style="margin-bottom:6px">Impatto su NQ</div><div class="result-text" style="margin-bottom:12px">${fed.outlookNQ}</div>`:''}
-      ${fed.keyRisks?`<div class="card-title" style="margin-bottom:6px">Rischi chiave</div><div class="result-text" style="margin-bottom:12px">${fed.keyRisks}</div>`:''}
-      ${fed.summary?`<div class="card-title" style="margin-bottom:6px">Sintesi</div><div class="result-text">${fed.summary}</div>`:''}`;
+      ${fed.outlookNQ ? `<div class="card-title" style="margin-bottom:6px">Impatto su NQ</div><div class="result-text" style="margin-bottom:12px">${fed.outlookNQ}</div>` : ''}
+      ${fed.keyRisks ? `<div class="card-title" style="margin-bottom:6px">Rischi chiave</div><div class="result-text" style="margin-bottom:12px">${fed.keyRisks}</div>` : ''}
+      ${fed.summary ? `<div class="card-title" style="margin-bottom:6px">Sintesi</div><div class="result-text">${fed.summary}</div>` : ''}`;
   }
 }
 </script>
