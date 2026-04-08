@@ -3,641 +3,755 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pre-Trading NQ — Analisi Giornaliera</title>
+<title>Pre-Trading NQ Nasdaq</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#0f0f0f;--bg2:#1a1a1a;--bg3:#242424;--bg4:#2e2e2e;--text:#f0f0f0;--text2:#a0a0a0;--text3:#666;--border:#2e2e2e;--border2:#3a3a3a;--green:#22c55e;--red:#ef4444;--blue:#3b82f6;--amber:#f59e0b;--radius:10px;--radius-sm:6px}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6;min-height:100vh}
-.header{padding:18px 24px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--bg);z-index:100}
-.header h1{font-size:18px;font-weight:600}
-.header h1 span{color:var(--text2);font-weight:400}
-.date-badge{font-size:12px;background:var(--bg3);border:1px solid var(--border2);border-radius:20px;padding:4px 12px;color:var(--text2)}
-.status-dot{width:8px;height:8px;border-radius:50%;background:var(--border2);margin-left:8px}
-.status-dot.ready{background:var(--green)}
-.nav{display:flex;border-bottom:1px solid var(--border);padding:0 24px;overflow-x:auto;background:var(--bg)}
+:root{
+  --bg:#0a0a0a;--bg2:#141414;--bg3:#1c1c1c;--bg4:#252525;--bg5:#2e2e2e;
+  --text:#f0f0f0;--text2:#909090;--text3:#505050;
+  --border:#222;--border2:#2e2e2e;
+  --green:#22c55e;--gd:rgba(34,197,94,0.1);--gb:rgba(34,197,94,0.2);
+  --red:#ef4444;--rd:rgba(239,68,68,0.1);--rb:rgba(239,68,68,0.2);
+  --blue:#3b82f6;--bd:rgba(59,130,246,0.1);--bb:rgba(59,130,246,0.2);
+  --amber:#f59e0b;--ad:rgba(245,158,11,0.1);--ab:rgba(245,158,11,0.2);
+  --r:8px;--rsm:5px;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);font-size:13px;line-height:1.6;min-height:100vh}
+.hdr{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:14px 22px;background:var(--bg);border-bottom:1px solid var(--border)}
+.hdr-t{font-size:17px;font-weight:700}.hdr-t span{color:var(--text2);font-weight:400}
+.hdr-r{display:flex;align-items:center;gap:10px}
+.dpill{font-size:11px;padding:3px 10px;background:var(--bg3);border:1px solid var(--border2);border-radius:20px;color:var(--text2)}
+.sdot{width:8px;height:8px;border-radius:50%;background:var(--bg5);transition:background .3s}
+.sdot.ok{background:var(--green)}.sdot.err{background:var(--red)}.sdot.run{background:var(--amber);animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.nav{display:flex;padding:0 22px;border-bottom:1px solid var(--border);overflow-x:auto;background:var(--bg)}
 .nav::-webkit-scrollbar{display:none}
-.nav-btn{padding:10px 16px;font-size:13px;font-weight:500;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;color:var(--text2);white-space:nowrap;transition:all 0.15s}
-.nav-btn:hover{color:var(--text)}
-.nav-btn.active{color:var(--text);border-bottom-color:var(--text)}
-.content{padding:20px 24px;max-width:860px;margin:0 auto}
-.tab-content{display:none}
-.tab-content.active{display:block}
-.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;margin-bottom:14px}
-.card-sm{background:var(--bg3);border-radius:var(--radius-sm);padding:10px 14px;margin-bottom:8px}
-.card-title{font-size:13px;font-weight:600;margin-bottom:10px}
-.section-title{font-size:15px;font-weight:600;margin-bottom:4px}
-.section-sub{font-size:12px;color:var(--text2);margin-bottom:14px}
-.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:14px}
-.metric{background:var(--bg3);border-radius:var(--radius-sm);padding:12px 14px}
-.metric-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:4px}
-.metric-val{font-size:19px;font-weight:600}
-.metric-sub{font-size:11px;color:var(--text2);margin-top:2px}
-.btn-primary{width:100%;padding:13px;background:var(--text);color:var(--bg);border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:600;cursor:pointer;margin-bottom:14px;transition:opacity 0.15s}
-.btn-primary:hover{opacity:0.85}
-.btn-primary:disabled{opacity:0.3;cursor:not-allowed}
-.btn-secondary{width:100%;padding:11px;background:transparent;color:var(--text2);border:1px solid var(--border2);border-radius:var(--radius-sm);font-size:13px;font-weight:500;cursor:pointer;transition:all 0.15s}
-.btn-secondary:hover{color:var(--text);border-color:var(--text2)}
-.spinner{display:inline-block;width:13px;height:13px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:spin 0.7s linear infinite;vertical-align:middle;margin-right:6px}
-@keyframes spin{to{transform:rotate(360deg)}}
-.badge{font-size:11px;padding:3px 8px;border-radius:20px;font-weight:500;display:inline-block}
-.badge-green{background:rgba(34,197,94,0.15);color:var(--green)}
-.badge-red{background:rgba(239,68,68,0.15);color:var(--red)}
-.badge-blue{background:rgba(59,130,246,0.15);color:var(--blue)}
-.badge-amber{background:rgba(245,158,11,0.15);color:var(--amber)}
-.badge-gray{background:var(--bg3);color:var(--text2)}
-.level-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px}
-.level-row:last-child{border-bottom:none}
-.level-label{color:var(--text2)}
-.level-val{font-weight:600;font-family:'SF Mono',Consolas,monospace;font-size:12px}
-.up{color:var(--green)}
-.dn{color:var(--red)}
-.neutral{color:var(--amber)}
-.alert{border-radius:var(--radius-sm);padding:10px 14px;font-size:13px;margin-bottom:14px;line-height:1.5}
-.alert-info{background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.2);color:#93c5fd}
-.alert-warn{background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);color:#fcd34d}
-.alert-success{background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.2);color:#86efac}
-.alert-danger{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);color:#fca5a5}
-.progress-wrap{margin-bottom:10px}
-.progress-label{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text2);margin-bottom:4px}
-.progress-label .dot{width:7px;height:7px;border-radius:50%;background:var(--border2);flex-shrink:0}
-.progress-label .dot.active{background:var(--blue)}
-.progress-label .dot.done{background:var(--green)}
-.progress-bar{height:3px;background:var(--bg4);border-radius:2px}
-.progress-fill{height:3px;border-radius:2px;background:var(--blue);transition:width 0.4s ease;width:0%}
-.progress-fill.done{background:var(--green)}
-.form-group{margin-bottom:12px}
-.form-label{font-size:12px;color:var(--text2);margin-bottom:5px;display:block}
-select,input[type=text]{width:100%;padding:8px 10px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius-sm);color:var(--text);font-size:13px;font-family:inherit;appearance:none}
+.nbtn{padding:10px 14px;font-size:12px;font-weight:500;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;color:var(--text2);white-space:nowrap;transition:all .15s}
+.nbtn:hover{color:var(--text)}.nbtn.active{color:var(--text);border-bottom-color:var(--text)}
+.content{max-width:860px;margin:0 auto;padding:18px 22px}
+.tab{display:none}.tab.active{display:block}
+.sh{font-size:15px;font-weight:700;margin-bottom:3px}
+.ssub{font-size:12px;color:var(--text2);margin-bottom:14px}
+.lbl{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.6px}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:14px 18px;margin-bottom:12px}
+.ctitle{font-size:13px;font-weight:600;margin-bottom:10px}
+.inset{background:var(--bg3);border-radius:var(--rsm);padding:10px 13px}
+.mg{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:8px;margin-bottom:12px}
+.mc{background:var(--bg3);border-radius:var(--rsm);padding:11px 13px}
+.mc .lbl{margin-bottom:4px}.mc .val{font-size:18px;font-weight:700;line-height:1.2}.mc .sub{font-size:10px;color:var(--text2);margin-top:2px}
+.badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600}
+.bg{background:var(--gd);color:var(--green)}.br{background:var(--rd);color:var(--red)}.bb{background:var(--bd);color:var(--blue)}.ba{background:var(--ad);color:var(--amber)}.bgr{background:var(--bg4);color:var(--text2)}
+.al{border-radius:var(--rsm);padding:10px 13px;font-size:12px;margin-bottom:12px;line-height:1.5}
+.ai{background:var(--bd);border:1px solid var(--bb);color:#93c5fd}.aw{background:var(--ad);border:1px solid var(--ab);color:#fcd34d}
+.as{background:var(--gd);border:1px solid var(--gb);color:#86efac}.ae{background:var(--rd);border:1px solid var(--rb);color:#fca5a5}
+.dr{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px}
+.dr:last-child{border-bottom:none}.dk{color:var(--text2)}.dv{font-weight:600;font-family:'SF Mono',Consolas,monospace;font-size:11.5px}
+.up{color:var(--green)}.dn{color:var(--red)}.neu{color:var(--amber)}.mu{color:var(--text2)}
+.fg{margin-bottom:10px}.fl{font-size:11px;color:var(--text2);margin-bottom:4px;display:block}
+select,input[type=text],input[type=number],input[type=password]{width:100%;padding:7px 10px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--rsm);color:var(--text);font-size:12px;font-family:inherit}
 select:focus,input:focus{outline:none;border-color:var(--text2)}
-input[type=password]{width:100%;padding:8px 10px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius-sm);color:var(--text);font-size:13px;font-family:inherit}
-textarea{width:100%;min-height:68px;padding:8px 10px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius-sm);color:var(--text);font-size:13px;font-family:inherit;resize:vertical;line-height:1.5}
-textarea:focus{outline:none;border-color:var(--text2)}
-.apikey-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;margin-bottom:16px}
-.apikey-wrap h3{font-size:14px;font-weight:600;margin-bottom:6px}
-.apikey-wrap p{font-size:12px;color:var(--text2);margin-bottom:10px}
-.apikey-input-row{display:flex;gap:8px}
-.apikey-input-row input{flex:1}
-.apikey-input-row button{padding:8px 14px;background:var(--bg4);border:1px solid var(--border2);border-radius:var(--radius-sm);color:var(--text);font-size:13px;cursor:pointer;white-space:nowrap}
-.result-text{font-size:13px;line-height:1.7;color:var(--text2);background:var(--bg3);border-radius:var(--radius-sm);padding:12px 14px;border-left:2px solid var(--border2)}
-.scenario-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:14px 18px;margin-bottom:10px}
-.scenario-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-.scenario-name{font-weight:600;font-size:14px}
-.scenario-desc{font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:10px}
-.scenario-levels{display:flex;gap:16px;font-size:12px}
-.scenario-levels span{display:flex;flex-direction:column;gap:2px}
-.scenario-levels .lbl{color:var(--text3)}
-.scenario-levels .val{font-weight:600;font-family:monospace}
-.news-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:14px 18px;margin-bottom:10px}
-.news-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;gap:10px}
-.news-name{font-weight:600;font-size:14px}
-.news-values{display:flex;gap:12px;font-size:12px;margin-bottom:8px;flex-wrap:wrap}
-.news-values span{display:flex;flex-direction:column;gap:1px}
-.news-values .lbl{color:var(--text3)}
-.news-values .val{font-weight:600}
-.news-scenarios{font-size:12px;background:var(--bg3);border-radius:var(--radius-sm);padding:8px 12px;display:flex;flex-direction:column;gap:4px}
-.news-scenarios div{display:flex;gap:6px}
-.news-scenarios .slbl{min-width:90px;color:var(--text3)}
+textarea{width:100%;min-height:58px;padding:7px 10px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--rsm);color:var(--text);font-size:12px;font-family:inherit;resize:vertical}
+.btnp{width:100%;padding:12px;background:var(--text);color:var(--bg);border:none;border-radius:var(--rsm);font-size:14px;font-weight:700;cursor:pointer;margin-bottom:10px;transition:opacity .15s}
+.btnp:hover{opacity:.88}.btnp:disabled{opacity:.3;cursor:not-allowed}
+.btns{width:100%;padding:9px;background:transparent;color:var(--text2);border:1px solid var(--border2);border-radius:var(--rsm);font-size:12px;font-weight:500;cursor:pointer;transition:all .15s}
+.btns:hover{color:var(--text);border-color:var(--text2)}
+.spin{display:inline-block;width:12px;height:12px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:rot .7s linear infinite;vertical-align:middle;margin-right:5px}
+@keyframes rot{to{transform:rotate(360deg)}}
+.pw{margin-bottom:8px}.pr{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--text2);margin-bottom:3px}
+.pd{width:6px;height:6px;border-radius:50%;background:var(--bg5);flex-shrink:0}.pd.run{background:var(--blue)}.pd.ok{background:var(--green)}
+.pbar{height:2px;background:var(--bg5);border-radius:2px}.pfill{height:2px;border-radius:2px;background:var(--blue);width:0;transition:width .5s ease}.pfill.ok{background:var(--green)}
+.og3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.lvlb{border-radius:var(--rsm);padding:12px;text-align:center}
+.lvlr{background:var(--rd);border:1px solid var(--rb)}.lvln{background:var(--bg3);border:1px solid var(--border2)}.lvls{background:var(--gd);border:1px solid var(--gb)}
+.lvll{font-size:10px;text-transform:uppercase;letter-spacing:.6px;margin-bottom:4px}
+.lvlr .lvll{color:var(--red)}.lvln .lvll{color:var(--text2)}.lvls .lvll{color:var(--green)}
+.lvlv{font-size:22px;font-weight:700;font-family:'SF Mono',monospace}
+.lvlr .lvlv{color:var(--red)}.lvls .lvlv{color:var(--green)}
+.cg3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.ci{background:var(--bg3);border-radius:var(--rsm);padding:12px}
+.cin{font-size:11px;color:var(--text2);margin-bottom:6px}.civ{font-size:22px;font-weight:700;line-height:1.1;margin-bottom:2px}.cis{font-size:10px;color:var(--text3)}
+.cot-nav{display:flex;gap:4px;margin-bottom:12px;flex-wrap:wrap}
+.ctab{padding:4px 12px;font-size:11px;font-weight:500;background:var(--bg3);border:1px solid var(--border2);border-radius:20px;cursor:pointer;color:var(--text2);transition:all .15s}
+.ctab.active{background:var(--bg4);color:var(--text);border-color:var(--text2)}
+.cpanel{display:none}.cpanel.active{display:block}
+.nc{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:14px 18px;margin-bottom:10px}
+.nh{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;gap:10px}
+.nn{font-size:14px;font-weight:700}.nt{font-size:11px;color:var(--text2);margin-top:2px}
+.dtbl{width:100%;border-collapse:collapse;margin-bottom:10px}
+.dtbl th{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.4px;text-align:left;padding:4px 8px;border-bottom:1px solid var(--border)}
+.dtbl td{font-size:12px;font-weight:600;padding:6px 8px;border-bottom:1px solid var(--border)}
+.dtbl tr:last-child td{border-bottom:none}
+.sg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.sb{border-radius:var(--rsm);padding:10px}
+.sbull{background:rgba(34,197,94,.07);border:1px solid rgba(34,197,94,.2)}.sbear{background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.2)}.sneu{background:var(--bg3);border:1px solid var(--border2)}
+.sl{font-size:10px;font-weight:700;margin-bottom:5px}.sbull .sl{color:var(--green)}.sbear .sl{color:var(--red)}.sneu .sl{color:var(--amber)}
+.st{font-size:11px;color:var(--text2);line-height:1.5}
+.wc{border:1px solid var(--border);border-radius:var(--r);padding:13px 16px;margin-bottom:8px;background:var(--bg2)}
+.wd{font-size:11px;font-weight:600;color:var(--amber);margin-bottom:5px}.wn{font-size:13px;font-weight:600;margin-bottom:3px}.wt{font-size:11px;color:var(--text2);margin-bottom:6px}.wdesc{font-size:11px;color:var(--text2);line-height:1.5}
+.fitbl{width:100%;border-collapse:collapse;margin-bottom:14px}
+.fitbl th{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.4px;text-align:left;padding:6px 8px;border-bottom:1px solid var(--border)}
+.fitbl td{font-size:12px;padding:7px 8px;border-bottom:1px solid var(--border);vertical-align:top}
+.fitbl tr:last-child td{border-bottom:none}
+.tup{color:var(--red)}.tdn{color:var(--green)}.tneu{color:var(--amber)}
+.so{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:14px 18px;margin-bottom:10px}
+.soh{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.son{font-size:14px;font-weight:700}.sod{font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:8px}.sotr{font-size:11px;color:var(--text3);font-style:italic;margin-bottom:10px}
+.sols{display:flex;gap:12px;flex-wrap:wrap}.sli{display:flex;flex-direction:column;gap:2px}.sli .lbl{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.4px}.sli .v{font-size:12px;font-weight:700;font-family:'SF Mono',monospace}
+.psyl{list-style:none;counter-reset:pc}.psyl li{padding:8px 12px;margin-bottom:6px;background:var(--ad);border-left:3px solid var(--amber);border-radius:0 var(--rsm) var(--rsm) 0;font-size:12px;color:#fcd34d;line-height:1.5;counter-increment:pc}
+.psyl li::before{content:counter(pc)". ";font-weight:700}
 .sep{height:1px;background:var(--border);margin:16px 0}
-.timer-note{font-size:11px;color:var(--text3);text-align:center;margin-top:6px}
-@media(max-width:600px){.content{padding:14px 16px}.nav{padding:0 16px}.metric-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.content{padding:14px 16px}.nav{padding:0 16px}.cg3,.og3{grid-template-columns:1fr}.sg{grid-template-columns:1fr}.sols{flex-direction:column}}
 </style>
 </head>
 <body>
-<div class="header">
-  <h1>Pre-Trading <span>NQ Nasdaq</span></h1>
-  <div style="display:flex;align-items:center">
-    <span class="date-badge" id="header-date">—</span>
-    <div class="status-dot" id="status-dot"></div>
+
+<div class="hdr">
+  <div class="hdr-t">Pre-Trading <span>NQ Nasdaq</span></div>
+  <div class="hdr-r">
+    <span class="dpill" id="hdr-date">—</span>
+    <div class="sdot" id="sdot"></div>
   </div>
 </div>
+
 <nav class="nav">
-  <button class="nav-btn active" onclick="switchTab('overview',this)">Panoramica</button>
-  <button class="nav-btn" onclick="switchTab('cot',this)">COT</button>
-  <button class="nav-btn" onclick="switchTab('options',this)">Opzioni</button>
-  <button class="nav-btn" onclick="switchTab('news',this)">News</button>
-  <button class="nav-btn" onclick="switchTab('fed',this)">FED</button>
-  <button class="nav-btn" onclick="switchTab('psychology',this)">Psicologia</button>
-  <button class="nav-btn" onclick="switchTab('settings',this)">Impostazioni</button>
+  <button class="nbtn active" onclick="tab('panoramica',this)">Panoramica</button>
+  <button class="nbtn" onclick="tab('cot',this)">COT</button>
+  <button class="nbtn" onclick="tab('opzioni',this)">Opzioni</button>
+  <button class="nbtn" onclick="tab('news',this)">News</button>
+  <button class="nbtn" onclick="tab('fed',this)">FED</button>
+  <button class="nbtn" onclick="tab('psicologia',this)">Psicologia</button>
+  <button class="nbtn" onclick="tab('settings',this)">Impostazioni</button>
 </nav>
+
 <div class="content">
 
 <!-- PANORAMICA -->
-<div class="tab-content active" id="tab-overview">
-  <div id="apikey-banner" class="apikey-wrap" style="display:none">
-    <h3>Configura API Key Anthropic</h3>
-    <p>Inserisci la tua API key. Viene salvata solo nel tuo browser.</p>
-    <div class="apikey-input-row">
-      <input type="password" id="apikey-input" placeholder="sk-ant-...">
-      <button onclick="saveApiKey()">Salva</button>
+<div class="tab active" id="t-panoramica">
+  <div id="apibanner" class="card" style="display:none">
+    <div class="ctitle">Configura API Key Anthropic</div>
+    <p style="font-size:12px;color:var(--text2);margin-bottom:10px">Inserisci la tua API key. Salvata solo nel browser.</p>
+    <div style="display:flex;gap:8px">
+      <input type="password" id="apiin" placeholder="sk-ant-...">
+      <button onclick="saveKey()" style="padding:7px 14px;background:var(--bg4);border:1px solid var(--border2);border-radius:var(--rsm);color:var(--text);cursor:pointer;font-size:12px;white-space:nowrap">Salva</button>
     </div>
   </div>
-  <div class="section-title">Genera report di oggi</div>
-  <p class="section-sub">L'AI raccoglie COT, livelli opzionari CME, news macro e scenario FED.</p>
-  <div class="form-group">
-    <label class="form-label">Bias personale iniziale</label>
-    <select id="bias-select">
-      <option value="">Seleziona bias...</option>
-      <option>Long to short</option>
-      <option>Short to long</option>
-      <option>Long bias</option>
-      <option>Short bias</option>
-      <option>Neutro / range</option>
-    </select>
+
+  <div class="card">
+    <div class="ctitle">Livelli Opzionari CME — NQ (inserisci manualmente)</div>
+    <p style="font-size:11px;color:var(--text2);margin-bottom:10px">Settlement + Calls + Puts = Resistenza &nbsp;|&nbsp; Settlement − Calls − Puts = Supporto</p>
+    <div class="og3">
+      <div class="fg"><label class="fl">Settlement NQ</label><input type="number" id="inp-s" placeholder="es. 19350" step="0.25" oninput="calcOpt()"></div>
+      <div class="fg"><label class="fl">Calls Settle</label><input type="number" id="inp-c" placeholder="es. 118" step="0.25" oninput="calcOpt()"></div>
+      <div class="fg"><label class="fl">Puts Settle</label><input type="number" id="inp-p" placeholder="es. 120" step="0.25" oninput="calcOpt()"></div>
+    </div>
+    <div class="og3" id="opt-mini">
+      <div class="lvlb lvlr"><div class="lvll">Resistenza MM</div><div class="lvlv" id="rm">—</div></div>
+      <div class="lvlb lvln"><div class="lvll">Settlement</div><div class="lvlv" id="sm" style="color:var(--text)">—</div></div>
+      <div class="lvlb lvls"><div class="lvll">Supporto MM</div><div class="lvlv" id="supm">—</div></div>
+    </div>
   </div>
-  <button class="btn-primary" id="gen-btn" onclick="generateReport()">Genera analisi pre-trading completa</button>
-  <div class="timer-note" id="timer-note" style="display:none">⏱ Generazione in corso — circa 60–90 secondi</div>
-  <div id="progress-area" style="display:none;margin-bottom:14px">
-    <div class="progress-wrap"><div class="progress-label"><div class="dot" id="d1"></div>1 — COT istituzionali (NQ, ES, YM)</div><div class="progress-bar"><div class="progress-fill" id="p1"></div></div></div>
-    <div class="progress-wrap"><div class="progress-label"><div class="dot" id="d2"></div>2 — Livelli opzionari CME</div><div class="progress-bar"><div class="progress-fill" id="p2"></div></div></div>
-    <div class="progress-wrap"><div class="progress-label"><div class="dot" id="d3"></div>3 — News macro US</div><div class="progress-bar"><div class="progress-fill" id="p3"></div></div></div>
-    <div class="progress-wrap"><div class="progress-label"><div class="dot" id="d4"></div>4 — Scenario FED</div><div class="progress-bar"><div class="progress-fill" id="p4"></div></div></div>
-    <div class="progress-wrap"><div class="progress-label"><div class="dot" id="d5"></div>5 — Sintesi e scenari</div><div class="progress-bar"><div class="progress-fill" id="p5"></div></div></div>
+
+  <div class="card">
+    <div class="ctitle">Stato Pre-Trading</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div class="fg"><label class="fl">Bias personale iniziale</label>
+        <select id="bias"><option value="">Seleziona...</option><option>Long bias</option><option>Short bias</option><option>Long to short</option><option>Short to long</option><option>Neutro / range</option></select>
+      </div>
+      <div class="fg"><label class="fl">Sessione ieri</label>
+        <select id="yr"><option value="">—</option><option>Positiva</option><option>Negativa</option><option>Break even</option><option>Non ho tradato</option></select>
+      </div>
+      <div class="fg"><label class="fl">Stato emotivo oggi</label>
+        <select id="ms"><option>Concentrato e sereno</option><option>Un po' ansioso</option><option>Overconfident</option><option>Revenge trading mode</option><option>Stanco / distratto</option></select>
+      </div>
+      <div class="fg"><label class="fl">Andamento settimana</label>
+        <select id="ws"><option>Settimana positiva</option><option>Settimana negativa</option><option>Neutro</option><option>Primo giorno settimana</option><option>Drawdown prolungato</option></select>
+      </div>
+    </div>
+    <div class="fg"><label class="fl">Note tecniche ieri (livelli, struttura, POC)</label><textarea id="yt" placeholder="VAH, VAL, gap aperti, livelli chiave ieri..."></textarea></div>
+    <div class="fg"><label class="fl">Note mentali ieri (trade mancati, errori)</label><textarea id="ym" placeholder="Osservazioni psicologiche..."></textarea></div>
   </div>
-  <div id="overview-result" style="display:none">
+
+  <button class="btnp" id="gbtn" onclick="generate()">Genera analisi pre-trading completa</button>
+  <div style="font-size:11px;color:var(--text3);text-align:center;margin-bottom:12px;display:none" id="tnote">⏱ Generazione in corso — circa 70–90 secondi. Non chiudere la pagina.</div>
+
+  <div id="parea" style="display:none;margin-bottom:14px">
+    <div class="pw"><div class="pr"><div class="pd" id="d1"></div>1 — COT istituzionali (NQ · ES · YM)</div><div class="pbar"><div class="pfill" id="p1"></div></div></div>
+    <div class="pw"><div class="pr"><div class="pd" id="d2"></div>2 — Livelli opzionari CME</div><div class="pbar"><div class="pfill" id="p2"></div></div></div>
+    <div class="pw"><div class="pr"><div class="pd" id="d3"></div>3 — News macro US + Radar settimana</div><div class="pbar"><div class="pfill" id="p3"></div></div></div>
+    <div class="pw"><div class="pr"><div class="pd" id="d4"></div>4 — Scenario FED</div><div class="pbar"><div class="pfill" id="p4"></div></div></div>
+    <div class="pw"><div class="pr"><div class="pd" id="d5"></div>5 — Sintesi operativa</div><div class="pbar"><div class="pfill" id="p5"></div></div></div>
+  </div>
+
+  <div id="ovres" style="display:none">
     <div class="sep"></div>
-    <div class="section-title" style="margin-bottom:12px">Sintesi sessione</div>
-    <div class="metric-grid" id="metric-cards"></div>
-    <div id="psych-warn-block"></div>
+    <div class="mg" id="ovmet"></div>
+    <div id="ovpsych"></div>
+    <div id="ovbias"></div>
     <div class="sep"></div>
-    <div class="section-title" style="margin-bottom:4px">Scenari operativi</div>
-    <p class="section-sub">Livelli chiave e piani d'azione</p>
-    <div id="scenarios-area"></div>
+    <div class="sh" style="margin-bottom:4px">3 Scenari Probabilistici</div>
+    <div class="ssub">Livelli operativi e trigger di attivazione</div>
+    <div id="ovscen"></div>
     <div class="sep"></div>
-    <div class="section-title" style="margin-bottom:10px">Livelli chiave</div>
-    <div class="card" id="key-levels-card"></div>
+    <div class="sh" style="margin-bottom:10px">Livelli Chiave</div>
+    <div class="card">
+      <div style="position:relative;height:200px"><canvas id="lvchart"></canvas></div>
+      <div id="lvlist" style="margin-top:10px"></div>
+    </div>
+    <div class="al ai" style="font-size:11px;margin-top:6px">⚠ Report a scopo informativo. Dati COT CFTC aggiornati settimanalmente. Verifica prezzi live su DeepCharts prima di operare.</div>
   </div>
 </div>
 
 <!-- COT -->
-<div class="tab-content" id="tab-cot">
-  <div class="section-title">Posizionamento COT istituzionali</div>
-  <p class="section-sub">Non-commercial vs Commercial vs Non-Reportable. NQ / ES / YM.</p>
-  <div id="cot-content"><div class="alert alert-info">Genera il report dalla tab Panoramica.</div></div>
+<div class="tab" id="t-cot">
+  <div class="sh">COT — Commitment of Traders</div>
+  <div class="ssub">Non-Commercial vs Commercial · NQ / ES / YM · fonte CFTC.gov</div>
+  <div id="cotc"><div class="al ai">Genera il report dalla tab Panoramica.</div></div>
 </div>
 
 <!-- OPZIONI -->
-<div class="tab-content" id="tab-options">
-  <div class="section-title">Livelli opzionari CME — NQ</div>
-  <p class="section-sub">Settlement weekly, resistenza e supporto market maker.</p>
-  <div id="options-content"><div class="alert alert-info">Genera il report dalla tab Panoramica.</div></div>
+<div class="tab" id="t-opzioni">
+  <div class="sh">Livelli Opzionari CME — NQ</div>
+  <div class="ssub">Inserisci i dati settimanali. Calcolo automatico di Resistenza e Supporto.</div>
+  <div class="card">
+    <div class="ctitle">Dati settimana corrente</div>
+    <div class="og3">
+      <div class="fg"><label class="fl">Settlement NQ</label><input type="number" id="o-s" placeholder="es. 19350" step="0.25" oninput="syncOpt()"></div>
+      <div class="fg"><label class="fl">Calls Settle</label><input type="number" id="o-c" placeholder="es. 118" step="0.25" oninput="syncOpt()"></div>
+      <div class="fg"><label class="fl">Puts Settle</label><input type="number" id="o-p" placeholder="es. 120" step="0.25" oninput="syncOpt()"></div>
+    </div>
+  </div>
+  <div id="optdetail"><div class="al ai">Inserisci i valori sopra.</div></div>
 </div>
 
 <!-- NEWS -->
-<div class="tab-content" id="tab-news">
-  <div class="section-title">News macroeconomiche US</div>
-  <p class="section-sub">Solo eventi 3 stelle con analisi contestuale.</p>
-  <div id="news-content"><div class="alert alert-info">Genera il report dalla tab Panoramica.</div></div>
+<div class="tab" id="t-news">
+  <div class="sh">News Macro US</div>
+  <div class="ssub">Solo eventi ⭐⭐⭐ — oggi e radar settimana</div>
+  <div id="newsc"><div class="al ai">Genera il report dalla tab Panoramica.</div></div>
 </div>
 
 <!-- FED -->
-<div class="tab-content" id="tab-fed">
-  <div class="section-title">Scenario FED</div>
-  <p class="section-sub">Inflazione, occupazione, aspettative tassi.</p>
-  <div id="fed-content"><div class="alert alert-info">Genera il report dalla tab Panoramica.</div></div>
+<div class="tab" id="t-fed">
+  <div class="sh">Scenario FED</div>
+  <div class="ssub">Inflazione, occupazione, aspettative tassi</div>
+  <div id="fedc"><div class="al ai">Genera il report dalla tab Panoramica.</div></div>
 </div>
 
 <!-- PSICOLOGIA -->
-<div class="tab-content" id="tab-psychology">
-  <div class="section-title">Note psicologiche</div>
-  <p class="section-sub">Compilale prima di generare il report.</p>
+<div class="tab" id="t-psicologia">
+  <div class="sh">Note Psicologiche</div>
+  <div class="ssub">Compilale prima di generare per avvertenze personalizzate</div>
   <div class="card">
-    <div class="card-title">Sessione di ieri</div>
-    <div class="form-group"><label class="form-label">Risultato</label>
-      <select id="y-result"><option value="">—</option><option>Positiva</option><option>Negativa</option><option>Break even</option><option>Non ho tradato</option></select>
-    </div>
-    <div class="form-group"><label class="form-label">Note mentali</label><textarea id="y-mental" placeholder="Trade mancati, errori, osservazioni..."></textarea></div>
-    <div class="form-group"><label class="form-label">Note tecniche</label><textarea id="y-technical" placeholder="Livelli importanti, struttura..."></textarea></div>
+    <div class="ctitle">Sessione di ieri</div>
+    <div class="fg"><label class="fl">Risultato</label><select id="ps-yr"><option value="">—</option><option>Positiva</option><option>Negativa</option><option>Break even</option><option>Non ho tradato</option></select></div>
+    <div class="fg"><label class="fl">Note mentali</label><textarea id="ps-ym" placeholder="Trade mancati, errori, osservazioni..."></textarea></div>
+    <div class="fg"><label class="fl">Note tecniche</label><textarea id="ps-yt" placeholder="Livelli importanti, struttura..."></textarea></div>
   </div>
   <div class="card">
-    <div class="card-title">Stato mentale oggi</div>
-    <div class="form-group"><label class="form-label">Stato emotivo</label>
-      <select id="mental-state"><option>Concentrato e sereno</option><option>Un po' ansioso</option><option>Overconfident</option><option>Revenge trading mode</option><option>Stanco / distratto</option><option>Ottimale</option></select>
-    </div>
-    <div class="form-group"><label class="form-label">Andamento settimana</label>
-      <select id="week-state"><option>Settimana positiva</option><option>Settimana negativa</option><option>Neutro</option><option>Primo giorno settimana</option><option>Drawdown prolungato</option></select>
-    </div>
-    <div class="form-group"><label class="form-label">Note libere</label><textarea id="free-notes" placeholder="Qualsiasi cosa ritieni rilevante..."></textarea></div>
+    <div class="ctitle">Oggi</div>
+    <div class="fg"><label class="fl">Stato emotivo</label><select id="ps-ms"><option>Concentrato e sereno</option><option>Un po' ansioso</option><option>Overconfident</option><option>Revenge trading mode</option><option>Stanco / distratto</option></select></div>
+    <div class="fg"><label class="fl">Andamento settimana</label><select id="ps-ws"><option>Settimana positiva</option><option>Settimana negativa</option><option>Neutro</option><option>Primo giorno settimana</option><option>Drawdown prolungato</option></select></div>
+    <div class="fg"><label class="fl">Note libere</label><textarea id="ps-free" placeholder="Qualsiasi cosa ritieni rilevante..."></textarea></div>
   </div>
-  <button class="btn-secondary" onclick="savePsych()">Salva note</button>
-  <div id="psych-saved" style="display:none;text-align:center;font-size:12px;color:var(--green);margin-top:8px">Salvate ✓</div>
+  <button class="btns" onclick="savePsych()">Salva note psicologiche</button>
+  <div id="psaved" style="display:none;font-size:11px;color:var(--green);text-align:center;margin-top:6px">Salvate ✓</div>
 </div>
 
-<!-- IMPOSTAZIONI -->
-<div class="tab-content" id="tab-settings">
-  <div class="section-title">Impostazioni</div>
-  <p class="section-sub">Configurazione API.</p>
+<!-- SETTINGS -->
+<div class="tab" id="t-settings">
+  <div class="sh">Impostazioni</div>
+  <div class="ssub">Configurazione API</div>
   <div class="card">
-    <div class="card-title">API Key Anthropic</div>
-    <p style="font-size:12px;color:var(--text2);margin-bottom:10px">Salvata solo nel tuo browser (localStorage).</p>
-    <div class="form-group"><label class="form-label">API Key</label><input type="password" id="settings-apikey" placeholder="sk-ant-..."></div>
-    <button class="btn-secondary" onclick="saveApiKeyFromSettings()">Salva API Key</button>
-    <div id="settings-saved" style="display:none;font-size:12px;color:var(--green);margin-top:8px">Salvata ✓</div>
+    <div class="ctitle">API Key Anthropic</div>
+    <p style="font-size:11px;color:var(--text2);margin-bottom:10px">Salvata solo nel browser (localStorage).</p>
+    <div class="fg"><label class="fl">API Key</label><input type="password" id="set-ak" placeholder="sk-ant-..."></div>
+    <button class="btns" onclick="saveKeyS()">Salva</button>
+    <div id="sset" style="display:none;font-size:11px;color:var(--green);margin-top:6px">Salvata ✓</div>
   </div>
   <div class="card">
-    <div class="card-title">Info app</div>
-    <div class="level-row"><span class="level-label">Strumento</span><span class="level-val">NQ Nasdaq CFD</span></div>
-    <div class="level-row"><span class="level-label">Broker</span><span class="level-val">FP Markets / cTrader</span></div>
-    <div class="level-row"><span class="level-label">Analisi volume</span><span class="level-val">DeepCharts / DeepDOM</span></div>
-    <div class="level-row"><span class="level-label">Versione</span><span class="level-val">1.2.0</span></div>
+    <div class="ctitle">Info</div>
+    <div class="dr"><span class="dk">Strumento</span><span class="dv">NQ Nasdaq CFD</span></div>
+    <div class="dr"><span class="dk">Broker</span><span class="dv">FP Markets / cTrader</span></div>
+    <div class="dr"><span class="dk">Volume analysis</span><span class="dv">DeepCharts / DeepDOM</span></div>
+    <div class="dr"><span class="dk">Versione</span><span class="dv">2.1.0</span></div>
   </div>
 </div>
 
-</div>
+</div><!-- /content -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script>
-const today = new Date();
-const dayN = ['Domenica','Lunedì','Martedì','Mercoledì','Giovedì','Venerdì','Sabato'];
-const monN = ['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
-document.getElementById('header-date').textContent = `${dayN[today.getDay()]} ${today.getDate()} ${monN[today.getMonth()]} ${today.getFullYear()}`;
+// ── DATE SETUP ──
+const T=new Date();
+const DAYS=['Domenica','Lunedì','Martedì','Mercoledì','Giovedì','Venerdì','Sabato'];
+const MONS=['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
+const DS=`${DAYS[T.getDay()]} ${T.getDate()} ${MONS[T.getMonth()]} ${T.getFullYear()}`;
+const DS2=`${T.getDate().toString().padStart(2,'0')}/${(T.getMonth()+1).toString().padStart(2,'0')}/${T.getFullYear()}`;
+document.getElementById('hdr-date').textContent=DS;
+const fri=new Date(T);fri.setDate(T.getDate()+((5-T.getDay()+7)%7||7));
+const FRI=`${DAYS[fri.getDay()]} ${fri.getDate()} ${MONS[fri.getMonth()]}`;
+const tmr=new Date(T);tmr.setDate(T.getDate()+1);
+const TMR=`${DAYS[tmr.getDay()]} ${tmr.getDate()} ${MONS[tmr.getMonth()]}`;
 
-function switchTab(name, btn) {
-  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
-  document.getElementById('tab-' + name).classList.add('active');
-  if (btn) btn.classList.add('active');
+// ── STATE ──
+let ST={cot:{},news:{},fed:{},synth:{}};
+let OPT={s:0,c:0,p:0,r:0,sup:0};
+let lvChart=null;
+
+// ── TABS ──
+function tab(name,btn){
+  document.querySelectorAll('.tab').forEach(e=>e.classList.remove('active'));
+  document.querySelectorAll('.nbtn').forEach(e=>e.classList.remove('active'));
+  document.getElementById('t-'+name).classList.add('active');
+  if(btn)btn.classList.add('active');
 }
 
-function getApiKey() { return localStorage.getItem('pt_apikey') || ''; }
+// ── API KEY ──
+const getKey=()=>localStorage.getItem('pt_k')||'';
+function saveKey(){const k=document.getElementById('apiin').value.trim();if(k){localStorage.setItem('pt_k',k);document.getElementById('apibanner').style.display='none';}}
+function saveKeyS(){const k=document.getElementById('set-ak').value.trim();if(k){localStorage.setItem('pt_k',k);const el=document.getElementById('sset');el.style.display='block';setTimeout(()=>el.style.display='none',2000);}}
+window.addEventListener('load',()=>{const k=getKey();if(!k)document.getElementById('apibanner').style.display='block';else document.getElementById('set-ak').value=k;});
+function savePsych(){const el=document.getElementById('psaved');el.style.display='block';setTimeout(()=>el.style.display='none',2000);}
 
-function saveApiKey() {
-  const k = document.getElementById('apikey-input').value.trim();
-  if (!k) return;
-  localStorage.setItem('pt_apikey', k);
-  document.getElementById('apikey-banner').style.display = 'none';
+// ── OPTIONS ──
+function calcOpt(){
+  const s=parseFloat(document.getElementById('inp-s').value)||0;
+  const c=parseFloat(document.getElementById('inp-c').value)||0;
+  const p=parseFloat(document.getElementById('inp-p').value)||0;
+  OPT={s,c,p,r:s+c+p,sup:s-c-p};
+  const f=n=>n?n.toLocaleString('it-IT',{minimumFractionDigits:2,maximumFractionDigits:2}):'—';
+  document.getElementById('rm').textContent=f(OPT.r);
+  document.getElementById('sm').textContent=f(OPT.s);
+  document.getElementById('supm').textContent=f(OPT.sup);
+  document.getElementById('o-s').value=s||'';
+  document.getElementById('o-c').value=c||'';
+  document.getElementById('o-p').value=p||'';
+  renderOptDetail();
+}
+function syncOpt(){
+  document.getElementById('inp-s').value=document.getElementById('o-s').value;
+  document.getElementById('inp-c').value=document.getElementById('o-c').value;
+  document.getElementById('inp-p').value=document.getElementById('o-p').value;
+  calcOpt();
+}
+function renderOptDetail(){
+  const el=document.getElementById('optdetail');
+  if(!OPT.s){el.innerHTML='<div class="al ai">Inserisci i valori sopra.</div>';return;}
+  const f=n=>n.toLocaleString('it-IT',{minimumFractionDigits:2,maximumFractionDigits:2});
+  el.innerHTML=`
+    <div class="og3" style="margin-bottom:14px">
+      <div class="lvlb lvlr"><div class="lvll">RESISTENZA MM</div><div class="lvlv">${f(OPT.r)}</div><div style="font-size:10px;color:var(--red);margin-top:3px">${f(OPT.s)} + ${f(OPT.c)} + ${f(OPT.p)}</div></div>
+      <div class="lvlb lvln"><div class="lvll">SETTLEMENT</div><div class="lvlv" style="color:var(--text)">${f(OPT.s)}</div></div>
+      <div class="lvlb lvls"><div class="lvll">SUPPORTO MM</div><div class="lvlv">${f(OPT.sup)}</div><div style="font-size:10px;color:var(--green);margin-top:3px">${f(OPT.s)} − ${f(OPT.c)} − ${f(OPT.p)}</div></div>
+    </div>
+    <div class="card"><div class="ctitle">Dettaglio calcolo</div>
+      <div class="dr"><span class="dk">Settlement NQ</span><span class="dv">${f(OPT.s)}</span></div>
+      <div class="dr"><span class="dk">Calls settle</span><span class="dv">${f(OPT.c)}</span></div>
+      <div class="dr"><span class="dk">Puts settle</span><span class="dv">${f(OPT.p)}</span></div>
+      <div class="dr"><span class="dk">Somma C + P</span><span class="dv">${f(OPT.c+OPT.p)}</span></div>
+    </div>
+    <div class="inset" style="margin-top:10px;font-size:12px;color:var(--text2);line-height:1.7">
+      <strong style="color:var(--text)">Come usare:</strong> Prezzo sopra Settlement → momentum bullish verso R (${f(OPT.r)}). Sotto Settlement → bearish verso S (${f(OPT.sup)}). Entro 50pt da R/S = monitorare orderflow su DeepDOM.
+    </div>`;
 }
 
-function saveApiKeyFromSettings() {
-  const k = document.getElementById('settings-apikey').value.trim();
-  if (!k) return;
-  localStorage.setItem('pt_apikey', k);
-  const s = document.getElementById('settings-saved');
-  s.style.display = 'block';
-  setTimeout(() => s.style.display = 'none', 2000);
+// ── UTILS ──
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const fmt=(n,d=2)=>(n===null||n===undefined||isNaN(n))?'—':Number(n).toLocaleString('it-IT',{minimumFractionDigits:d,maximumFractionDigits:d});
+function sbadge(s){
+  if(!s)return'<span class="badge bgr">—</span>';
+  const l=s.toLowerCase();
+  if(l.includes('bull'))return`<span class="badge bg">${s}</span>`;
+  if(l.includes('bear'))return`<span class="badge br">${s}</span>`;
+  return`<span class="badge ba">${s}</span>`;
 }
-
-window.addEventListener('load', () => {
-  const k = getApiKey();
-  if (!k) document.getElementById('apikey-banner').style.display = 'block';
-  else document.getElementById('settings-apikey').value = k;
-});
-
-function savePsych() {
-  const s = document.getElementById('psych-saved');
-  s.style.display = 'block';
-  setTimeout(() => s.style.display = 'none', 2000);
+function sc(n){return n>0?'up':n<0?'dn':'mu';}
+function pJSON(raw){
+  try{const c=raw.replace(/```json|```/g,'').trim();const s=c.indexOf('{'),e=c.lastIndexOf('}');if(s<0||e<0)throw new Error('no json');return JSON.parse(c.slice(s,e+1));}
+  catch(er){return{_err:raw.substring(0,500)};}
 }
-
-function setProg(n, pct, done) {
-  const f = document.getElementById('p' + n), d = document.getElementById('d' + n);
-  if (f) { f.style.width = pct + '%'; if (done) f.classList.add('done'); }
-  if (d) d.className = 'dot' + (done ? ' done' : ' active');
+function setProg(n,state){
+  const f=document.getElementById('p'+n),d=document.getElementById('d'+n);
+  if(state==='active'){if(d)d.className='pd run';if(f){f.style.width='25%';f.classList.remove('ok');}}
+  if(state==='done'){if(d)d.className='pd ok';if(f){f.style.width='100%';f.classList.add('ok');}}
 }
-
-function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
-
-// ─── CHIAMATA API ────────────────────────────────────────────────────────────
-// FIX: web_search attivato SOLO per news (step 3)
-// FIX: max_tokens ridotto a 600 per limitare token output
-// FIX: sleep aumentato a 15s tra chiamate per restare sotto il rate limit
-async function callClaude(systemPrompt, userPrompt, useSearch = false) {
-  const key = getApiKey();
-  if (!key) throw new Error('API key non configurata.');
-
-  const body = {
-    model: 'claude-haiku-4-5-20251001',
-    max_tokens: 600,
-    system: systemPrompt,
-    messages: [{ role: 'user', content: userPrompt }]
+function getPS(){
+  return{
+    ieri:document.getElementById('yr')?.value||'',
+    stato:document.getElementById('ms')?.value||'',
+    settimana:document.getElementById('ws')?.value||'',
+    bias:document.getElementById('bias')?.value||'',
+    noteT:document.getElementById('yt')?.value||'',
+    noteM:document.getElementById('ym')?.value||''
   };
+}
 
-  if (useSearch) {
-    body.tools = [{ type: 'web_search_20250305', name: 'web_search' }];
-  }
-
-  const resp = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': key,
-      'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-direct-browser-access': 'true'
-    },
-    body: JSON.stringify(body)
+// ── API ──
+async function callClaude(sys,usr,ws=false){
+  const k=getKey();if(!k)throw new Error('API key non configurata');
+  const body={model:'claude-haiku-4-5-20251001',max_tokens:900,system:sys,messages:[{role:'user',content:usr}]};
+  if(ws)body.tools=[{type:'web_search_20250305',name:'web_search'}];
+  const r=await fetch('https://api.anthropic.com/v1/messages',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','x-api-key':k,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+    body:JSON.stringify(body)
   });
-
-  if (!resp.ok) {
-    const e = await resp.json();
-    throw new Error(e.error?.message || 'Errore API');
-  }
-
-  const data = await resp.json();
-  let text = '';
-  (data.content || []).forEach(b => { if (b.type === 'text') text += b.text; });
-  return text;
+  if(!r.ok){const e=await r.json();throw new Error(e.error?.message||'Errore API');}
+  const data=await r.json();
+  let txt='';(data.content||[]).forEach(b=>{if(b.type==='text')txt+=b.text;});
+  return txt;
 }
 
-function parseJSON(raw) {
-  try {
-    const clean = raw.replace(/```json|```/g, '').trim();
-    const s = clean.indexOf('{'), e = clean.lastIndexOf('}');
-    return JSON.parse(clean.slice(s, e + 1));
-  } catch (e) {
-    return { error: raw.substring(0, 300) };
-  }
+// ── PROMPTS ──
+function buildCOT(){
+  return`Cerca i dati COT CFTC più recenti (Traders in Financial Futures, Futures Only) per:
+1. NQ = E-mini Nasdaq-100 (#209742 CME) — su cftc.gov/dea/futures/financial_lf.htm o tradingster.com
+2. ES = S&P 500 Consolidated (#13874+ CME)
+3. YM = DJIA x$5 (#124603 CBOT)
+
+Per ogni indice: leveragedFundsLong, leveragedFundsShort, leveragedFundsNet (long−short con segno), assetManagerLong, assetManagerShort, assetManagerNet (con segno), openInterest, weeklyChangeLF (var. LF net vs settimana prec.), signal ("bearish" se LF net<0 / "bullish" se >0), trend (max 10 parole).
+Include: reportDate, nextUpdateDate, integratedAnalysis (max 80 parole italiano).
+
+SOLO JSON PURO:
+{"reportDate":"","nextUpdateDate":"","nq":{"leveragedFundsLong":0,"leveragedFundsShort":0,"leveragedFundsNet":0,"assetManagerLong":0,"assetManagerShort":0,"assetManagerNet":0,"openInterest":0,"weeklyChangeLF":0,"signal":"","trend":""},"es":{"leveragedFundsLong":0,"leveragedFundsShort":0,"leveragedFundsNet":0,"assetManagerLong":0,"assetManagerShort":0,"assetManagerNet":0,"openInterest":0,"weeklyChangeLF":0,"signal":"","trend":""},"ym":{"leveragedFundsLong":0,"leveragedFundsShort":0,"leveragedFundsNet":0,"assetManagerLong":0,"assetManagerShort":0,"assetManagerNet":0,"openInterest":0,"weeklyChangeLF":0,"signal":"","trend":""},"integratedAnalysis":""}`;
 }
 
-// ─── GENERAZIONE REPORT ──────────────────────────────────────────────────────
-async function generateReport() {
-  if (!getApiKey()) { document.getElementById('apikey-banner').style.display = 'block'; return; }
+function buildNews(){
+  return`Oggi è ${DS} (${DS2}). Cerca su investing.com/economic-calendar gli eventi macro USA di ALTA IMPORTANZA (3 stelle).
 
-  const btn = document.getElementById('gen-btn');
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span>Generazione...';
-  document.getElementById('progress-area').style.display = 'block';
-  document.getElementById('timer-note').style.display = 'block';
-  document.getElementById('overview-result').style.display = 'none';
-  document.getElementById('status-dot').className = 'status-dot';
+PARTE A — OGGI ${DS}: elenca TUTTI gli eventi US ★★★ previsti ESCLUSIVAMENTE per oggi. Se nessuno, noEventsToday=true e todayEvents=[].
+PARTE B — RADAR ${TMR}→${FRI}: elenca TUTTI gli eventi US ★★★ dei giorni successivi fino a venerdì.
 
-  const prevErr = document.getElementById('progress-area').querySelector('.alert-danger');
-  if (prevErr) prevErr.remove();
+Per ogni evento: name, date (es "Mer 8 Apr"), timeCET (es "20:00 CET"), timeET (es "14:00 ET"), previous, forecast, actual (se già uscito altrimenti ""), analysisIT (max 50 parole italiano), scenarioPositive (max 20 parole — NQ se migliore), scenarioNegative (max 20 parole — NQ se peggiore), scenarioBaseline (max 20 parole — NQ se in linea).
+Include geopoliticalAlert (stringa con alert attivi — Iran/Hormuz, tariffe, discorsi presidenziali — vuota se nessuno).
 
-  const ds = `${dayN[today.getDay()]} ${today.getDate()} ${monN[today.getMonth()]} ${today.getFullYear()}`;
-  const ps = {
-    ieri: document.getElementById('y-result').value,
-    note: document.getElementById('y-mental').value.substring(0, 80),
-    stato: document.getElementById('mental-state').value,
-    settimana: document.getElementById('week-state').value,
-    bias: document.getElementById('bias-select').value
+SOLO JSON PURO:
+{"todayEvents":[{"name":"","date":"","timeCET":"","timeET":"","previous":"","forecast":"","actual":"","analysisIT":"","scenarioPositive":"","scenarioNegative":"","scenarioBaseline":""}],"weekEvents":[{"name":"","date":"","timeCET":"","timeET":"","previous":"","forecast":"","actual":"","analysisIT":"","scenarioPositive":"","scenarioNegative":"","scenarioBaseline":""}],"noEventsToday":false,"geopoliticalAlert":""}`;
+}
+
+function buildFED(){
+  return`Dati macro FED aggiornati al ${DS}. SOLO JSON PURO:
+{"currentRate":"","nextFOMCDate":"","holdProbabilityNext":"","hikeProbability2026":"","cpiHeadline":"","cpiCore":"","pceCore":"","unemployment":"","nfpLast":"","ismPricesPaid":"","importPrices":"","fedStance":"","outlookNQ":"","keyRisks":""}
+Compila: currentRate (es "3.50-3.75%"), nextFOMCDate, holdProbabilityNext (% da CME FedWatch), hikeProbability2026 (% almeno 1 rialzo entro 2026), cpiHeadline YoY, cpiCore YoY, pceCore YoY, unemployment, nfpLast con mese, ismPricesPaid, importPrices MoM, fedStance (max 30 parole italiano), outlookNQ (meccanismo tassi→NQ max 60 parole), keyRisks (max 30 parole).`;
+}
+
+function buildSynth(ps){
+  const r=OPT.r||0,sup=OPT.sup||0,sett=OPT.s||0;
+  return`Sei un trader professionista NQ Nasdaq. Genera la sintesi operativa per OGGI ${DS}.
+
+INPUT:
+- COT NQ: LF netti ${ST.cot.nq?.leveragedFundsNet||'N/D'}, AM netti ${ST.cot.nq?.assetManagerNet||'N/D'}, signal: ${ST.cot.nq?.signal||'N/D'}
+- COT ES signal: ${ST.cot.es?.signal||'N/D'} | COT YM signal: ${ST.cot.ym?.signal||'N/D'}
+- Opzioni NQ: Settlement=${sett||'non inserito'}, Resistenza MM=${r||'non calcolata'}, Supporto MM=${sup||'non calcolato'}
+- News oggi: ${ST.news.todayEvents?.length||0} eventi★★★${ST.news.todayEvents?.[0]?.name?' — '+ST.news.todayEvents[0].name+' '+ST.news.todayEvents[0].timeCET:''}
+- Alert geopolitico: ${ST.news.geopoliticalAlert||'nessuno'}
+- FED: ${ST.fed.currentRate||'N/D'} hold ${ST.fed.holdProbabilityNext||'N/D'}, hike2026 ${ST.fed.hikeProbability2026||'N/D'}
+- Psicologia: ieri=${ps.ieri||'N/D'}, stato=${ps.stato||'N/D'}, settimana=${ps.settimana||'N/D'}, bias=${ps.bias||'N/D'}
+- Note tecniche: ${ps.noteT||'non specificate'}
+
+OUTPUT in italiano, SOLO JSON PURO:
+{"bias":"","biasReason":"","scenarios":[{"name":"","probability":"","descriptionIT":"","entryZone":"","target1":0,"target2":0,"stopLoss":0,"triggerIT":""}],"psychWarnings":["","","",""],"keyLevels":{"r2":0,"r1":0,"pivot":0,"s1":0,"s2":0,"s3":0}}
+
+bias: es "SHORT / CAUTELOSO". biasReason: 60 parole, cita COT+opzioni+news+FED.
+scenarios: 3 oggetti. psychWarnings: 4 avvertenze personalizzate max 25 parole ciascuna basate su stato+settimana.
+keyLevels: usa livelli opzionari se disponibili (r1=${r||'stima'}, s1=${sup||'stima'}, pivot=${sett||'stima'}), altrimenti stima da contesto.`;
+}
+
+// ── GENERATE ──
+async function generate(){
+  if(!getKey()){document.getElementById('apibanner').style.display='block';return;}
+  const btn=document.getElementById('gbtn');
+  btn.disabled=true;btn.innerHTML='<span class="spin"></span>Generazione in corso...';
+  document.getElementById('parea').style.display='block';
+  document.getElementById('tnote').style.display='block';
+  document.getElementById('ovres').style.display='none';
+  document.getElementById('sdot').className='sdot run';
+  document.querySelectorAll('.gen-err').forEach(e=>e.remove());
+  ST={cot:{},news:{},fed:{},synth:{}};
+  const ps=getPS();
+
+  try{
+    // 1 — COT con web_search
+    setProg(1,'active');
+    try{const r=await callClaude('Rispondi SOLO con JSON valido. Zero testo fuori dal JSON.',buildCOT(),true);ST.cot=pJSON(r);}
+    catch(e){ST.cot={_err:e.message};}
+    setProg(1,'done');
+    await sleep(20000);
+
+    // 2 — Opzioni: JS puro, nessuna API
+    setProg(2,'active');
+    calcOpt();renderOptDetail();
+    await sleep(300);
+    setProg(2,'done');
+
+    // 3 — News + Radar con web_search, data inclusa nel prompt
+    setProg(3,'active');
+    try{const r=await callClaude('Rispondi SOLO con JSON valido. Zero testo fuori dal JSON.',buildNews(),true);ST.news=pJSON(r);}
+    catch(e){ST.news={_err:e.message};}
+    setProg(3,'done');
+    await sleep(20000);
+
+    // 4 — FED senza web_search
+    setProg(4,'active');
+    try{const r=await callClaude('Rispondi SOLO con JSON valido. Zero testo fuori dal JSON.',buildFED(),false);ST.fed=pJSON(r);}
+    catch(e){ST.fed={_err:e.message};}
+    setProg(4,'done');
+    await sleep(15000);
+
+    // 5 — Sintesi senza web_search
+    setProg(5,'active');
+    try{const r=await callClaude('Sei un trader professionista NQ. Rispondi SOLO con JSON valido.',buildSynth(ps),false);ST.synth=pJSON(r);}
+    catch(e){ST.synth={_err:e.message};}
+    setProg(5,'done');
+
+    renderAll(ps);
+    document.getElementById('sdot').className='sdot ok';
+  }catch(err){
+    document.getElementById('parea').insertAdjacentHTML('beforeend',`<div class="al ae gen-err" style="margin-top:10px">Errore: ${err.message}</div>`);
+    document.getElementById('sdot').className='sdot err';
+  }
+  btn.disabled=false;btn.innerHTML='Rigenera analisi';
+  document.getElementById('tnote').style.display='none';
+}
+
+// ── RENDER ──
+function renderAll(ps){renderOverview(ps);renderCOT();renderNews();renderFED();}
+
+function renderOverview(ps){
+  const b=ST.synth.bias||'—';
+  const il=b.toLowerCase().includes('long'),is=b.toLowerCase().includes('short');
+  const bClass=il?'bg':is?'br':'ba';
+
+  document.getElementById('ovmet').innerHTML=`
+    <div class="mc"><div class="lbl">Bias del giorno</div><div class="val ${il?'up':is?'dn':'neu'}" style="font-size:14px">${b}</div><div class="sub">${(ST.synth.biasReason||'').substring(0,50)}…</div></div>
+    <div class="mc"><div class="lbl">Settlement NQ</div><div class="val" style="font-size:15px">${OPT.s?fmt(OPT.s):'—'}</div><div class="sub">Weekly options CME</div></div>
+    <div class="mc"><div class="lbl">Resistenza MM</div><div class="val up" style="font-size:15px">${OPT.r?fmt(OPT.r):'—'}</div><div class="sub">S + C + P</div></div>
+    <div class="mc"><div class="lbl">Supporto MM</div><div class="val dn" style="font-size:15px">${OPT.sup?fmt(OPT.sup):'—'}</div><div class="sub">S − C − P</div></div>
+    <div class="mc"><div class="lbl">Fed Rate</div><div class="val" style="font-size:14px">${ST.fed.currentRate||'—'}</div><div class="sub">${ST.fed.holdProbabilityNext?'Hold '+ST.fed.holdProbabilityNext:''}</div></div>
+    <div class="mc"><div class="lbl">COT NQ Signal</div><div class="val" style="margin-top:4px">${sbadge(ST.cot.nq?.signal)}</div><div class="sub">LF ${ST.cot.nq?.leveragedFundsNet!=null?(ST.cot.nq.leveragedFundsNet>0?'+':'')+Number(ST.cot.nq.leveragedFundsNet).toLocaleString('it-IT'):'—'}</div></div>`;
+
+  const pw=document.getElementById('ovpsych');
+  const wl=ST.synth.psychWarnings;
+  pw.innerHTML=wl?.length?`<div style="font-size:13px;font-weight:600;margin-bottom:8px;margin-top:8px">⚠ Avvertenze Psicologiche</div><ul class="psyl">${wl.map(w=>`<li>${w}</li>`).join('')}</ul>`:'';
+
+  document.getElementById('ovbias').innerHTML=`
+    <div style="margin-bottom:12px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><span class="badge ${bClass}" style="font-size:12px;padding:4px 14px">BIAS: ${b}</span></div>
+      <div style="font-size:13px;color:var(--text2);line-height:1.7">${ST.synth.biasReason||''}</div>
+    </div>`;
+
+  const sa=document.getElementById('ovscen');
+  const scens=ST.synth.scenarios||[];
+  sa.innerHTML=scens.length?scens.map((s,i)=>{
+    const cc=i===0?'br':i===2?'bg':'ba';
+    return`<div class="so">
+      <div class="soh"><span class="son">${s.name||'Scenario '+(i+1)}</span><span class="badge ${cc}">${s.probability||''}</span></div>
+      <div class="sod">${s.descriptionIT||''}</div>
+      <div class="sotr">Trigger: ${s.triggerIT||''}</div>
+      <div class="sols">
+        <div class="sli"><span class="lbl">Entry Zone</span><span class="v">${s.entryZone||'—'}</span></div>
+        <div class="sli"><span class="lbl">Target 1</span><span class="v up">${s.target1?fmt(s.target1,0):'—'}</span></div>
+        <div class="sli"><span class="lbl">Target 2</span><span class="v up">${s.target2?fmt(s.target2,0):'—'}</span></div>
+        <div class="sli"><span class="lbl">Stop Loss</span><span class="v dn">${s.stopLoss?fmt(s.stopLoss,0):'—'}</span></div>
+      </div>
+    </div>`;
+  }).join(''):'<div class="al aw">Scenari non disponibili.</div>';
+
+  const kl=ST.synth.keyLevels||{};
+  if(!kl.pivot&&OPT.s)kl.pivot=OPT.s;
+  if(!kl.r1&&OPT.r)kl.r1=OPT.r;
+  if(!kl.s1&&OPT.sup)kl.s1=OPT.sup;
+  renderLvChart(kl);
+  document.getElementById('lvlist').innerHTML=`
+    <div class="dr"><span class="dk">R2</span><span class="dv up">${kl.r2?fmt(kl.r2,0):'—'}</span></div>
+    <div class="dr"><span class="dk">R1</span><span class="dv up">${kl.r1?fmt(kl.r1,0):'—'}</span></div>
+    <div class="dr"><span class="dk">Settlement / Pivot</span><span class="dv">${kl.pivot?fmt(kl.pivot,0):'—'}</span></div>
+    <div class="dr"><span class="dk">S1</span><span class="dv dn">${kl.s1?fmt(kl.s1,0):'—'}</span></div>
+    <div class="dr"><span class="dk">S2</span><span class="dv dn">${kl.s2?fmt(kl.s2,0):'—'}</span></div>
+    <div class="dr"><span class="dk">S3</span><span class="dv dn">${kl.s3?fmt(kl.s3,0):'—'}</span></div>`;
+
+  document.getElementById('ovres').style.display='block';
+}
+
+function renderLvChart(kl){
+  const ctx=document.getElementById('lvchart');if(!ctx)return;
+  if(lvChart)lvChart.destroy();
+  const labels=['S3','S2','S1','Settlement','R1','R2'];
+  const vals=[kl.s3,kl.s2,kl.s1,kl.pivot,kl.r1,kl.r2].map(v=>v||0);
+  const colors=['#22c55e','#16a34a','#4ade80','#3b82f6','#f87171','#ef4444'];
+  lvChart=new Chart(ctx,{type:'bar',
+    data:{labels,datasets:[{data:vals,backgroundColor:colors,borderRadius:4,borderSkipped:false}]},
+    options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{
+        x:{ticks:{color:'#505050',font:{size:10},callback:v=>v.toLocaleString('it-IT')},grid:{color:'#1c1c1c'}},
+        y:{ticks:{color:'#909090',font:{size:11}},grid:{display:false}}
+      }}});
+}
+
+function renderCOT(){
+  const el=document.getElementById('cotc');
+  const cot=ST.cot;
+  if(cot._err){el.innerHTML=`<div class="al ae">${cot._err}</div>`;return;}
+
+  const netBox=(label,d,code)=>{
+    if(!d)return'';
+    const lf=Number(d.leveragedFundsNet)||0,am=Number(d.assetManagerNet)||0,wc=Number(d.weeklyChangeLF)||0;
+    return`<div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <span style="font-size:13px;font-weight:700">${label}</span>${sbadge(d.signal)}
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+        <div class="inset"><div class="lbl">Non-Commercial (LF) netto</div>
+          <div style="font-size:20px;font-weight:700;${lf<0?'color:var(--red)':'color:var(--green)'}">${lf>0?'+':''}${lf.toLocaleString('it-IT')}</div>
+          <div style="font-size:10px;color:var(--text3)">OI ${(Number(d.openInterest)||0).toLocaleString('it-IT')} · ${lf<0?'NET SHORT':'NET LONG'}</div>
+        </div>
+        <div class="inset"><div class="lbl">Commercial (AM) netto</div>
+          <div style="font-size:20px;font-weight:700;${am>0?'color:var(--green)':'color:var(--red)'}">${am>0?'+':''}${am.toLocaleString('it-IT')}</div>
+          <div style="font-size:10px;color:var(--text3)">${am>0?'NET LONG · strutturali':'NET SHORT'}</div>
+        </div>
+      </div>
+      <div class="dr"><span class="dk">Non-Comm. Long</span><span class="dv up">${(Number(d.leveragedFundsLong)||0).toLocaleString('it-IT')}</span></div>
+      <div class="dr"><span class="dk">Non-Comm. Short</span><span class="dv dn">${(Number(d.leveragedFundsShort)||0).toLocaleString('it-IT')}</span></div>
+      <div class="dr"><span class="dk">Commercial Long</span><span class="dv">${(Number(d.assetManagerLong)||0).toLocaleString('it-IT')}</span></div>
+      <div class="dr"><span class="dk">Commercial Short</span><span class="dv">${(Number(d.assetManagerShort)||0).toLocaleString('it-IT')}</span></div>
+      <div class="dr"><span class="dk">Variazione settim. LF</span><span class="dv ${sc(wc)}">${wc>0?'+':''}${wc.toLocaleString('it-IT')}</span></div>
+      <div class="dr"><span class="dk">Open Interest tot.</span><span class="dv">${(Number(d.openInterest)||0).toLocaleString('it-IT')}</span></div>
+      <div class="dr"><span class="dk">Trend</span><span class="dv" style="font-size:11px;max-width:200px;text-align:right">${d.trend||'—'}</span></div>
+    </div>`;
   };
 
-  let cot = {}, opt = {}, news = {}, fed = {}, synth = {};
+  el.innerHTML=`
+    ${cot.reportDate?`<div class="al ai">📅 CFTC Futures Only — dati al <strong>${cot.reportDate}</strong>${cot.nextUpdateDate?' · prossimo aggiornamento: '+cot.nextUpdateDate:''}</div>`:''}
+    <div class="cg3">
+      <div class="ci"><div class="cin">NQ · LF Netto</div><div class="civ ${(cot.nq?.leveragedFundsNet||0)<0?'dn':'up'}">${(cot.nq?.leveragedFundsNet||0)>0?'+':''}${(Number(cot.nq?.leveragedFundsNet)||0).toLocaleString('it-IT')}</div><div class="cis"><span class="${(cot.nq?.leveragedFundsNet||0)<0?'dn':'up'}">${(cot.nq?.leveragedFundsNet||0)<0?'NET SHORT':'NET LONG'}</span></div></div>
+      <div class="ci"><div class="cin">ES · LF Netto</div><div class="civ ${(cot.es?.leveragedFundsNet||0)<0?'dn':'up'}">${(cot.es?.leveragedFundsNet||0)>0?'+':''}${(Number(cot.es?.leveragedFundsNet)||0).toLocaleString('it-IT')}</div><div class="cis"><span class="${(cot.es?.leveragedFundsNet||0)<0?'dn':'up'}">${(cot.es?.leveragedFundsNet||0)<0?'NET SHORT':'NET LONG'}</span></div></div>
+      <div class="ci"><div class="cin">YM · LF Netto</div><div class="civ ${(cot.ym?.leveragedFundsNet||0)<0?'dn':'up'}">${(cot.ym?.leveragedFundsNet||0)>0?'+':''}${(Number(cot.ym?.leveragedFundsNet)||0).toLocaleString('it-IT')}</div><div class="cis"><span class="${(cot.ym?.leveragedFundsNet||0)<0?'dn':'up'}">${(cot.ym?.leveragedFundsNet||0)<0?'NET SHORT':'NET LONG'}</span></div></div>
+      <div class="ci"><div class="cin">NQ · AM Netto</div><div class="civ ${(cot.nq?.assetManagerNet||0)>0?'up':'dn'}">${(cot.nq?.assetManagerNet||0)>0?'+':''}${(Number(cot.nq?.assetManagerNet)||0).toLocaleString('it-IT')}</div><div class="cis">${(cot.nq?.assetManagerNet||0)>0?'NET LONG · strutturali':'NET SHORT'}</div></div>
+      <div class="ci"><div class="cin">ES · AM Netto</div><div class="civ ${(cot.es?.assetManagerNet||0)>0?'up':'dn'}">${(cot.es?.assetManagerNet||0)>0?'+':''}${(Number(cot.es?.assetManagerNet)||0).toLocaleString('it-IT')}</div><div class="cis">${(cot.es?.assetManagerNet||0)>0?'NET LONG · strutturali':'NET SHORT'}</div></div>
+      <div class="ci"><div class="cin">YM · AM Netto</div><div class="civ ${(cot.ym?.assetManagerNet||0)>0?'up':'dn'}">${(cot.ym?.assetManagerNet||0)>0?'+':''}${(Number(cot.ym?.assetManagerNet)||0).toLocaleString('it-IT')}</div><div class="cis">${(cot.ym?.assetManagerNet||0)>0?'NET LONG · strutturali':'NET SHORT'}</div></div>
+    </div>
+    <div class="card"><div class="ctitle">AM Net vs LF Net (assoluto) — confronto cross-index</div>
+      <div style="position:relative;height:220px"><canvas id="cotch"></canvas></div>
+    </div>
+    ${cot.integratedAnalysis?`<div class="inset" style="font-size:12px;color:var(--text2);line-height:1.7;margin-bottom:14px"><strong style="color:var(--text)">Analisi integrata cross-index:</strong> ${cot.integratedAnalysis}</div>`:''}
+    <div class="sep"></div>
+    <div class="cot-nav">
+      <button class="ctab active" onclick="ctab('nq',this)">NQ #209742</button>
+      <button class="ctab" onclick="ctab('es',this)">ES #13874+</button>
+      <button class="ctab" onclick="ctab('ym',this)">YM #124603</button>
+    </div>
+    <div class="cpanel active" id="cp-nq">${netBox('E-mini Nasdaq-100 — CME · #209742',cot.nq)}</div>
+    <div class="cpanel" id="cp-es">${netBox('S&P 500 Consolidated — CME · #13874+',cot.es)}</div>
+    <div class="cpanel" id="cp-ym">${netBox('DJIA x$5 — CBOT · #124603',cot.ym)}</div>`;
 
-  try {
-    // ── STEP 1: COT ──────────────────────────────────────────────────────────
-    // FIX: useSearch=false — dati COT dalla knowledge base, non ricerca web
-    // Risparmia ~15K token vs web_search
-    setProg(1, 20, false);
-    const cotR = await callClaude(
-      'Rispondi SOLO con JSON valido puro, zero testo fuori dal JSON.',
-      `Dati COT CFTC più recenti per NQ (E-mini Nasdaq), ES (S&P500), YM (Dow). Per ognuno: nonCommercialNet, commercialNet, nonReportableNet, weekChange, signal (bullish/bearish/neutro), trend (max 8 parole). Includi dataDate e summary (max 60 parole). Usa diciture: Commercial, Non-Commercial, Non-Reportable. JSON: {"nq":{"nonCommercialNet":0,"commercialNet":0,"nonReportableNet":0,"weekChange":0,"signal":"","trend":""},"es":{"nonCommercialNet":0,"commercialNet":0,"nonReportableNet":0,"weekChange":0,"signal":"","trend":""},"ym":{"nonCommercialNet":0,"commercialNet":0,"nonReportableNet":0,"weekChange":0,"signal":"","trend":""},"dataDate":"","summary":""}`,
-      false // ← FIX chiave: niente web_search qui
-    );
-    cot = parseJSON(cotR);
-    setProg(1, 100, true);
-    await sleep(15000); // ← FIX: era 8000, ora 15000
-
-    // ── STEP 2: OPTIONS ───────────────────────────────────────────────────────
-    // FIX: useSearch=false — i dati settlement li fornisce il modello
-    // (l'utente può sovrascriverli manualmente)
-    setProg(2, 20, false);
-    const optR = await callClaude(
-      'Rispondi SOLO con JSON valido puro, zero testo fuori dal JSON.',
-      `Settlement opzionario NQ CME settimana corrente (${ds}). Stima settlement, calls settle, puts settle. Calcola resistenza=settlement+calls+puts e supporto=settlement-calls-puts. JSON: {"settlement":0,"nearestStrike":0,"callsSettle":0,"putsSettle":0,"resistance":0,"support":0,"weeklyExpiry":"","dataNote":""}`,
-      false // ← FIX: niente web_search
-    );
-    opt = parseJSON(optR);
-    setProg(2, 100, true);
-    await sleep(15000); // ← FIX: era 8000
-
-    // ── STEP 3: NEWS ─────────────────────────────────────────────────────────
-    // FIX: useSearch=TRUE — le news cambiano ogni giorno, qui serve davvero
-    setProg(3, 20, false);
-    const newsR = await callClaude(
-      'Rispondi SOLO con JSON valido puro, zero testo fuori dal JSON.',
-      `News macro US 3 stelle oggi ${ds}. Cerca su investing.com/economic-calendar. Solo eventi high impact. Per evento: name, time (CET), previous, forecast, actual (vuoto se non uscito), analysis (max 40 parole), scenarios:{better,worse,inline} (max 15 parole ciascuno). Se nessun evento 3 stelle oggi, events=[]. JSON: {"events":[{"name":"","time":"","previous":"","forecast":"","actual":"","analysis":"","scenarios":{"better":"","worse":"","inline":""}}],"generalMacroContext":""}`,
-      true // ← unico step con web_search
-    );
-    news = parseJSON(newsR);
-    setProg(3, 100, true);
-    await sleep(15000); // ← FIX: era 8000
-
-    // ── STEP 4: FED ───────────────────────────────────────────────────────────
-    // FIX: useSearch=false — dati Fed stabili, cambia poco giorno per giorno
-    setProg(4, 20, false);
-    const fedR = await callClaude(
-      'Rispondi SOLO con JSON valido puro, zero testo fuori dal JSON.',
-      `Dati FED aggiornati: currentRate, nextMeeting, cutProbability (CME FedWatch), cpi, pce, unemployment, fedStance (max 20 parole), outlookNQ (max 35 parole), keyRisks (max 25 parole), summary (max 40 parole). JSON: {"currentRate":"","nextMeeting":"","cutProbability":"","cpi":"","pce":"","unemployment":"","fedStance":"","outlookNQ":"","keyRisks":"","summary":""}`,
-      false // ← FIX: niente web_search
-    );
-    fed = parseJSON(fedR);
-    setProg(4, 100, true);
-    await sleep(15000); // ← FIX: era 8000
-
-    // ── STEP 5: SINTESI ───────────────────────────────────────────────────────
-    // Nessun web_search, elabora solo i dati già raccolti
-    setProg(5, 20, false);
-    const synthR = await callClaude(
-      'Sei un trader professionista NQ. Rispondi SOLO con JSON valido puro.',
-      `Sintetizza report NQ ${ds}. Dati: COT NQ signal=${cot.nq?.signal}, settlement=${opt.settlement}, R=${opt.resistance}, S=${opt.support}, news=${news.events?.length || 0} eventi, fed=${fed.currentRate}, psicologia=${JSON.stringify(ps)}. Produci: bias, biasReason (max 30 parole), 3 scenari con {name,probability,description(max 30 parole),entryZone,target,stop}, psychWarnings (max 30 parole), keyLevels:{r1,r2,s1,s2,pivot}. JSON: {"bias":"","biasReason":"","scenarios":[{"name":"","probability":"","description":"","entryZone":"","target":"","stop":""}],"psychWarnings":"","keyLevels":{"r1":"","r2":"","s1":"","s2":"","pivot":""}}`,
-      false
-    );
-    synth = parseJSON(synthR);
-    setProg(5, 100, true);
-
-    renderAll(cot, opt, news, fed, synth);
-    document.getElementById('status-dot').className = 'status-dot ready';
-
-  } catch (err) {
-    document.getElementById('progress-area').insertAdjacentHTML('beforeend',
-      `<div class="alert alert-danger" style="margin-top:10px">Errore: ${err.message}</div>`
-    );
-  }
-
-  btn.disabled = false;
-  btn.innerHTML = 'Rigenera analisi';
-  document.getElementById('timer-note').style.display = 'none';
+  setTimeout(()=>{
+    const ctx=document.getElementById('cotch');if(!ctx)return;
+    new Chart(ctx,{type:'bar',
+      data:{labels:['NQ','ES (÷10)','YM'],
+        datasets:[
+          {label:'Asset Manager Net',data:[Math.abs(cot.nq?.assetManagerNet||0),Math.abs(cot.es?.assetManagerNet||0)/10,Math.abs(cot.ym?.assetManagerNet||0)],backgroundColor:'rgba(34,197,94,0.7)',borderRadius:4},
+          {label:'Lev. Funds Net (abs)',data:[Math.abs(cot.nq?.leveragedFundsNet||0),Math.abs(cot.es?.leveragedFundsNet||0)/10,Math.abs(cot.ym?.leveragedFundsNet||0)],backgroundColor:'rgba(239,68,68,0.7)',borderRadius:4}
+        ]},
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{labels:{color:'#909090',font:{size:11}}}},
+        scales:{x:{ticks:{color:'#909090'},grid:{color:'#1c1c1c'}},y:{ticks:{color:'#505050',font:{size:10},callback:v=>v.toLocaleString('it-IT')},grid:{color:'#1c1c1c'}}}}});
+  },100);
 }
 
-// ─── RENDER ───────────────────────────────────────────────────────────────────
-function fmt(n, d = 2) {
-  if (!n && n !== 0) return '—';
-  return Number(n).toLocaleString('it-IT', { minimumFractionDigits: d, maximumFractionDigits: d });
+function ctab(name,btn){
+  document.querySelectorAll('.cpanel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.ctab').forEach(b=>b.classList.remove('active'));
+  document.getElementById('cp-'+name).classList.add('active');
+  btn.classList.add('active');
 }
 
-function signColor(n) { return n > 0 ? 'up' : n < 0 ? 'dn' : 'neutral'; }
+function renderNews(){
+  const el=document.getElementById('newsc');
+  const news=ST.news;
+  if(news._err){el.innerHTML=`<div class="al ae">${news._err}</div>`;return;}
 
-function signalBadge(s) {
-  if (!s) return '<span class="badge badge-gray">—</span>';
-  const sl = s.toLowerCase();
-  if (sl.includes('bull')) return `<span class="badge badge-green">${s}</span>`;
-  if (sl.includes('bear')) return `<span class="badge badge-red">${s}</span>`;
-  return `<span class="badge badge-amber">${s}</span>`;
-}
-
-function renderAll(cot, opt, news, fed, synth) {
-  // ── Metriche panoramica
-  const bias = synth.bias || '—';
-  const bc = bias.toLowerCase().includes('long') ? 'up' : bias.toLowerCase().includes('short') ? 'dn' : 'neutral';
-
-  document.getElementById('metric-cards').innerHTML = `
-    <div class="metric"><div class="metric-label">Bias</div><div class="metric-val ${bc}" style="font-size:15px">${bias}</div><div class="metric-sub">${(synth.biasReason || '').substring(0, 40)}</div></div>
-    <div class="metric"><div class="metric-label">Settlement</div><div class="metric-val" style="font-size:15px">${fmt(opt.settlement, 2)}</div><div class="metric-sub">Weekly options</div></div>
-    <div class="metric"><div class="metric-label">Resist. MM</div><div class="metric-val up" style="font-size:15px">${fmt(opt.resistance, 2)}</div><div class="metric-sub">Market maker</div></div>
-    <div class="metric"><div class="metric-label">Supp. MM</div><div class="metric-val dn" style="font-size:15px">${fmt(opt.support, 2)}</div><div class="metric-sub">Market maker</div></div>
-    <div class="metric"><div class="metric-label">Fed Rate</div><div class="metric-val" style="font-size:15px">${fed.currentRate || '—'}</div><div class="metric-sub">${fed.cutProbability || ''}</div></div>
-    <div class="metric"><div class="metric-label">COT NQ</div><div class="metric-val" style="font-size:14px">${signalBadge(cot.nq?.signal)}</div><div class="metric-sub">Non-Commercial</div></div>`;
-
-  // ── Avviso psicologico
-  const pw = document.getElementById('psych-warn-block');
-  pw.innerHTML = synth.psychWarnings
-    ? `<div class="alert alert-warn" style="margin-bottom:14px">⚠ ${synth.psychWarnings}</div>`
-    : '';
-
-  // ── Scenari
-  const sa = document.getElementById('scenarios-area');
-  sa.innerHTML = (synth.scenarios?.length)
-    ? synth.scenarios.map(s => `
-      <div class="scenario-card">
-        <div class="scenario-header">
-          <span class="scenario-name">${s.name || 'Scenario'}</span>
-          <span class="badge badge-blue">${s.probability || ''}</span>
-        </div>
-        <div class="scenario-desc">${s.description || ''}</div>
-        <div class="scenario-levels">
-          <span><span class="lbl">Entry</span><span class="val">${s.entryZone || '—'}</span></span>
-          <span><span class="lbl">Target</span><span class="val up">${s.target || '—'}</span></span>
-          <span><span class="lbl">Stop</span><span class="val dn">${s.stop || '—'}</span></span>
-        </div>
-      </div>`).join('')
-    : '<div class="alert alert-warn">Scenari non disponibili.</div>';
-
-  // ── Livelli chiave
-  const kl = synth.keyLevels || {};
-  document.getElementById('key-levels-card').innerHTML = `
-    <div class="level-row"><span class="level-label">Resistenza 2</span><span class="level-val up">${kl.r2 || '—'}</span></div>
-    <div class="level-row"><span class="level-label">Resistenza 1</span><span class="level-val up">${kl.r1 || '—'}</span></div>
-    <div class="level-row"><span class="level-label">Pivot / Settlement</span><span class="level-val">${kl.pivot || fmt(opt.settlement, 2)}</span></div>
-    <div class="level-row"><span class="level-label">Supporto 1</span><span class="level-val dn">${kl.s1 || '—'}</span></div>
-    <div class="level-row"><span class="level-label">Supporto 2</span><span class="level-val dn">${kl.s2 || '—'}</span></div>`;
-
-  document.getElementById('overview-result').style.display = 'block';
-
-  // ── TAB COT — con diciture Commercial / Non-Commercial / Non-Reportable
-  const cotC = document.getElementById('cot-content');
-  if (cot.error) {
-    cotC.innerHTML = `<div class="alert alert-warn">${cot.error}</div>`;
-  } else {
-    const renderCOT = (label, d) => {
-      if (!d) return '';
-      const nc = Number(d.nonCommercialNet) || 0;
-      const c  = Number(d.commercialNet) || 0;
-      const nr = Number(d.nonReportableNet) || 0;
-      return `
-        <div class="card">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-            <span class="card-title" style="margin:0">${label}</span>
-            ${signalBadge(d.signal)}
-          </div>
-          <div class="level-row">
-            <span class="level-label">Non-Commercial (speculatori)</span>
-            <span class="level-val ${signColor(nc)}">${nc > 0 ? '+' : ''}${nc.toLocaleString('it-IT')}</span>
-          </div>
-          <div class="level-row">
-            <span class="level-label">Commercial (hedgers)</span>
-            <span class="level-val ${signColor(c)}">${c > 0 ? '+' : ''}${c.toLocaleString('it-IT')}</span>
-          </div>
-          <div class="level-row">
-            <span class="level-label">Non-Reportable (retail)</span>
-            <span class="level-val ${signColor(nr)}">${nr > 0 ? '+' : ''}${nr.toLocaleString('it-IT')}</span>
-          </div>
-          <div class="level-row">
-            <span class="level-label">Variazione sett. (Non-Comm.)</span>
-            <span class="level-val ${signColor(d.weekChange)}">${(d.weekChange > 0 ? '+' : '') + (Number(d.weekChange) || 0).toLocaleString('it-IT')}</span>
-          </div>
-          <div class="level-row">
-            <span class="level-label">Trend</span>
-            <span class="level-val" style="font-size:11px;max-width:200px;text-align:right">${d.trend || '—'}</span>
-          </div>
-        </div>`;
-    };
-
-    cotC.innerHTML =
-      (cot.dataDate ? `<div class="alert alert-info">📅 Dati CFTC: ${cot.dataDate}</div>` : '') +
-      renderCOT('NQ — Nasdaq 100 Mini', cot.nq) +
-      renderCOT('ES — S&P 500 Consolidated', cot.es) +
-      renderCOT('YM — Dow Jones x$5', cot.ym) +
-      (cot.summary ? `<div class="sep"></div><div class="card-title" style="margin-bottom:6px">Lettura integrata</div><div class="result-text">${cot.summary}</div>` : '');
-  }
-
-  // ── TAB OPZIONI
-  const optC = document.getElementById('options-content');
-  if (opt.error) {
-    optC.innerHTML = `<div class="alert alert-warn">${opt.error}</div>`;
-  } else {
-    const sum = (Number(opt.callsSettle) || 0) + (Number(opt.putsSettle) || 0);
-    optC.innerHTML = `
-      ${opt.weeklyExpiry ? `<div class="alert alert-info">Scadenza: ${opt.weeklyExpiry}</div>` : ''}
-      ${opt.dataNote ? `<div class="alert alert-warn" style="font-size:12px">${opt.dataNote}</div>` : ''}
-      <div class="card">
-        <div class="card-title">Calcolo livelli market maker</div>
-        <div class="level-row"><span class="level-label">Settlement</span><span class="level-val">${fmt(opt.settlement, 2)}</span></div>
-        <div class="level-row"><span class="level-label">Strike più vicino</span><span class="level-val">${fmt(opt.nearestStrike, 0)}</span></div>
-        <div class="level-row"><span class="level-label">Calls settle</span><span class="level-val">${fmt(opt.callsSettle, 2)}</span></div>
-        <div class="level-row"><span class="level-label">Puts settle</span><span class="level-val">${fmt(opt.putsSettle, 2)}</span></div>
-        <div class="level-row"><span class="level-label">Somma calls + puts</span><span class="level-val">${fmt(sum, 2)}</span></div>
+  const evCard=ev=>`
+    <div class="nc">
+      <div class="nh">
+        <div><div class="nn">${ev.name||''}</div><div class="nt">${ev.date||''} · ${ev.timeCET||''} (${ev.timeET||''})</div></div>
+        <span class="badge br">★★★</span>
       </div>
-      <div class="metric-grid">
-        <div class="metric"><div class="metric-label">Resistenza MM</div><div class="metric-val up">${fmt(opt.resistance, 2)}</div><div class="metric-sub">Settlement + calls + puts</div></div>
-        <div class="metric"><div class="metric-label">Settlement</div><div class="metric-val">${fmt(opt.settlement, 2)}</div></div>
-        <div class="metric"><div class="metric-label">Supporto MM</div><div class="metric-val dn">${fmt(opt.support, 2)}</div><div class="metric-sub">Settlement - calls - puts</div></div>
-      </div>`;
-  }
+      ${(ev.previous||ev.forecast||ev.actual)?`<table class="dtbl"><thead><tr><th>Precedente</th><th>Atteso</th><th>Attuale</th></tr></thead><tbody><tr><td>${ev.previous||'—'}</td><td>${ev.forecast||'—'}</td><td class="${ev.actual?'up':''}">${ev.actual||'—'}</td></tr></tbody></table>`:''}
+      ${ev.analysisIT?`<div class="inset" style="font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:10px">${ev.analysisIT}</div>`:''}
+      ${(ev.scenarioPositive||ev.scenarioNegative||ev.scenarioBaseline)?`
+      <div class="sg">
+        <div class="sb sbull"><div class="sl">↑ Dato migliore</div><div class="st">${ev.scenarioPositive||'—'}</div></div>
+        <div class="sb sneu"><div class="sl">↔ In linea</div><div class="st">${ev.scenarioBaseline||'—'}</div></div>
+        <div class="sb sbear"><div class="sl">↓ Dato peggiore</div><div class="st">${ev.scenarioNegative||'—'}</div></div>
+      </div>`:''}
+    </div>`;
 
-  // ── TAB NEWS
-  const newsC = document.getElementById('news-content');
-  if (news.error) {
-    newsC.innerHTML = `<div class="alert alert-warn">${news.error}</div>`;
+  const tevs=news.todayEvents||[],wevs=news.weekEvents||[];
+  let html=`<div class="sh" style="margin-bottom:4px">News Macro US Oggi — ${DS2}</div><div class="ssub">Solo eventi ⭐⭐⭐ US</div>`;
+
+  html+=(news.noEventsToday||tevs.length===0)
+    ?'<div class="al ai">Nessun evento 3 stelle US programmato per oggi. Mercato si muoverà su geopolitica o sentiment.</div>'
+    :tevs.map(evCard).join('');
+
+  if(news.geopoliticalAlert)
+    html+=`<div class="al aw" style="margin-top:6px"><strong>⚡ Attenzione geopolitica:</strong> ${news.geopoliticalAlert}</div>`;
+
+  html+='<div class="sep"></div>';
+  html+=`<div class="sh" style="margin-bottom:4px">📡 Radar Macro Settimana — ${TMR} → ${FRI}</div><div class="ssub">Tutti gli eventi ⭐⭐⭐ US dei prossimi giorni</div>`;
+
+  if(wevs.length===0){
+    html+='<div class="al ai">Nessun evento 3 stelle programmato per il resto della settimana.</div>';
   } else {
-    const evH = (news.events || []).map(ev => `
-      <div class="news-card">
-        <div class="news-header">
-          <span class="news-name">${ev.name || ''}</span>
-          <div style="display:flex;gap:6px;align-items:center;flex-shrink:0">
-            <span class="badge badge-red">★★★</span>
-            <span style="font-size:12px;color:var(--text2)">${ev.time || ''} CET</span>
-          </div>
+    html+=wevs.map(ev=>`
+      <div class="wc">
+        <div class="wd">${ev.date||''}</div>
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;gap:10px">
+          <div><div class="wn">${ev.name||''}</div><div class="wt">${ev.timeCET||''} (${ev.timeET||''})</div></div>
+          <span class="badge br">★★★</span>
         </div>
-        <div class="news-values">
-          <span><span class="lbl">Prec.</span><span class="val">${ev.previous || '—'}</span></span>
-          <span><span class="lbl">Prev.</span><span class="val">${ev.forecast || '—'}</span></span>
-          <span><span class="lbl">Attuale</span><span class="val ${ev.actual ? 'up' : ''}">${ev.actual || '—'}</span></span>
-        </div>
-        ${ev.analysis ? `<div class="result-text" style="margin-bottom:8px">${ev.analysis}</div>` : ''}
-        ${ev.scenarios ? `
-          <div class="news-scenarios">
-            <div><span class="slbl">Migliore →</span><span style="color:var(--green)">${ev.scenarios.better || '—'}</span></div>
-            <div><span class="slbl">Peggiore →</span><span style="color:var(--red)">${ev.scenarios.worse || '—'}</span></div>
-            <div><span class="slbl">In linea →</span><span>${ev.scenarios.inline || '—'}</span></div>
-          </div>` : ''}
+        ${(ev.previous||ev.forecast)?`<table class="dtbl" style="margin-bottom:8px"><thead><tr><th>Precedente</th><th>Previsto</th><th>Attuale</th></tr></thead><tbody><tr><td>${ev.previous||'—'}</td><td>${ev.forecast||'—'}</td><td class="${ev.actual?'up':''}">${ev.actual||'—'}</td></tr></tbody></table>`:''}
+        ${ev.analysisIT?`<div class="wdesc">${ev.analysisIT}</div>`:''}
+        ${(ev.scenarioPositive||ev.scenarioNegative)?`<div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">${ev.scenarioPositive?`<span class="badge bg" style="font-size:10px">↑ ${ev.scenarioPositive}</span>`:''} ${ev.scenarioNegative?`<span class="badge br" style="font-size:10px">↓ ${ev.scenarioNegative}</span>`:''}</div>`:''}
       </div>`).join('');
-
-    newsC.innerHTML =
-      (evH || '<div class="alert alert-info">Nessun evento 3 stelle oggi.</div>') +
-      (news.generalMacroContext
-        ? `<div class="sep"></div><div class="card-title" style="margin-bottom:8px">Contesto macro</div><div class="result-text">${news.generalMacroContext}</div>`
-        : '');
   }
+  el.innerHTML=html;
+}
 
-  // ── TAB FED
-  const fedC = document.getElementById('fed-content');
-  if (fed.error) {
-    fedC.innerHTML = `<div class="alert alert-warn">${fed.error}</div>`;
-  } else {
-    fedC.innerHTML = `
-      <div class="metric-grid">
-        <div class="metric"><div class="metric-label">Fed Funds</div><div class="metric-val">${fed.currentRate || '—'}</div></div>
-        <div class="metric"><div class="metric-label">CPI</div><div class="metric-val">${fed.cpi || '—'}</div></div>
-        <div class="metric"><div class="metric-label">PCE Core</div><div class="metric-val">${fed.pce || '—'}</div></div>
-        <div class="metric"><div class="metric-label">Disoccupaz.</div><div class="metric-val">${fed.unemployment || '—'}</div></div>
+function renderFED(){
+  const el=document.getElementById('fedc');
+  const fed=ST.fed;
+  if(fed._err){el.innerHTML=`<div class="al ae">${fed._err}</div>`;return;}
+  el.innerHTML=`
+    <div class="mg" style="margin-bottom:14px">
+      <div class="mc"><div class="lbl">Fed Funds Rate</div><div class="val">${fed.currentRate||'—'}</div></div>
+      <div class="mc"><div class="lbl">Prossimo FOMC</div><div class="val" style="font-size:13px">${fed.nextFOMCDate||'—'}</div></div>
+      <div class="mc"><div class="lbl">Hold Probability</div><div class="val up">${fed.holdProbabilityNext||'—'}</div><div class="sub">CME FedWatch</div></div>
+      <div class="mc"><div class="lbl">Hike entro 2026</div><div class="val dn">${fed.hikeProbability2026||'—'}</div></div>
+    </div>
+    <div class="card" style="margin-bottom:14px">
+      <div class="ctitle">Indicatori macro chiave</div>
+      <table class="fitbl">
+        <thead><tr><th>Indicatore</th><th>Ultimo dato</th><th>Implicazione</th></tr></thead>
+        <tbody>
+          <tr><td>CPI Headline YoY</td><td><strong>${fed.cpiHeadline||'—'}</strong></td><td class="tup">Pressione inflazionistica</td></tr>
+          <tr><td>CPI Core YoY</td><td><strong>${fed.cpiCore||'—'}</strong></td><td class="tup">Persistente</td></tr>
+          <tr><td>PCE Core YoY</td><td><strong>${fed.pceCore||'—'}</strong></td><td class="tup">Sopra target FED</td></tr>
+          <tr><td>NFP</td><td><strong>${fed.nfpLast||'—'}</strong></td><td class="tneu">Mercato lavoro solido</td></tr>
+          <tr><td>ISM Prices Paid</td><td><strong>${fed.ismPricesPaid||'—'}</strong></td><td class="tup">Segnale stagflationary</td></tr>
+          <tr><td>Import Prices MoM</td><td><strong>${fed.importPrices||'—'}</strong></td><td class="tup">Oil shock Iran</td></tr>
+          <tr><td>Disoccupazione</td><td><strong>${fed.unemployment||'—'}</strong></td><td class="tneu">Stabile</td></tr>
+        </tbody>
+      </table>
+    </div>
+    ${fed.fedStance||fed.outlookNQ?`
+    <div class="card">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        ${fed.fedStance?`<div><div class="ctitle">Stance attuale FED</div><div style="font-size:12px;color:var(--text2);line-height:1.7">${fed.fedStance}</div></div>`:''}
+        ${fed.outlookNQ?`<div><div class="ctitle">Meccanismo tassi → NQ</div><div style="font-size:12px;color:var(--text2);line-height:1.7">${fed.outlookNQ}</div></div>`:''}
       </div>
-      <div class="card">
-        <div class="level-row"><span class="level-label">Prossima FOMC</span><span class="level-val" style="font-size:12px">${fed.nextMeeting || '—'}</span></div>
-        <div class="level-row"><span class="level-label">Prob. taglio</span><span class="level-val">${fed.cutProbability || '—'}</span></div>
-        <div class="level-row"><span class="level-label">Stance</span><span class="level-val" style="font-size:11px">${fed.fedStance || '—'}</span></div>
-      </div>
-      ${fed.outlookNQ ? `<div class="card-title" style="margin-bottom:6px">Impatto su NQ</div><div class="result-text" style="margin-bottom:12px">${fed.outlookNQ}</div>` : ''}
-      ${fed.keyRisks ? `<div class="card-title" style="margin-bottom:6px">Rischi chiave</div><div class="result-text" style="margin-bottom:12px">${fed.keyRisks}</div>` : ''}
-      ${fed.summary ? `<div class="card-title" style="margin-bottom:6px">Sintesi</div><div class="result-text">${fed.summary}</div>` : ''}`;
-  }
+    </div>`:''}
+    ${fed.keyRisks?`<div class="al aw"><strong>Rischi chiave:</strong> ${fed.keyRisks}</div>`:''}`;
 }
 </script>
 </body>
