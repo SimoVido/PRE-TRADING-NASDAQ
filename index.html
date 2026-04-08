@@ -42,18 +42,20 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600}
 .bgg{background:var(--gd);color:var(--green)}.brr{background:var(--rd);color:var(--red)}.baa{background:var(--ad);color:var(--amber)}.bgr{background:var(--bg4);color:var(--text2)}
 .al{border-radius:var(--rsm);padding:10px 13px;font-size:12px;margin-bottom:12px;line-height:1.5}
-.ai{background:var(--bd);border:1px solid var(--bb);color:#93c5fd}.aw{background:var(--ad);border:1px solid var(--ab);color:#fcd34d}
-.as{background:var(--gd);border:1px solid var(--gb);color:#86efac}.ae{background:var(--rd);border:1px solid var(--rb);color:#fca5a5}
+.ai{background:var(--bd);border:1px solid var(--bb);color:#93c5fd}
+.aw{background:var(--ad);border:1px solid var(--ab);color:#fcd34d}
+.as{background:var(--gd);border:1px solid var(--gb);color:#86efac}
+.ae{background:var(--rd);border:1px solid var(--rb);color:#fca5a5}
 .dr{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px}
 .dr:last-child{border-bottom:none}.dk{color:var(--text2)}.dv{font-weight:600;font-family:'SF Mono',Consolas,monospace;font-size:11.5px}
-.up{color:var(--green)}.dn{color:var(--red)}.neu{color:var(--amber)}.mu{color:var(--text2)}
+.up{color:var(--green)}.dn{color:var(--red)}.neu{color:var(--amber)}
 .fg{margin-bottom:10px}.fl{font-size:11px;color:var(--text2);margin-bottom:4px;display:block}
 select,input[type=text],input[type=number],input[type=password]{width:100%;padding:7px 10px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--rsm);color:var(--text);font-size:12px;font-family:inherit}
 select:focus,input:focus{outline:none;border-color:var(--text2)}
 textarea{width:100%;min-height:58px;padding:7px 10px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--rsm);color:var(--text);font-size:12px;font-family:inherit;resize:vertical}
 .btnp{width:100%;padding:12px;background:var(--text);color:var(--bg);border:none;border-radius:var(--rsm);font-size:14px;font-weight:700;cursor:pointer;margin-bottom:10px;transition:opacity .15s}
 .btnp:hover{opacity:.88}.btnp:disabled{opacity:.3;cursor:not-allowed}
-.btns{width:100%;padding:9px;background:transparent;color:var(--text2);border:1px solid var(--border2);border-radius:var(--rsm);font-size:12px;font-weight:500;cursor:pointer;transition:all .15s;margin-bottom:6px}
+.btns{width:100%;padding:9px;background:transparent;color:var(--text2);border:1px solid var(--border2);border-radius:var(--rsm);font-size:12px;cursor:pointer;transition:all .15s;margin-bottom:6px}
 .btns:hover{color:var(--text);border-color:var(--text2)}
 .spin{display:inline-block;width:12px;height:12px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:rot .7s linear infinite;vertical-align:middle;margin-right:5px}
 @keyframes rot{to{transform:rotate(360deg)}}
@@ -74,7 +76,7 @@ textarea{width:100%;min-height:58px;padding:7px 10px;background:var(--bg3);borde
 .lvlr .lvlv{color:var(--red)}.lvls .lvlv{color:var(--green)}
 .cg3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
 .ci{background:var(--bg3);border-radius:var(--rsm);padding:12px}
-.cin{font-size:11px;color:var(--text2);margin-bottom:6px}.civ{font-size:22px;font-weight:700;line-height:1.1;margin-bottom:2px}.cis{font-size:10px;color:var(--text3)}
+.cin{font-size:11px;color:var(--text2);margin-bottom:6px}.civ{font-size:22px;font-weight:700;line-height:1.1;margin-bottom:2px}.cis{font-size:10px}
 .ctabs{display:flex;gap:4px;margin-bottom:12px;flex-wrap:wrap}
 .ctab{padding:4px 12px;font-size:11px;font-weight:500;background:var(--bg3);border:1px solid var(--border2);border-radius:20px;cursor:pointer;color:var(--text2);transition:all .15s}
 .ctab.active{background:var(--bg4);color:var(--text);border-color:var(--text2)}
@@ -83,26 +85,33 @@ textarea{width:100%;min-height:58px;padding:7px 10px;background:var(--bg3);borde
 .nh{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;gap:10px}
 .nn{font-size:14px;font-weight:700}.nt{font-size:11px;color:var(--text2);margin-top:2px}
 .dtbl{width:100%;border-collapse:collapse;margin-bottom:10px}
-.dtbl th{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.4px;text-align:left;padding:4px 8px;border-bottom:1px solid var(--border)}
+.dtbl th{font-size:10px;color:var(--text3);text-transform:uppercase;text-align:left;padding:4px 8px;border-bottom:1px solid var(--border)}
 .dtbl td{font-size:12px;font-weight:600;padding:6px 8px;border-bottom:1px solid var(--border)}
 .dtbl tr:last-child td{border-bottom:none}
 .sg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .sb{border-radius:var(--rsm);padding:10px}
-.sbull{background:rgba(34,197,94,.07);border:1px solid rgba(34,197,94,.2)}.sbear{background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.2)}.sneu{background:var(--bg3);border:1px solid var(--border2)}
-.sl{font-size:10px;font-weight:700;margin-bottom:5px}.sbull .sl{color:var(--green)}.sbear .sl{color:var(--red)}.sneu .sl{color:var(--amber)}
+.sbull{background:rgba(34,197,94,.07);border:1px solid rgba(34,197,94,.2)}
+.sbear{background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.2)}
+.sneu{background:var(--bg3);border:1px solid var(--border2)}
+.sl{font-size:10px;font-weight:700;margin-bottom:5px}
+.sbull .sl{color:var(--green)}.sbear .sl{color:var(--red)}.sneu .sl{color:var(--amber)}
 .st{font-size:11px;color:var(--text2);line-height:1.5}
 .wc{border:1px solid var(--border);border-radius:var(--r);padding:13px 16px;margin-bottom:8px;background:var(--bg2)}
-.wd{font-size:11px;font-weight:600;color:var(--amber);margin-bottom:5px}.wn{font-size:13px;font-weight:600;margin-bottom:3px}.wt{font-size:11px;color:var(--text2);margin-bottom:6px}
+.wd{font-size:11px;font-weight:600;color:var(--amber);margin-bottom:5px}
+.wn{font-size:13px;font-weight:600;margin-bottom:3px}.wt{font-size:11px;color:var(--text2);margin-bottom:6px}
 .fitbl{width:100%;border-collapse:collapse;margin-bottom:14px}
-.fitbl th{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.4px;text-align:left;padding:6px 8px;border-bottom:1px solid var(--border)}
+.fitbl th{font-size:10px;color:var(--text3);text-transform:uppercase;text-align:left;padding:6px 8px;border-bottom:1px solid var(--border)}
 .fitbl td{font-size:12px;padding:7px 8px;border-bottom:1px solid var(--border);vertical-align:top}
 .fitbl tr:last-child td{border-bottom:none}
 .tup{color:var(--red)}.tdn{color:var(--green)}.tneu{color:var(--amber)}
 .so{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:14px 18px;margin-bottom:10px}
 .soh{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-.son{font-size:14px;font-weight:700}.sod{font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:8px}.sotr{font-size:11px;color:var(--text3);font-style:italic;margin-bottom:10px}
-.sols{display:flex;gap:12px;flex-wrap:wrap}.sli{display:flex;flex-direction:column;gap:2px}.sli .lbl{font-size:10px}.sli .v{font-size:12px;font-weight:700;font-family:'SF Mono',monospace}
-.psyl{list-style:none;counter-reset:pc}.psyl li{padding:8px 12px;margin-bottom:6px;background:var(--ad);border-left:3px solid var(--amber);border-radius:0 var(--rsm) var(--rsm) 0;font-size:12px;color:#fcd34d;line-height:1.5;counter-increment:pc}
+.son{font-size:14px;font-weight:700}.sod{font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:8px}
+.sotr{font-size:11px;color:var(--text3);font-style:italic;margin-bottom:10px}
+.sols{display:flex;gap:12px;flex-wrap:wrap}
+.sli{display:flex;flex-direction:column;gap:2px}.sli .lbl{font-size:10px}.sli .v{font-size:12px;font-weight:700;font-family:'SF Mono',monospace}
+.psyl{list-style:none;counter-reset:pc}
+.psyl li{padding:8px 12px;margin-bottom:6px;background:var(--ad);border-left:3px solid var(--amber);border-radius:0 var(--rsm) var(--rsm) 0;font-size:12px;color:#fcd34d;line-height:1.5;counter-increment:pc}
 .psyl li::before{content:counter(pc)". ";font-weight:700}
 .sep{height:1px;background:var(--border);margin:16px 0}
 .dbg{background:#0d0d0d;border:1px solid #1a2a1a;border-radius:var(--rsm);padding:10px 13px;margin-bottom:8px}
@@ -112,10 +121,12 @@ textarea{width:100%;min-height:58px;padding:7px 10px;background:var(--bg3);borde
 </style>
 </head>
 <body>
+
 <div class="hdr">
   <div class="hdr-t">Pre-Trading <span>NQ Nasdaq</span></div>
   <div class="hdr-r"><span class="dpill" id="hdr-date">—</span><div class="sdot" id="sdot"></div></div>
 </div>
+
 <nav class="nav">
   <button class="nbtn active" onclick="goTab('panoramica',this)">Panoramica</button>
   <button class="nbtn" onclick="goTab('cot',this)">COT</button>
@@ -126,13 +137,19 @@ textarea{width:100%;min-height:58px;padding:7px 10px;background:var(--bg3);borde
   <button class="nbtn" onclick="goTab('debug',this)">Debug</button>
   <button class="nbtn" onclick="goTab('settings',this)">Impostazioni</button>
 </nav>
+
 <div class="content">
 
+<!-- PANORAMICA -->
 <div class="tab active" id="t-panoramica">
   <div id="apibanner" class="card" style="display:none">
     <div class="ctitle">Configura API Key Anthropic</div>
-    <div style="display:flex;gap:8px;margin-top:8px"><input type="password" id="apiin" placeholder="sk-ant-..."><button onclick="saveKey()" style="padding:7px 14px;background:var(--bg4);border:1px solid var(--border2);border-radius:var(--rsm);color:var(--text);cursor:pointer;font-size:12px;white-space:nowrap">Salva</button></div>
+    <div style="display:flex;gap:8px;margin-top:8px">
+      <input type="password" id="apiin" placeholder="sk-ant-...">
+      <button onclick="saveKey()" style="padding:7px 14px;background:var(--bg4);border:1px solid var(--border2);border-radius:var(--rsm);color:var(--text);cursor:pointer;font-size:12px;white-space:nowrap">Salva</button>
+    </div>
   </div>
+
   <div class="card">
     <div class="ctitle">Livelli Opzionari CME — NQ (inserisci manualmente ogni settimana)</div>
     <p style="font-size:11px;color:var(--text2);margin-bottom:10px">R = Settlement + Calls + Puts &nbsp;·&nbsp; S = Settlement - Calls - Puts</p>
@@ -147,25 +164,33 @@ textarea{width:100%;min-height:58px;padding:7px 10px;background:var(--bg3);borde
       <div class="lvlb lvls"><div class="lvll">Supporto MM</div><div class="lvlv" id="supm">—</div></div>
     </div>
   </div>
+
   <div class="card">
     <div class="ctitle">Stato Pre-Trading</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-      <div class="fg"><label class="fl">Bias personale</label><select id="bias"><option value="">Seleziona...</option><option>Long bias</option><option>Short bias</option><option>Long to short</option><option>Short to long</option><option>Neutro / range</option></select></div>
-      <div class="fg"><label class="fl">Sessione ieri</label><select id="yr"><option value="">—</option><option>Positiva</option><option>Negativa</option><option>Break even</option><option>Non ho tradato</option></select></div>
-      <div class="fg"><label class="fl">Stato emotivo</label><select id="ms"><option>Concentrato e sereno</option><option>Un po' ansioso</option><option>Overconfident</option><option>Revenge trading mode</option><option>Stanco / distratto</option></select></div>
-      <div class="fg"><label class="fl">Settimana</label><select id="ws"><option>Settimana positiva</option><option>Settimana negativa</option><option>Neutro</option><option>Primo giorno settimana</option><option>Drawdown prolungato</option></select></div>
+      <div class="fg"><label class="fl">Bias personale</label>
+        <select id="bias"><option value="">Seleziona...</option><option>Long bias</option><option>Short bias</option><option>Long to short</option><option>Short to long</option><option>Neutro / range</option></select></div>
+      <div class="fg"><label class="fl">Sessione ieri</label>
+        <select id="yr"><option value="">—</option><option>Positiva</option><option>Negativa</option><option>Break even</option><option>Non ho tradato</option></select></div>
+      <div class="fg"><label class="fl">Stato emotivo</label>
+        <select id="ms"><option>Concentrato e sereno</option><option>Un po' ansioso</option><option>Overconfident</option><option>Revenge trading mode</option><option>Stanco / distratto</option></select></div>
+      <div class="fg"><label class="fl">Settimana</label>
+        <select id="ws"><option>Settimana positiva</option><option>Settimana negativa</option><option>Neutro</option><option>Primo giorno settimana</option><option>Drawdown prolungato</option></select></div>
     </div>
     <div class="fg"><label class="fl">Note tecniche ieri</label><textarea id="yt" placeholder="VAH, VAL, gap, livelli chiave..."></textarea></div>
     <div class="fg"><label class="fl">Note mentali ieri</label><textarea id="ym" placeholder="Errori, trade mancati, osservazioni..."></textarea></div>
   </div>
+
   <button class="btnp" id="gbtn" onclick="generate()">Genera analisi pre-trading completa</button>
   <div style="font-size:11px;color:var(--text3);text-align:center;margin-bottom:12px;display:none" id="tnote">⏱ Circa 90 secondi — non chiudere la pagina</div>
+
   <div id="parea" style="display:none;margin-bottom:14px">
-    <div class="pw"><div class="pr"><div class="pd" id="d1"></div>1 — COT + News macro (una sola ricerca web)</div><div class="pbar"><div class="pfill" id="p1"></div></div><div class="pnote" id="n1"></div></div>
+    <div class="pw"><div class="pr"><div class="pd" id="d1"></div>1 — COT CFTC + News macro (unica ricerca web)</div><div class="pbar"><div class="pfill" id="p1"></div></div><div class="pnote" id="n1"></div></div>
     <div class="pw"><div class="pr"><div class="pd" id="d2"></div>2 — Livelli opzionari CME (calcolo locale)</div><div class="pbar"><div class="pfill" id="p2"></div></div></div>
-    <div class="pw"><div class="pr"><div class="pd" id="d3"></div>3 — Scenario FED</div><div class="pbar"><div class="pfill" id="p3"></div></div></div>
-    <div class="pw"><div class="pr"><div class="pd" id="d4"></div>4 — Sintesi operativa</div><div class="pbar"><div class="pfill" id="p4"></div></div></div>
+    <div class="pw"><div class="pr"><div class="pd" id="d3"></div>3 — Scenario FED</div><div class="pbar"><div class="pfill" id="p3"></div></div><div class="pnote" id="n3"></div></div>
+    <div class="pw"><div class="pr"><div class="pd" id="d4"></div>4 — Sintesi operativa</div><div class="pbar"><div class="pfill" id="p4"></div></div><div class="pnote" id="n4"></div></div>
   </div>
+
   <div id="ovres" style="display:none">
     <div class="sep"></div>
     <div class="mg" id="ovmet"></div>
@@ -185,9 +210,19 @@ textarea{width:100%;min-height:58px;padding:7px 10px;background:var(--bg3);borde
   </div>
 </div>
 
-<div class="tab" id="t-cot"><div class="sh">COT — Commitment of Traders</div><div class="ssub">Non-Commercial vs Commercial · NQ ES YM · CFTC</div><div id="cotc"><div class="al ai">Genera il report dalla tab Panoramica.</div></div></div>
-<div class="tab" id="t-opzioni"><div class="sh">Livelli Opzionari CME — NQ</div><div class="ssub">Calcolo automatico da Settlement + Calls + Puts</div>
-  <div class="card"><div class="ctitle">Dati settimana corrente</div>
+<!-- COT -->
+<div class="tab" id="t-cot">
+  <div class="sh">COT — Commitment of Traders</div>
+  <div class="ssub">Non-Commercial vs Commercial · NQ ES YM · CFTC.gov</div>
+  <div id="cotc"><div class="al ai">Genera il report dalla tab Panoramica.</div></div>
+</div>
+
+<!-- OPZIONI -->
+<div class="tab" id="t-opzioni">
+  <div class="sh">Livelli Opzionari CME — NQ</div>
+  <div class="ssub">Calcolo automatico da Settlement + Calls + Puts</div>
+  <div class="card">
+    <div class="ctitle">Dati settimana corrente</div>
     <div class="og3">
       <div class="fg"><label class="fl">Settlement NQ</label><input type="number" id="o-s" step="0.25" oninput="syncOpt()"></div>
       <div class="fg"><label class="fl">Calls Settle</label><input type="number" id="o-c" step="0.25" oninput="syncOpt()"></div>
@@ -196,419 +231,576 @@ textarea{width:100%;min-height:58px;padding:7px 10px;background:var(--bg3);borde
   </div>
   <div id="optdetail"><div class="al ai">Inserisci i valori sopra.</div></div>
 </div>
-<div class="tab" id="t-news"><div class="sh">News Macro US</div><div class="ssub">Solo eventi *** — oggi e radar settimana</div><div id="newsc"><div class="al ai">Genera il report dalla tab Panoramica.</div></div></div>
-<div class="tab" id="t-fed"><div class="sh">Scenario FED</div><div class="ssub">Inflazione, occupazione, tassi</div><div id="fedc"><div class="al ai">Genera il report dalla tab Panoramica.</div></div></div>
+
+<!-- NEWS -->
+<div class="tab" id="t-news">
+  <div class="sh">News Macro US</div>
+  <div class="ssub">Solo eventi *** — oggi e radar settimana</div>
+  <div id="newsc"><div class="al ai">Genera il report dalla tab Panoramica.</div></div>
+</div>
+
+<!-- FED -->
+<div class="tab" id="t-fed">
+  <div class="sh">Scenario FED</div>
+  <div class="ssub">Inflazione, occupazione, tassi</div>
+  <div id="fedc"><div class="al ai">Genera il report dalla tab Panoramica.</div></div>
+</div>
+
+<!-- PSICOLOGIA -->
 <div class="tab" id="t-psicologia">
-  <div class="sh">Note Psicologiche</div><div class="ssub">Compilale prima di generare per avvertenze personalizzate</div>
-  <div class="card"><div class="ctitle">Ieri</div>
-    <div class="fg"><label class="fl">Risultato</label><select id="ps-yr"><option value="">—</option><option>Positiva</option><option>Negativa</option><option>Break even</option><option>Non ho tradato</option></select></div>
+  <div class="sh">Note Psicologiche</div>
+  <div class="ssub">Compilale prima di generare per avvertenze personalizzate</div>
+  <div class="card">
+    <div class="ctitle">Ieri</div>
+    <div class="fg"><label class="fl">Risultato sessione</label>
+      <select id="ps-yr"><option value="">—</option><option>Positiva</option><option>Negativa</option><option>Break even</option><option>Non ho tradato</option></select></div>
     <div class="fg"><label class="fl">Note mentali</label><textarea id="ps-ym" placeholder="Trade mancati, errori..."></textarea></div>
   </div>
-  <div class="card"><div class="ctitle">Oggi</div>
-    <div class="fg"><label class="fl">Stato emotivo</label><select id="ps-ms"><option>Concentrato e sereno</option><option>Un po' ansioso</option><option>Overconfident</option><option>Revenge trading mode</option><option>Stanco / distratto</option></select></div>
-    <div class="fg"><label class="fl">Andamento settimana</label><select id="ps-ws"><option>Settimana positiva</option><option>Settimana negativa</option><option>Neutro</option><option>Primo giorno settimana</option><option>Drawdown prolungato</option></select></div>
+  <div class="card">
+    <div class="ctitle">Oggi</div>
+    <div class="fg"><label class="fl">Stato emotivo</label>
+      <select id="ps-ms"><option>Concentrato e sereno</option><option>Un po' ansioso</option><option>Overconfident</option><option>Revenge trading mode</option><option>Stanco / distratto</option></select></div>
+    <div class="fg"><label class="fl">Andamento settimana</label>
+      <select id="ps-ws"><option>Settimana positiva</option><option>Settimana negativa</option><option>Neutro</option><option>Primo giorno settimana</option><option>Drawdown prolungato</option></select></div>
   </div>
-  <button class="btns" onclick="tmp('psaved')">Salva</button>
+  <button class="btns" id="psbtn" onclick="savePsych()">Salva note</button>
   <div id="psaved" style="display:none;font-size:11px;color:var(--green);text-align:center;margin-top:4px">Salvate</div>
 </div>
-<div class="tab" id="t-debug"><div class="sh">Debug — Risposte Raw</div><div class="ssub">Cosa ha risposto il modello per ogni step</div><div id="debugpanel"><div class="al ai">Genera il report per vedere le risposte raw.</div></div></div>
-<div class="tab" id="t-settings"><div class="sh">Impostazioni</div>
-  <div class="card"><div class="ctitle">API Key Anthropic</div>
+
+<!-- DEBUG -->
+<div class="tab" id="t-debug">
+  <div class="sh">Debug — Risposte Raw API</div>
+  <div class="ssub">Cosa ha risposto il modello per ogni step</div>
+  <div id="debugpanel"><div class="al ai">Genera il report per vedere le risposte raw.</div></div>
+</div>
+
+<!-- SETTINGS -->
+<div class="tab" id="t-settings">
+  <div class="sh">Impostazioni</div>
+  <div class="card">
+    <div class="ctitle">API Key Anthropic</div>
     <div class="fg"><label class="fl">API Key</label><input type="password" id="set-ak" placeholder="sk-ant-..."></div>
     <button class="btns" onclick="saveKeyS()">Salva</button>
     <div id="sset" style="display:none;font-size:11px;color:var(--green);margin-top:4px">Salvata</div>
   </div>
-  <div class="card"><div class="ctitle">Info</div>
+  <div class="card">
+    <div class="ctitle">Info</div>
     <div class="dr"><span class="dk">Strumento</span><span class="dv">NQ Nasdaq CFD</span></div>
     <div class="dr"><span class="dk">Broker</span><span class="dv">FP Markets / cTrader</span></div>
-    <div class="dr"><span class="dk">Versione</span><span class="dv">2.4.0 — 1 sola chiamata web</span></div>
+    <div class="dr"><span class="dk">Versione</span><span class="dv">2.4.0</span></div>
   </div>
 </div>
-</div>
+
+</div><!-- /content -->
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script>
-// DATE
-const T=new Date();
-const DN=['Domenica','Lunedi','Martedi','Mercoledi','Giovedi','Venerdi','Sabato'];
-const MN=['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
-const DS=DN[T.getDay()]+' '+T.getDate()+' '+MN[T.getMonth()]+' '+T.getFullYear();
-const DS2=(T.getDate()<10?'0':'')+T.getDate()+'/'+(T.getMonth()<9?'0':'')+(T.getMonth()+1)+'/'+T.getFullYear();
-document.getElementById('hdr-date').textContent=DS;
-const fri=new Date(T);fri.setDate(T.getDate()+((5-T.getDay()+7)%7||7));
-const FRI=DN[fri.getDay()]+' '+fri.getDate()+' '+MN[fri.getMonth()];
-const tmr=new Date(T);tmr.setDate(T.getDate()+1);
-const TMR=DN[tmr.getDay()]+' '+tmr.getDate()+' '+MN[tmr.getMonth()];
+// === DATE SETUP ===
+var T = new Date();
+var DAYS = ['Domenica','Lunedi','Martedi','Mercoledi','Giovedi','Venerdi','Sabato'];
+var MONS = ['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
+var DS = DAYS[T.getDay()] + ' ' + T.getDate() + ' ' + MONS[T.getMonth()] + ' ' + T.getFullYear();
+var DS2 = (T.getDate()<10?'0':'') + T.getDate() + '/' + (T.getMonth()<9?'0':'') + (T.getMonth()+1) + '/' + T.getFullYear();
+document.getElementById('hdr-date').textContent = DS;
+var fri = new Date(T); fri.setDate(T.getDate() + ((5 - T.getDay() + 7) % 7 || 7));
+var FRI = DAYS[fri.getDay()] + ' ' + fri.getDate() + ' ' + MONS[fri.getMonth()];
+var tmr = new Date(T); tmr.setDate(T.getDate() + 1);
+var TMR = DAYS[tmr.getDay()] + ' ' + tmr.getDate() + ' ' + MONS[tmr.getMonth()];
 
-let ST={combined:{},fed:{},synth:{}};
-let OPT={s:0,c:0,p:0,r:0,sup:0};
-let lvChart=null;
-let RAW={};
+// === STATE ===
+var ST = { combined: {}, fed: {}, synth: {} };
+var OPT = { s: 0, c: 0, p: 0, r: 0, sup: 0 };
+var lvChart = null;
+var RAW = {};
 
-function goTab(n,b){document.querySelectorAll('.tab').forEach(e=>e.classList.remove('active'));document.querySelectorAll('.nbtn').forEach(e=>e.classList.remove('active'));document.getElementById('t-'+n).classList.add('active');if(b)b.classList.add('active');}
-const getKey=()=>localStorage.getItem('pt_k')||'';
-function saveKey(){const k=document.getElementById('apiin').value.trim();if(k){localStorage.setItem('pt_k',k);document.getElementById('apibanner').style.display='none';}}
-function saveKeyS(){const k=document.getElementById('set-ak').value.trim();if(k){localStorage.setItem('pt_k',k);tmp('sset');}}
-window.addEventListener('load',()=>{const k=getKey();if(!k)document.getElementById('apibanner').style.display='block';else document.getElementById('set-ak').value=k;});
-function tmp(id){const e=document.getElementById(id);e.style.display='block';setTimeout(()=>e.style.display='none',2000);}
+// === TABS ===
+function goTab(name, btn) {
+  document.querySelectorAll('.tab').forEach(function(e){ e.classList.remove('active'); });
+  document.querySelectorAll('.nbtn').forEach(function(e){ e.classList.remove('active'); });
+  document.getElementById('t-' + name).classList.add('active');
+  if (btn) btn.classList.add('active');
+}
 
-function calcOpt(){
-  const s=parseFloat(document.getElementById('inp-s').value)||0;
-  const c=parseFloat(document.getElementById('inp-c').value)||0;
-  const p=parseFloat(document.getElementById('inp-p').value)||0;
-  OPT={s,c,p,r:s+c+p,sup:s-c-p};
-  const f=n=>n?n.toLocaleString('it-IT',{minimumFractionDigits:2,maximumFractionDigits:2}):'—';
-  document.getElementById('rm').textContent=f(OPT.r);
-  document.getElementById('sm').textContent=f(OPT.s);
-  document.getElementById('supm').textContent=f(OPT.sup);
-  ['s','c','p'].forEach(x=>{const el=document.getElementById('o-'+x);if(el)el.value=OPT[x]||'';});
+// === API KEY ===
+function getKey() { return localStorage.getItem('pt_k') || ''; }
+function saveKey() {
+  var k = document.getElementById('apiin').value.trim();
+  if (k) { localStorage.setItem('pt_k', k); document.getElementById('apibanner').style.display = 'none'; }
+}
+function saveKeyS() {
+  var k = document.getElementById('set-ak').value.trim();
+  if (k) { localStorage.setItem('pt_k', k); showTmp('sset'); }
+}
+function savePsych() { showTmp('psaved'); }
+function showTmp(id) {
+  var el = document.getElementById(id);
+  el.style.display = 'block';
+  setTimeout(function(){ el.style.display = 'none'; }, 2000);
+}
+window.addEventListener('load', function() {
+  var k = getKey();
+  if (!k) document.getElementById('apibanner').style.display = 'block';
+  else document.getElementById('set-ak').value = k;
+});
+
+// === OPTIONS CALC ===
+function calcOpt() {
+  var s = parseFloat(document.getElementById('inp-s').value) || 0;
+  var c = parseFloat(document.getElementById('inp-c').value) || 0;
+  var p = parseFloat(document.getElementById('inp-p').value) || 0;
+  OPT = { s: s, c: c, p: p, r: s + c + p, sup: s - c - p };
+  function f(n) { return n ? n.toLocaleString('it-IT', {minimumFractionDigits:2, maximumFractionDigits:2}) : '—'; }
+  document.getElementById('rm').textContent = f(OPT.r);
+  document.getElementById('sm').textContent = f(OPT.s);
+  document.getElementById('supm').textContent = f(OPT.sup);
+  var os = document.getElementById('o-s'); if (os) os.value = s || '';
+  var oc = document.getElementById('o-c'); if (oc) oc.value = c || '';
+  var op = document.getElementById('o-p'); if (op) op.value = p || '';
   renderOptDetail();
 }
-function syncOpt(){['s','c','p'].forEach(x=>{const a=document.getElementById('o-'+x),b=document.getElementById('inp-'+x);if(a&&b)b.value=a.value;});calcOpt();}
-function renderOptDetail(){
-  const el=document.getElementById('optdetail');
-  if(!OPT.s){el.innerHTML='<div class="al ai">Inserisci i valori sopra.</div>';return;}
-  const f=n=>n.toLocaleString('it-IT',{minimumFractionDigits:2,maximumFractionDigits:2});
-  el.innerHTML='<div class="og3" style="margin-bottom:14px"><div class="lvlb lvlr"><div class="lvll">RESISTENZA MM</div><div class="lvlv">'+f(OPT.r)+'</div><div style="font-size:10px;color:var(--red);margin-top:3px">'+f(OPT.s)+' + '+f(OPT.c)+' + '+f(OPT.p)+'</div></div><div class="lvlb lvln"><div class="lvll">SETTLEMENT</div><div class="lvlv" style="color:var(--text)">'+f(OPT.s)+'</div></div><div class="lvlb lvls"><div class="lvll">SUPPORTO MM</div><div class="lvlv">'+f(OPT.sup)+'</div><div style="font-size:10px;color:var(--green);margin-top:3px">'+f(OPT.s)+' - '+f(OPT.c)+' - '+f(OPT.p)+'</div></div></div><div class="inset" style="font-size:12px;color:var(--text2);line-height:1.7">Sopra Settlement: bullish verso R ('+f(OPT.r)+'). Sotto: bearish verso S ('+f(OPT.sup)+'). Entro 50pt da R/S monitorare DeepDOM.</div>';
+function syncOpt() {
+  var os = document.getElementById('o-s'); if (os) document.getElementById('inp-s').value = os.value;
+  var oc = document.getElementById('o-c'); if (oc) document.getElementById('inp-c').value = oc.value;
+  var op = document.getElementById('o-p'); if (op) document.getElementById('inp-p').value = op.value;
+  calcOpt();
+}
+function renderOptDetail() {
+  var el = document.getElementById('optdetail');
+  if (!OPT.s) { el.innerHTML = '<div class="al ai">Inserisci i valori sopra.</div>'; return; }
+  function f(n) { return n.toLocaleString('it-IT', {minimumFractionDigits:2, maximumFractionDigits:2}); }
+  el.innerHTML = '<div class="og3" style="margin-bottom:14px">' +
+    '<div class="lvlb lvlr"><div class="lvll">RESISTENZA MM</div><div class="lvlv">' + f(OPT.r) + '</div>' +
+    '<div style="font-size:10px;color:var(--red);margin-top:3px">' + f(OPT.s) + ' + ' + f(OPT.c) + ' + ' + f(OPT.p) + '</div></div>' +
+    '<div class="lvlb lvln"><div class="lvll">SETTLEMENT</div><div class="lvlv" style="color:var(--text)">' + f(OPT.s) + '</div></div>' +
+    '<div class="lvlb lvls"><div class="lvll">SUPPORTO MM</div><div class="lvlv">' + f(OPT.sup) + '</div>' +
+    '<div style="font-size:10px;color:var(--green);margin-top:3px">' + f(OPT.s) + ' - ' + f(OPT.c) + ' - ' + f(OPT.p) + '</div></div></div>' +
+    '<div class="inset" style="font-size:12px;color:var(--text2);line-height:1.7">' +
+    'Sopra Settlement: bullish verso R (' + f(OPT.r) + '). Sotto: bearish verso S (' + f(OPT.sup) + '). Entro 50pt da R/S monitorare DeepDOM.</div>';
 }
 
-const sleep=ms=>new Promise(r=>setTimeout(r,ms));
-const fmt=(n,d=2)=>(n==null||isNaN(n))?'—':Number(n).toLocaleString('it-IT',{minimumFractionDigits:d,maximumFractionDigits:d});
-function sbadge(s){if(!s)return'<span class="badge bgr">—</span>';const l=(s||'').toLowerCase();if(l.includes('bull'))return'<span class="badge bgg">'+s+'</span>';if(l.includes('bear'))return'<span class="badge brr">'+s+'</span>';return'<span class="badge baa">'+s+'</span>';}
-function sgnc(n){return n>0?'up':n<0?'dn':'mu';}
-
-function pJSON(raw){
-  if(!raw)return{_err:'Risposta vuota'};
-  let c=raw.replace(/```json\s*/gi,'').replace(/```\s*/g,'').trim();
-  const s=c.indexOf('{'),e=c.lastIndexOf('}');
-  if(s<0||e<s)return{_err:'Nessun JSON trovato ('+raw.length+' chars)',_raw:raw.substring(0,600)};
-  const snip=c.slice(s,e+1);
-  for(const suf of['','}',' }','}}','}}}',' }}',' }}}',' }}}']){try{return JSON.parse(snip+suf);}catch(_){}}
-  return{_err:'JSON malformato',_raw:snip.substring(0,600)};
+// === UTILS ===
+function sleep(ms) { return new Promise(function(r){ setTimeout(r, ms); }); }
+function fmt(n, d) {
+  d = d === undefined ? 2 : d;
+  if (n == null || isNaN(n)) return '—';
+  return Number(n).toLocaleString('it-IT', {minimumFractionDigits:d, maximumFractionDigits:d});
+}
+function sbadge(s) {
+  if (!s) return '<span class="badge bgr">—</span>';
+  var l = s.toLowerCase();
+  if (l.indexOf('bull') >= 0) return '<span class="badge bgg">' + s + '</span>';
+  if (l.indexOf('bear') >= 0) return '<span class="badge brr">' + s + '</span>';
+  return '<span class="badge baa">' + s + '</span>';
+}
+function sgnc(n) { return n > 0 ? 'up' : n < 0 ? 'dn' : ''; }
+function esc(s) {
+  return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
-function prog(n,state,note){
-  const f=document.getElementById('p'+n),d=document.getElementById('d'+n),no=document.getElementById('n'+n);
-  if(d)d.className='pd '+(state==='active'?'run':state==='done'?'ok':state==='err'?'err':'');
-  if(f){f.className='pfill'+(state==='done'?' ok':state==='err'?' err':'');f.style.width=state==='active'?'15%':'100%';}
-  if(no&&note!==undefined)no.textContent=note;
-}
-
-function getPS(){return{ieri:document.getElementById('yr')?.value||'',stato:document.getElementById('ms')?.value||'',settimana:document.getElementById('ws')?.value||'',bias:document.getElementById('bias')?.value||'',noteT:document.getElementById('yt')?.value||'',noteM:document.getElementById('ym')?.value||''};}
-
-// ═══════════════════════════════════════════════════════════
-// ARCHITETTURA v2.4.0 — UNA SOLA chiamata web_search
-// Step 1: combined (COT + News) — web_search=true — 1 sola chiamata
-// Step 2: opzioni — locale
-// Step 3: FED — no web_search
-// Step 4: sintesi — no web_search
-// Totale: 1 web_search → nessun rischio 429 tra chiamate
-// ═══════════════════════════════════════════════════════════
-
-async function callClaude(sys,usr,ws,attempt){
-  attempt=attempt||0;
-  const k=getKey();if(!k)throw new Error('API key non configurata');
-  // web_search=true: 2000 token output per avere spazio
-  // web_search=false: 1200 token
-  const body={model:'claude-haiku-4-5-20251001',max_tokens:ws?3000:1200,system:sys,messages:[{role:'user',content:usr}]};
-  if(ws)body.tools=[{type:'web_search_20250305',name:'web_search'}];
-  const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':k,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify(body)});
-  if(r.status===429){
-    if(attempt>=3)throw new Error('429 persistente — attendi 2 minuti e riprova');
-    const w=40000+(attempt*20000);
-    console.warn('429, retry in '+w+'ms');
-    await sleep(w);
-    return callClaude(sys,usr,ws,attempt+1);
+// Robust JSON parser
+function pJSON(raw) {
+  if (!raw) return { _err: 'Risposta vuota' };
+  var c = raw.replace(/```json/gi,'').replace(/```/g,'').trim();
+  var s = c.indexOf('{');
+  var e = c.lastIndexOf('}');
+  if (s < 0 || e < s) return { _err: 'Nessun JSON (' + raw.length + ' chars)', _raw: raw.substring(0,500) };
+  var snip = c.slice(s, e + 1);
+  var tries = ['', '}', ' }', '}}', '}}}'];
+  for (var i = 0; i < tries.length; i++) {
+    try { return JSON.parse(snip + tries[i]); } catch(ex) {}
   }
-  if(!r.ok){const e=await r.json();throw new Error(r.status+' — '+(e.error&&e.error.message||'Errore'));}
-  const data=await r.json();
-  let txt='';(data.content||[]).forEach(b=>{if(b.type==='text')txt+=b.text;});
-  return{text:txt,data};
+  return { _err: 'JSON malformato', _raw: snip.substring(0,500) };
 }
 
-// PROMPT COMBINATO: COT + News in una sola ricerca
-function pCombined(){
-  return 'Oggi e '+DS+'. Fai DUE ricerche e restituisci UN SOLO JSON con tutti i dati.
-
-'+
-  'RICERCA 1 — COT CFTC piu recenti "Traders in Financial Futures Futures Only":
-'+
-  'NQ #209742 CME, ES #13874+ CME, YM #124603 CBOT
-'+
-  'Fonti: tradingster.com/cot/futures/fin/ o cftc.gov/dea/futures/financial_lf.htm
-'+
-  'Per ognuno: leveragedFundsLong, leveragedFundsShort, leveragedFundsNet (Long-Short), assetManagerLong, assetManagerShort, assetManagerNet, openInterest, weeklyChangeLF, signal (bearish/bullish), trend (max 8 parole)
-
-'+
-  'RICERCA 2 — Calendario economico US oggi e settimana:
-'+
-  'Cerca su investing.com/economic-calendar eventi USA a 3 stelle (alta importanza).
-'+
-  'todayEvents: SOLO eventi US 3 stelle di OGGI '+DS+' (se nessuno: array vuoto, noEventsToday:true)
-'+
-  'weekEvents: eventi US 3 stelle da '+TMR+' a '+FRI+'
-'+
-  'Per ogni evento: name, date, timeCET, timeET, previous, forecast, actual (vuoto se non uscito), analysisIT (max 30 parole), scenarioPositive (max 12 parole NQ), scenarioNegative (max 12 parole NQ)
-'+
-  'geopoliticalAlert: alert attivi Iran/Hormuz/tariffe (vuoto se nessuno)
-
-'+
-  'RISPOSTA: SOLO questo JSON, zero testo fuori:
-'+
-  '{"reportDate":"","nq":{"leveragedFundsLong":0,"leveragedFundsShort":0,"leveragedFundsNet":0,"assetManagerLong":0,"assetManagerShort":0,"assetManagerNet":0,"openInterest":0,"weeklyChangeLF":0,"signal":"","trend":""},"es":{"leveragedFundsLong":0,"leveragedFundsShort":0,"leveragedFundsNet":0,"assetManagerLong":0,"assetManagerShort":0,"assetManagerNet":0,"openInterest":0,"weeklyChangeLF":0,"signal":"","trend":""},"ym":{"leveragedFundsLong":0,"leveragedFundsShort":0,"leveragedFundsNet":0,"assetManagerLong":0,"assetManagerShort":0,"assetManagerNet":0,"openInterest":0,"weeklyChangeLF":0,"signal":"","trend":""},"cotAnalysis":"","todayEvents":[{"name":"","date":"","timeCET":"","timeET":"","previous":"","forecast":"","actual":"","analysisIT":"","scenarioPositive":"","scenarioNegative":""}],"weekEvents":[{"name":"","date":"","timeCET":"","timeET":"","previous":"","forecast":"","actual":"","analysisIT":"","scenarioPositive":"","scenarioNegative":""}],"noEventsToday":false,"geopoliticalAlert":""}';
+// Progress bar
+function prog(n, state, note) {
+  var f = document.getElementById('p' + n);
+  var d = document.getElementById('d' + n);
+  var no = document.getElementById('n' + n);
+  if (d) d.className = 'pd ' + (state === 'active' ? 'run' : state === 'done' ? 'ok' : state === 'err' ? 'err' : '');
+  if (f) {
+    f.className = 'pfill' + (state === 'done' ? ' ok' : state === 'err' ? ' err' : '');
+    f.style.width = state === 'active' ? '15%' : '100%';
+  }
+  if (no && note !== undefined) no.textContent = note;
 }
 
-function pFED(){
-  return 'Dati macro FED aggiornati al '+DS+'. SOLO JSON zero testo fuori:
-'+
-  '{"currentRate":"","nextFOMCDate":"","holdProbabilityNext":"","hikeProbability2026":"","cpiHeadline":"","cpiCore":"","pceCore":"","unemployment":"","nfpLast":"","ismPricesPaid":"","importPrices":"","fedStance":"","outlookNQ":"","keyRisks":""}';
+function getPS() {
+  return {
+    ieri: document.getElementById('yr').value || '',
+    stato: document.getElementById('ms').value || '',
+    settimana: document.getElementById('ws').value || '',
+    bias: document.getElementById('bias').value || '',
+    noteT: document.getElementById('yt').value || '',
+    noteM: document.getElementById('ym').value || ''
+  };
 }
 
-function pSynth(ps){
-  const r=OPT.r||0,sup=OPT.sup||0,sett=OPT.s||0;
-  const c=ST.combined;
-  const nq=c.nq||{};const es=c.es||{};const ym=c.ym||{};
-  const ev0=c.todayEvents&&c.todayEvents[0]||{};
-  return 'Trader NQ Nasdaq. Sintesi operativa OGGI '+DS+'. SOLO JSON zero testo fuori.
-
-'+
-  'COT NQ: LF='+( nq.leveragedFundsNet||'ND')+' AM='+(nq.assetManagerNet||'ND')+' signal='+(nq.signal||'ND')+'
-'+
-  'COT ES signal='+(es.signal||'ND')+' YM signal='+(ym.signal||'ND')+'
-'+
-  'Opzioni NQ: S='+(sett||'ND')+' R='+(r||'ND')+' Sup='+(sup||'ND')+'
-'+
-  'News oggi: '+(c.todayEvents&&c.todayEvents.length||0)+' eventi'+(ev0.name?' — '+ev0.name+' '+ev0.timeCET:'')+'
-'+
-  'Geo: '+(c.geopoliticalAlert||'nessuna')+'
-'+
-  'FED: '+(ST.fed.currentRate||'ND')+' hold='+(ST.fed.holdProbabilityNext||'ND')+' hike='+(ST.fed.hikeProbability2026||'ND')+'
-'+
-  'Psico: ieri='+(ps.ieri||'ND')+' stato='+(ps.stato||'ND')+' settimana='+(ps.settimana||'ND')+' bias='+(ps.bias||'ND')+'
-
-'+
-  '{"bias":"","biasReason":"","scenarios":[{"name":"","probability":"","descriptionIT":"","entryZone":"","target1":0,"target2":0,"stopLoss":0,"triggerIT":""},{"name":"","probability":"","descriptionIT":"","entryZone":"","target1":0,"target2":0,"stopLoss":0,"triggerIT":""},{"name":"","probability":"","descriptionIT":"","entryZone":"","target1":0,"target2":0,"stopLoss":0,"triggerIT":""}],"psychWarnings":["","","",""],"keyLevels":{"r2":0,"r1":'+r+',"pivot":'+sett+',"s1":'+sup+',"s2":0,"s3":0}}
-
-'+
-  'bias (es SHORT / CAUTELOSO), biasReason 50 parole italiano, 3 scenari NQ realistici, 4 psychWarnings personalizzati max 18 parole.';
+// === API CALL ===
+// v2.4.0: SINGLE web_search call — avoids 429 (10K output tokens/min limit)
+function callClaude(sys, usr, ws, attempt) {
+  attempt = attempt || 0;
+  var k = getKey();
+  if (!k) return Promise.reject(new Error('API key non configurata'));
+  var maxTok = ws ? 3000 : 1200;
+  var body = {
+    model: 'claude-haiku-4-5-20251001',
+    max_tokens: maxTok,
+    system: sys,
+    messages: [{ role: 'user', content: usr }]
+  };
+  if (ws) body.tools = [{ type: 'web_search_20250305', name: 'web_search' }];
+  return fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': k,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true'
+    },
+    body: JSON.stringify(body)
+  }).then(function(r) {
+    if (r.status === 429) {
+      if (attempt >= 2) throw new Error('429 persistente — attendi 2 min e riprova');
+      var w = 45000 + attempt * 20000;
+      return sleep(w).then(function(){ return callClaude(sys, usr, ws, attempt + 1); });
+    }
+    if (!r.ok) return r.json().then(function(e){ throw new Error(r.status + ' — ' + (e.error && e.error.message || 'Errore')); });
+    return r.json();
+  }).then(function(data) {
+    var txt = '';
+    (data.content || []).forEach(function(b){ if (b.type === 'text') txt += b.text; });
+    return { text: txt, data: data };
+  });
 }
 
-async function generate(){
-  if(!getKey()){document.getElementById('apibanner').style.display='block';return;}
-  const btn=document.getElementById('gbtn');
-  btn.disabled=true;btn.innerHTML='<span class="spin"></span>Generazione in corso...';
-  document.getElementById('parea').style.display='block';
-  document.getElementById('tnote').style.display='block';
-  document.getElementById('ovres').style.display='none';
-  document.getElementById('sdot').className='sdot run';
-  ST={combined:{},fed:{},synth:{}};RAW={};
-  const ps=getPS();
+// === PROMPTS ===
+function buildCombined(ds, tmr, fri) {
+  return 'Oggi e ' + ds + '. Esegui DUE ricerche e restituisci UN SOLO JSON.\n\n' +
+    'RICERCA 1 — COT CFTC piu recenti (Traders in Financial Futures, Futures Only):\n' +
+    'NQ=#209742 CME, ES=#13874+ CME, YM=#124603 CBOT\n' +
+    'Fonti: tradingster.com/cot/futures/fin/ o cftc.gov/dea/futures/financial_lf.htm\n' +
+    'Campi per ognuno: leveragedFundsLong, leveragedFundsShort, leveragedFundsNet (Long-Short), assetManagerLong, assetManagerShort, assetManagerNet, openInterest, weeklyChangeLF, signal (bearish/bullish), trend (max 8 parole).\n\n' +
+    'RICERCA 2 — Calendario economico USA:\n' +
+    'Cerca su investing.com/economic-calendar eventi USA a 3 stelle di OGGI ' + ds + ' e da ' + tmr + ' a ' + fri + '.\n' +
+    'Per ogni evento: name, date, timeCET, timeET, previous, forecast, actual (vuoto se non uscito), analysisIT (max 30 parole), scenarioPositive (max 12 parole NQ), scenarioNegative (max 12 parole NQ).\n' +
+    'Se nessun evento oggi: noEventsToday=true, todayEvents=[].\n' +
+    'geopoliticalAlert: alert attivi (Iran/tariffe/ecc) o stringa vuota.\n\n' +
+    'RISPOSTA: SOLO questo JSON esatto, zero testo prima o dopo:\n' +
+    '{"reportDate":"","nq":{"leveragedFundsLong":0,"leveragedFundsShort":0,"leveragedFundsNet":0,"assetManagerLong":0,"assetManagerShort":0,"assetManagerNet":0,"openInterest":0,"weeklyChangeLF":0,"signal":"","trend":""},' +
+    '"es":{"leveragedFundsLong":0,"leveragedFundsShort":0,"leveragedFundsNet":0,"assetManagerLong":0,"assetManagerShort":0,"assetManagerNet":0,"openInterest":0,"weeklyChangeLF":0,"signal":"","trend":""},' +
+    '"ym":{"leveragedFundsLong":0,"leveragedFundsShort":0,"leveragedFundsNet":0,"assetManagerLong":0,"assetManagerShort":0,"assetManagerNet":0,"openInterest":0,"weeklyChangeLF":0,"signal":"","trend":""},' +
+    '"cotAnalysis":"","todayEvents":[{"name":"","date":"","timeCET":"","timeET":"","previous":"","forecast":"","actual":"","analysisIT":"","scenarioPositive":"","scenarioNegative":""}],' +
+    '"weekEvents":[{"name":"","date":"","timeCET":"","timeET":"","previous":"","forecast":"","actual":"","analysisIT":"","scenarioPositive":"","scenarioNegative":""}],"noEventsToday":false,"geopoliticalAlert":""}';
+}
 
-  // STEP 1 — COT + News COMBINATI (unica chiamata web_search)
-  prog(1,'active','Ricerca COT CFTC + news macro US...');
-  try{
-    const res=await callClaude('Rispondi SOLO con JSON valido. Zero testo prima o dopo il JSON.',pCombined(),true);
-    RAW.combined=res.text;
-    ST.combined=pJSON(res.text);
-    const ok=!ST.combined._err&&ST.combined.nq&&ST.combined.nq.openInterest&&ST.combined.nq.openInterest!==0;
-    const nev=(ST.combined.todayEvents&&ST.combined.todayEvents.length)||0;
-    const wev=(ST.combined.weekEvents&&ST.combined.weekEvents.length)||0;
-    prog(1,'done',ok?'COT al '+ST.combined.reportDate+' - NQ LF '+Number(ST.combined.nq.leveragedFundsNet).toLocaleString('it-IT')+' | News oggi: '+nev+', settimana: '+wev:'Dati parziali — vedi Debug');
-  }catch(e){ST.combined={_err:e.message};RAW.combinedErr=e.message;prog(1,'err','x '+e.message.substring(0,80));}
+function buildFED(ds) {
+  return 'Dati macro FED aggiornati al ' + ds + '. SOLO questo JSON, zero testo prima o dopo:\n' +
+    '{"currentRate":"","nextFOMCDate":"","holdProbabilityNext":"","hikeProbability2026":"",' +
+    '"cpiHeadline":"","cpiCore":"","pceCore":"","unemployment":"","nfpLast":"",' +
+    '"ismPricesPaid":"","importPrices":"","fedStance":"","outlookNQ":"","keyRisks":""}';
+}
 
-  // STEP 2 — Opzioni (locale)
-  prog(2,'active');
-  calcOpt();renderOptDetail();
-  await sleep(500);
-  prog(2,'done');
+function buildSynth(ps, ds) {
+  var r = OPT.r || 0; var sup = OPT.sup || 0; var sett = OPT.s || 0;
+  var nq = ST.combined.nq || {};
+  var es = ST.combined.es || {};
+  var ym = ST.combined.ym || {};
+  var ev0 = (ST.combined.todayEvents && ST.combined.todayEvents[0]) || {};
+  return 'Trader NQ Nasdaq. Sintesi operativa OGGI ' + ds + '. SOLO JSON, zero testo prima o dopo.\n\n' +
+    'COT NQ: LF=' + (nq.leveragedFundsNet || 'ND') + ' AM=' + (nq.assetManagerNet || 'ND') + ' signal=' + (nq.signal || 'ND') + '\n' +
+    'COT ES signal=' + (es.signal || 'ND') + ' YM signal=' + (ym.signal || 'ND') + '\n' +
+    'NQ livelli: S=' + (sett || 'ND') + ' R=' + (r || 'ND') + ' Sup=' + (sup || 'ND') + '\n' +
+    'News oggi: ' + ((ST.combined.todayEvents && ST.combined.todayEvents.length) || 0) + ' eventi' + (ev0.name ? ' — ' + ev0.name + ' ' + ev0.timeCET : '') + '\n' +
+    'Geo: ' + (ST.combined.geopoliticalAlert || 'nessuna') + '\n' +
+    'FED: ' + (ST.fed.currentRate || 'ND') + ' hold=' + (ST.fed.holdProbabilityNext || 'ND') + ' hike=' + (ST.fed.hikeProbability2026 || 'ND') + '\n' +
+    'Psico: ieri=' + (ps.ieri || 'ND') + ' stato=' + (ps.stato || 'ND') + ' settimana=' + (ps.settimana || 'ND') + ' bias=' + (ps.bias || 'ND') + '\n\n' +
+    '{"bias":"","biasReason":"","scenarios":[' +
+    '{"name":"","probability":"","descriptionIT":"","entryZone":"","target1":0,"target2":0,"stopLoss":0,"triggerIT":""},' +
+    '{"name":"","probability":"","descriptionIT":"","entryZone":"","target1":0,"target2":0,"stopLoss":0,"triggerIT":""},' +
+    '{"name":"","probability":"","descriptionIT":"","entryZone":"","target1":0,"target2":0,"stopLoss":0,"triggerIT":""}],' +
+    '"psychWarnings":["","","",""],' +
+    '"keyLevels":{"r2":0,"r1":' + r + ',"pivot":' + sett + ',"s1":' + sup + ',"s2":0,"s3":0}}\n\n' +
+    'bias es SHORT/CAUTELOSO, biasReason 50 parole italiano, 3 scenari NQ realistici, 4 psychWarnings personalizzati max 18 parole.';
+}
 
-  // Pausa 30s tra la web_search e le chiamate successive (precauzione)
-  await sleep(30000);
+// === GENERATE ===
+// Architettura v2.4.0:
+// Step1: COT+News COMBINED (1 sola web_search) → risolve il 429 da 10K output/min
+// Step2: Opzioni locale
+// Step3: FED (no web_search)
+// Step4: Sintesi (no web_search)
+function generate() {
+  if (!getKey()) { document.getElementById('apibanner').style.display = 'block'; return; }
+  var btn = document.getElementById('gbtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span>Generazione in corso...';
+  document.getElementById('parea').style.display = 'block';
+  document.getElementById('tnote').style.display = 'block';
+  document.getElementById('ovres').style.display = 'none';
+  document.getElementById('sdot').className = 'sdot run';
+  ST = { combined: {}, fed: {}, synth: {} };
+  RAW = {};
+  var ps = getPS();
+
+  var SYS_JSON = 'Rispondi SOLO con JSON valido. Zero testo prima o dopo il JSON.';
+
+  // STEP 1 — COT + News combined (single web_search)
+  prog(1, 'active', 'Ricerca COT CFTC + news macro US...');
+  callClaude(SYS_JSON, buildCombined(DS, TMR, FRI), true)
+  .then(function(res) {
+    RAW.combined = res.text;
+    ST.combined = pJSON(res.text);
+    var ok = !ST.combined._err && ST.combined.nq && ST.combined.nq.openInterest && ST.combined.nq.openInterest !== 0;
+    var nev = (ST.combined.todayEvents && ST.combined.todayEvents.length) || 0;
+    var wev = (ST.combined.weekEvents && ST.combined.weekEvents.length) || 0;
+    if (ok) prog(1, 'done', 'COT al ' + ST.combined.reportDate + ' | NQ LF ' + Number(ST.combined.nq.leveragedFundsNet).toLocaleString('it-IT') + ' | News oggi: ' + nev + ', settimana: ' + wev);
+    else prog(1, 'done', 'Dati parziali — vedi tab Debug');
+  })
+  .catch(function(e) { ST.combined = { _err: e.message }; RAW.combinedErr = e.message; prog(1, 'err', 'x ' + e.message.substring(0,80)); })
+
+  // STEP 2 — Opzioni locale
+  .then(function() { prog(2, 'active'); calcOpt(); renderOptDetail(); return sleep(500); })
+  .then(function() { prog(2, 'done'); return sleep(30000); }) // 30s pausa dopo web_search
 
   // STEP 3 — FED (no web_search)
-  prog(3,'active');
-  try{
-    const res=await callClaude('Rispondi SOLO con JSON valido. Zero testo prima o dopo.',pFED(),false);
-    RAW.fed=res.text;ST.fed=pJSON(res.text);
-    prog(3,'done',ST.fed._err?'Parsing fallito':'v Rate: '+ST.fed.currentRate+' hold: '+ST.fed.holdProbabilityNext);
-  }catch(e){ST.fed={_err:e.message};prog(3,'err','x '+e.message.substring(0,80));}
-
-  await sleep(10000);
+  .then(function() {
+    prog(3, 'active');
+    return callClaude(SYS_JSON, buildFED(DS), false);
+  })
+  .then(function(res) {
+    RAW.fed = res.text; ST.fed = pJSON(res.text);
+    prog(3, 'done', ST.fed._err ? 'Parsing fallito' : ST.fed.currentRate + ' | hold ' + ST.fed.holdProbabilityNext);
+    return sleep(10000);
+  })
+  .catch(function(e) { ST.fed = { _err: e.message }; prog(3, 'err', 'x ' + e.message.substring(0,80)); return sleep(10000); })
 
   // STEP 4 — Sintesi (no web_search)
-  prog(4,'active');
-  try{
-    const res=await callClaude('Trader NQ. Rispondi SOLO con JSON valido. Zero testo prima o dopo.',pSynth(ps),false);
-    RAW.synth=res.text;ST.synth=pJSON(res.text);
-    prog(4,'done',ST.synth._err?'Parsing fallito':'v Bias: '+ST.synth.bias);
-  }catch(e){ST.synth={_err:e.message};prog(4,'err','x '+e.message.substring(0,80));}
+  .then(function() {
+    prog(4, 'active');
+    return callClaude('Trader NQ. ' + SYS_JSON, buildSynth(ps, DS), false);
+  })
+  .then(function(res) {
+    RAW.synth = res.text; ST.synth = pJSON(res.text);
+    prog(4, 'done', ST.synth._err ? 'Parsing fallito' : 'Bias: ' + ST.synth.bias);
+  })
+  .catch(function(e) { ST.synth = { _err: e.message }; prog(4, 'err', 'x ' + e.message.substring(0,80)); })
 
-  renderAll(ps);renderDebug();
-  document.getElementById('sdot').className='sdot ok';
-  btn.disabled=false;btn.innerHTML='Rigenera analisi';
-  document.getElementById('tnote').style.display='none';
+  // FINALE
+  .then(function() {
+    renderAll(ps);
+    renderDebug();
+    document.getElementById('sdot').className = 'sdot ok';
+    btn.disabled = false;
+    btn.innerHTML = 'Rigenera analisi';
+    document.getElementById('tnote').style.display = 'none';
+  });
 }
 
-function renderDebug(){
-  const items=[{k:'combined',l:'Step 1 — COT+News (web search)'},{k:'fed',l:'Step 3 — FED'},{k:'synth',l:'Step 4 — Sintesi'}];
-  document.getElementById('debugpanel').innerHTML=items.map(it=>{
-    const raw=RAW[it.k]||RAW[it.k+'Err']||'(vuoto)';
-    const s=ST[it.k]||{};const err=s._err;
-    return'<details class="dbg"'+(err?' open':'')+"><summary>"+(err?'x ':'v ')+it.l+(err?' — '+err:' ('+raw.length+' chars)')+'</summary><pre>'+esc(raw.substring(0,4000))+'</pre></details>';
+// === DEBUG ===
+function renderDebug() {
+  var items = [
+    { k: 'combined', l: 'Step 1 — COT + News (web search)' },
+    { k: 'fed', l: 'Step 3 — FED' },
+    { k: 'synth', l: 'Step 4 — Sintesi' }
+  ];
+  document.getElementById('debugpanel').innerHTML = items.map(function(it) {
+    var raw = RAW[it.k] || RAW[it.k + 'Err'] || '(vuoto)';
+    var s = ST[it.k] || {};
+    var err = s._err;
+    return '<details class="dbg"' + (err ? ' open' : '') + '><summary>' + (err ? 'x ' : 'v ') + it.l + (err ? ' — ' + err : ' (' + raw.length + ' chars)') + '</summary><pre>' + esc(raw.substring(0,4000)) + '</pre></details>';
   }).join('');
 }
-function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 
-function renderAll(ps){renderOverview(ps);renderCOT();renderNews();renderFED();}
+// === RENDER ===
+function renderAll(ps) { renderOverview(ps); renderCOT(); renderNews(); renderFED(); }
 
-function renderOverview(ps){
-  const b=ST.synth.bias||'—';
-  const il=b.toLowerCase().includes('long'),is=b.toLowerCase().includes('short');
-  const bc=il?'bgg':is?'brr':'baa',bco=il?'up':is?'dn':'neu';
-  const nq=ST.combined.nq||{};
+function renderOverview(ps) {
+  var b = ST.synth.bias || '—';
+  var il = b.toLowerCase().indexOf('long') >= 0;
+  var is_ = b.toLowerCase().indexOf('short') >= 0;
+  var bc = il ? 'bgg' : is_ ? 'brr' : 'baa';
+  var bco = il ? 'up' : is_ ? 'dn' : 'neu';
+  var nq = ST.combined.nq || {};
 
-  document.getElementById('ovmet').innerHTML=
-    '<div class="mc"><div class="lbl">Bias del giorno</div><div class="val '+bco+'" style="font-size:13px">'+b+'</div></div>'+
-    '<div class="mc"><div class="lbl">Settlement NQ</div><div class="val" style="font-size:15px">'+(OPT.s?fmt(OPT.s):'—')+'</div><div class="sub">CME Options</div></div>'+
-    '<div class="mc"><div class="lbl">Resistenza MM</div><div class="val up">'+(OPT.r?fmt(OPT.r):'—')+'</div><div class="sub">S+C+P</div></div>'+
-    '<div class="mc"><div class="lbl">Supporto MM</div><div class="val dn">'+(OPT.sup?fmt(OPT.sup):'—')+'</div><div class="sub">S-C-P</div></div>'+
-    '<div class="mc"><div class="lbl">Fed Rate</div><div class="val" style="font-size:14px">'+(ST.fed.currentRate||'—')+'</div><div class="sub">'+(ST.fed.holdProbabilityNext?'Hold '+ST.fed.holdProbabilityNext:'')+'</div></div>'+
-    '<div class="mc"><div class="lbl">COT NQ Signal</div><div class="val" style="margin-top:4px">'+sbadge(nq.signal)+'</div><div class="sub">LF '+(nq.leveragedFundsNet!=null?(Number(nq.leveragedFundsNet)>0?'+':'')+Number(nq.leveragedFundsNet).toLocaleString('it-IT'):'—')+'</div></div>';
+  document.getElementById('ovmet').innerHTML =
+    '<div class="mc"><div class="lbl">Bias del giorno</div><div class="val ' + bco + '" style="font-size:13px">' + b + '</div></div>' +
+    '<div class="mc"><div class="lbl">Settlement NQ</div><div class="val" style="font-size:15px">' + (OPT.s ? fmt(OPT.s) : '—') + '</div><div class="sub">CME Options</div></div>' +
+    '<div class="mc"><div class="lbl">Resistenza MM</div><div class="val up">' + (OPT.r ? fmt(OPT.r) : '—') + '</div><div class="sub">S+C+P</div></div>' +
+    '<div class="mc"><div class="lbl">Supporto MM</div><div class="val dn">' + (OPT.sup ? fmt(OPT.sup) : '—') + '</div><div class="sub">S-C-P</div></div>' +
+    '<div class="mc"><div class="lbl">Fed Rate</div><div class="val" style="font-size:14px">' + (ST.fed.currentRate || '—') + '</div><div class="sub">' + (ST.fed.holdProbabilityNext ? 'Hold ' + ST.fed.holdProbabilityNext : '') + '</div></div>' +
+    '<div class="mc"><div class="lbl">COT NQ Signal</div><div class="val" style="margin-top:4px">' + sbadge(nq.signal) + '</div><div class="sub">LF ' + (nq.leveragedFundsNet != null ? (Number(nq.leveragedFundsNet) > 0 ? '+' : '') + Number(nq.leveragedFundsNet).toLocaleString('it-IT') : '—') + '</div></div>';
 
-  const wl=ST.synth.psychWarnings;
-  document.getElementById('ovpsych').innerHTML=wl&&wl.length?'<div style="font-size:13px;font-weight:600;margin-bottom:8px;margin-top:4px">Avvertenze Psicologiche</div><ul class="psyl">'+wl.map(w=>'<li>'+w+'</li>').join('')+'</ul>':'';
+  var wl = ST.synth.psychWarnings;
+  document.getElementById('ovpsych').innerHTML = (wl && wl.length) ?
+    '<div style="font-size:13px;font-weight:600;margin-bottom:8px;margin-top:4px">Avvertenze Psicologiche</div><ul class="psyl">' + wl.map(function(w){ return '<li>' + w + '</li>'; }).join('') + '</ul>' : '';
 
-  document.getElementById('ovbias').innerHTML=
-    '<div style="margin-bottom:12px"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><span class="badge '+bc+'" style="font-size:12px;padding:4px 14px">BIAS: '+b+'</span></div>'+
-    '<div style="font-size:13px;color:var(--text2);line-height:1.7">'+(ST.synth.biasReason||'')+'</div></div>';
+  document.getElementById('ovbias').innerHTML =
+    '<div style="margin-bottom:12px"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><span class="badge ' + bc + '" style="font-size:12px;padding:4px 14px">BIAS: ' + b + '</span></div>' +
+    '<div style="font-size:13px;color:var(--text2);line-height:1.7">' + (ST.synth.biasReason || '') + '</div></div>';
 
-  const sc=ST.synth.scenarios||[];
-  document.getElementById('ovscen').innerHTML=sc.length?sc.map((s,i)=>
-    '<div class="so"><div class="soh"><span class="son">'+(s.name||'Scenario '+(i+1))+'</span><span class="badge '+(i===0?'brr':i===2?'bgg':'baa')+'">'+(s.probability||'')+'</span></div>'+
-    '<div class="sod">'+(s.descriptionIT||'')+'</div><div class="sotr">Trigger: '+(s.triggerIT||'')+'</div>'+
-    '<div class="sols"><div class="sli"><span class="lbl">Entry Zone</span><span class="v">'+(s.entryZone||'—')+'</span></div>'+
-    '<div class="sli"><span class="lbl">Target 1</span><span class="v up">'+(s.target1?fmt(s.target1,0):'—')+'</span></div>'+
-    '<div class="sli"><span class="lbl">Target 2</span><span class="v up">'+(s.target2?fmt(s.target2,0):'—')+'</span></div>'+
-    '<div class="sli"><span class="lbl">Stop Loss</span><span class="v dn">'+(s.stopLoss?fmt(s.stopLoss,0):'—')+'</span></div></div></div>'
-  ).join(''):'<div class="al aw">Scenari non disponibili.</div>';
+  var sc = ST.synth.scenarios || [];
+  document.getElementById('ovscen').innerHTML = sc.length ? sc.map(function(s, i) {
+    var cc = i === 0 ? 'brr' : i === 2 ? 'bgg' : 'baa';
+    return '<div class="so"><div class="soh"><span class="son">' + (s.name || 'Scenario ' + (i+1)) + '</span><span class="badge ' + cc + '">' + (s.probability || '') + '</span></div>' +
+      '<div class="sod">' + (s.descriptionIT || '') + '</div><div class="sotr">Trigger: ' + (s.triggerIT || '') + '</div>' +
+      '<div class="sols"><div class="sli"><span class="lbl">Entry Zone</span><span class="v">' + (s.entryZone || '—') + '</span></div>' +
+      '<div class="sli"><span class="lbl">Target 1</span><span class="v up">' + (s.target1 ? fmt(s.target1, 0) : '—') + '</span></div>' +
+      '<div class="sli"><span class="lbl">Target 2</span><span class="v up">' + (s.target2 ? fmt(s.target2, 0) : '—') + '</span></div>' +
+      '<div class="sli"><span class="lbl">Stop Loss</span><span class="v dn">' + (s.stopLoss ? fmt(s.stopLoss, 0) : '—') + '</span></div></div></div>';
+  }).join('') : '<div class="al aw">Scenari non disponibili.</div>';
 
-  const kl=ST.synth.keyLevels||{};
-  if(!kl.pivot&&OPT.s)kl.pivot=OPT.s;if(!kl.r1&&OPT.r)kl.r1=OPT.r;if(!kl.s1&&OPT.sup)kl.s1=OPT.sup;
+  var kl = ST.synth.keyLevels || {};
+  if (!kl.pivot && OPT.s) kl.pivot = OPT.s;
+  if (!kl.r1 && OPT.r) kl.r1 = OPT.r;
+  if (!kl.s1 && OPT.sup) kl.s1 = OPT.sup;
   renderLvChart(kl);
-  document.getElementById('lvlist').innerHTML=
-    '<div class="dr"><span class="dk">R2</span><span class="dv up">'+(kl.r2?fmt(kl.r2,0):'—')+'</span></div>'+
-    '<div class="dr"><span class="dk">R1</span><span class="dv up">'+(kl.r1?fmt(kl.r1,0):'—')+'</span></div>'+
-    '<div class="dr"><span class="dk">Settlement</span><span class="dv">'+(kl.pivot?fmt(kl.pivot,0):'—')+'</span></div>'+
-    '<div class="dr"><span class="dk">S1</span><span class="dv dn">'+(kl.s1?fmt(kl.s1,0):'—')+'</span></div>'+
-    '<div class="dr"><span class="dk">S2</span><span class="dv dn">'+(kl.s2?fmt(kl.s2,0):'—')+'</span></div>'+
-    '<div class="dr"><span class="dk">S3</span><span class="dv dn">'+(kl.s3?fmt(kl.s3,0):'—')+'</span></div>';
-  document.getElementById('ovres').style.display='block';
+  document.getElementById('lvlist').innerHTML =
+    '<div class="dr"><span class="dk">R2</span><span class="dv up">' + (kl.r2 ? fmt(kl.r2, 0) : '—') + '</span></div>' +
+    '<div class="dr"><span class="dk">R1</span><span class="dv up">' + (kl.r1 ? fmt(kl.r1, 0) : '—') + '</span></div>' +
+    '<div class="dr"><span class="dk">Settlement / Pivot</span><span class="dv">' + (kl.pivot ? fmt(kl.pivot, 0) : '—') + '</span></div>' +
+    '<div class="dr"><span class="dk">S1</span><span class="dv dn">' + (kl.s1 ? fmt(kl.s1, 0) : '—') + '</span></div>' +
+    '<div class="dr"><span class="dk">S2</span><span class="dv dn">' + (kl.s2 ? fmt(kl.s2, 0) : '—') + '</span></div>' +
+    '<div class="dr"><span class="dk">S3</span><span class="dv dn">' + (kl.s3 ? fmt(kl.s3, 0) : '—') + '</span></div>';
+  document.getElementById('ovres').style.display = 'block';
 }
 
-function renderLvChart(kl){
-  const ctx=document.getElementById('lvchart');if(!ctx)return;
-  if(lvChart)lvChart.destroy();
-  const v=[kl.s3,kl.s2,kl.s1,kl.pivot,kl.r1,kl.r2].map(x=>x||0);
-  lvChart=new Chart(ctx,{type:'bar',data:{labels:['S3','S2','S1','Pivot','R1','R2'],datasets:[{data:v,backgroundColor:['#22c55e','#16a34a','#4ade80','#3b82f6','#f87171','#ef4444'],borderRadius:4,borderSkipped:false}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#505050',font:{size:10},callback:v=>v.toLocaleString('it-IT')},grid:{color:'#1c1c1c'}},y:{ticks:{color:'#909090',font:{size:11}},grid:{display:false}}}}});
+function renderLvChart(kl) {
+  var ctx = document.getElementById('lvchart');
+  if (!ctx) return;
+  if (lvChart) lvChart.destroy();
+  var v = [kl.s3, kl.s2, kl.s1, kl.pivot, kl.r1, kl.r2].map(function(x){ return x || 0; });
+  lvChart = new Chart(ctx, {
+    type: 'bar',
+    data: { labels: ['S3','S2','S1','Pivot','R1','R2'], datasets: [{ data: v, backgroundColor: ['#22c55e','#16a34a','#4ade80','#3b82f6','#f87171','#ef4444'], borderRadius: 4, borderSkipped: false }] },
+    options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
+      scales: { x: { ticks: { color: '#505050', font: { size: 10 }, callback: function(v){ return v.toLocaleString('it-IT'); } }, grid: { color: '#1c1c1c' } }, y: { ticks: { color: '#909090', font: { size: 11 } }, grid: { display: false } } } }
+  });
 }
 
-function renderCOT(){
-  const el=document.getElementById('cotc'),c=ST.combined;
-  if(!c||c._err){el.innerHTML='<div class="al ae">Errore: '+(c&&c._err||'Dati mancanti')+'</div><div class="al aw">Vai tab Debug per la risposta raw.</div>';return;}
+function renderCOT() {
+  var el = document.getElementById('cotc');
+  var c = ST.combined;
+  if (!c || c._err) { el.innerHTML = '<div class="al ae">Errore: ' + (c && c._err || 'Dati mancanti') + '</div><div class="al aw">Vai tab Debug per vedere la risposta raw.</div>'; return; }
 
-  const detail=(label,d)=>{
-    if(!d)return'<div class="al aw">Dati non disponibili.</div>';
-    const lf=Number(d.leveragedFundsNet)||0,am=Number(d.assetManagerNet)||0,wc=Number(d.weeklyChangeLF)||0;
-    return '<div class="card">'+
-      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><span style="font-size:13px;font-weight:700">'+label+'</span>'+sbadge(d.signal)+'</div>'+
-      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">'+
-      '<div class="inset"><div class="lbl">Non-Commercial LF netto</div><div style="font-size:20px;font-weight:700;'+(lf<0?'color:var(--red)':'color:var(--green)')+'">'+( lf>0?'+':'')+lf.toLocaleString('it-IT')+'</div><div style="font-size:10px;color:var(--text3)">OI '+Number(d.openInterest||0).toLocaleString('it-IT')+' · '+(lf<0?'NET SHORT':'NET LONG')+'</div></div>'+
-      '<div class="inset"><div class="lbl">Commercial AM netto</div><div style="font-size:20px;font-weight:700;'+(am>0?'color:var(--green)':'color:var(--red)')+'">'+( am>0?'+':'')+am.toLocaleString('it-IT')+'</div><div style="font-size:10px;color:var(--text3)">'+(am>0?'NET LONG':'NET SHORT')+'</div></div></div>'+
-      '<div class="dr"><span class="dk">Non-Comm Long</span><span class="dv up">'+Number(d.leveragedFundsLong||0).toLocaleString('it-IT')+'</span></div>'+
-      '<div class="dr"><span class="dk">Non-Comm Short</span><span class="dv dn">'+Number(d.leveragedFundsShort||0).toLocaleString('it-IT')+'</span></div>'+
-      '<div class="dr"><span class="dk">Commercial Long</span><span class="dv">'+Number(d.assetManagerLong||0).toLocaleString('it-IT')+'</span></div>'+
-      '<div class="dr"><span class="dk">Commercial Short</span><span class="dv">'+Number(d.assetManagerShort||0).toLocaleString('it-IT')+'</span></div>'+
-      '<div class="dr"><span class="dk">Var. sett. LF</span><span class="dv '+(wc>0?'up':wc<0?'dn':'mu')+'">'+( wc>0?'+':'')+wc.toLocaleString('it-IT')+'</span></div>'+
-      '<div class="dr"><span class="dk">Open Interest</span><span class="dv">'+Number(d.openInterest||0).toLocaleString('it-IT')+'</span></div>'+
-      '<div class="dr"><span class="dk">Trend</span><span class="dv" style="font-size:11px;max-width:220px;text-align:right">'+(d.trend||'—')+'</span></div>'+
+  function detail(label, d) {
+    if (!d) return '<div class="al aw">Dati non disponibili.</div>';
+    var lf = Number(d.leveragedFundsNet) || 0;
+    var am = Number(d.assetManagerNet) || 0;
+    var wc = Number(d.weeklyChangeLF) || 0;
+    return '<div class="card">' +
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><span style="font-size:13px;font-weight:700">' + label + '</span>' + sbadge(d.signal) + '</div>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">' +
+      '<div class="inset"><div class="lbl">Non-Commercial (LF) netto</div><div style="font-size:20px;font-weight:700;' + (lf < 0 ? 'color:var(--red)' : 'color:var(--green)') + '">' + (lf > 0 ? '+' : '') + lf.toLocaleString('it-IT') + '</div><div style="font-size:10px;color:var(--text3)">OI ' + Number(d.openInterest || 0).toLocaleString('it-IT') + ' · ' + (lf < 0 ? 'NET SHORT' : 'NET LONG') + '</div></div>' +
+      '<div class="inset"><div class="lbl">Commercial (AM) netto</div><div style="font-size:20px;font-weight:700;' + (am > 0 ? 'color:var(--green)' : 'color:var(--red)') + '">' + (am > 0 ? '+' : '') + am.toLocaleString('it-IT') + '</div><div style="font-size:10px;color:var(--text3)">' + (am > 0 ? 'NET LONG' : 'NET SHORT') + '</div></div></div>' +
+      '<div class="dr"><span class="dk">Non-Comm Long</span><span class="dv up">' + Number(d.leveragedFundsLong || 0).toLocaleString('it-IT') + '</span></div>' +
+      '<div class="dr"><span class="dk">Non-Comm Short</span><span class="dv dn">' + Number(d.leveragedFundsShort || 0).toLocaleString('it-IT') + '</span></div>' +
+      '<div class="dr"><span class="dk">Commercial Long</span><span class="dv">' + Number(d.assetManagerLong || 0).toLocaleString('it-IT') + '</span></div>' +
+      '<div class="dr"><span class="dk">Commercial Short</span><span class="dv">' + Number(d.assetManagerShort || 0).toLocaleString('it-IT') + '</span></div>' +
+      '<div class="dr"><span class="dk">Variazione sett. LF</span><span class="dv ' + sgnc(wc) + '">' + (wc > 0 ? '+' : '') + wc.toLocaleString('it-IT') + '</span></div>' +
+      '<div class="dr"><span class="dk">Open Interest</span><span class="dv">' + Number(d.openInterest || 0).toLocaleString('it-IT') + '</span></div>' +
+      '<div class="dr"><span class="dk">Trend</span><span class="dv" style="font-size:11px;max-width:220px;text-align:right">' + (d.trend || '—') + '</span></div></div>';
+  }
+
+  el.innerHTML =
+    (c.reportDate ? '<div class="al ai">CFTC Futures Only · dati al <strong>' + c.reportDate + '</strong></div>' : '') +
+    '<div class="cg3">' +
+    ['nq','es','ym'].map(function(k) {
+      var d = c[k] || {}; var lf = Number(d.leveragedFundsNet) || 0;
+      return '<div class="ci"><div class="cin">' + k.toUpperCase() + ' · LF Net</div><div class="civ ' + (lf < 0 ? 'dn' : 'up') + '">' + (lf > 0 ? '+' : '') + lf.toLocaleString('it-IT') + '</div><div class="cis ' + (lf < 0 ? 'dn' : 'up') + '">' + (lf < 0 ? 'NET SHORT' : 'NET LONG') + '</div></div>';
+    }).join('') +
+    ['nq','es','ym'].map(function(k) {
+      var d = c[k] || {}; var am = Number(d.assetManagerNet) || 0;
+      return '<div class="ci"><div class="cin">' + k.toUpperCase() + ' · AM Net</div><div class="civ ' + (am > 0 ? 'up' : 'dn') + '">' + (am > 0 ? '+' : '') + am.toLocaleString('it-IT') + '</div><div class="cis ' + (am > 0 ? 'up' : 'dn') + '">' + (am > 0 ? 'NET LONG' : 'NET SHORT') + '</div></div>';
+    }).join('') +
+    '</div>' +
+    '<div class="card"><div class="ctitle">AM Net vs LF Net (valore assoluto)</div><div style="position:relative;height:200px"><canvas id="cotch"></canvas></div></div>' +
+    (c.cotAnalysis ? '<div class="inset" style="font-size:12px;color:var(--text2);line-height:1.7;margin-bottom:14px"><strong style="color:var(--text)">Analisi integrata:</strong> ' + c.cotAnalysis + '</div>' : '') +
+    '<div class="sep"></div>' +
+    '<div class="ctabs"><button class="ctab active" onclick="ctab(\'nq\',this)">NQ #209742</button><button class="ctab" onclick="ctab(\'es\',this)">ES #13874+</button><button class="ctab" onclick="ctab(\'ym\',this)">YM #124603</button></div>' +
+    '<div class="cpanel active" id="cp-nq">' + detail('E-mini Nasdaq-100 · CME · #209742', c.nq) + '</div>' +
+    '<div class="cpanel" id="cp-es">' + detail('S&P 500 Consolidated · CME · #13874+', c.es) + '</div>' +
+    '<div class="cpanel" id="cp-ym">' + detail('DJIA x$5 · CBOT · #124603', c.ym) + '</div>';
+
+  setTimeout(function() {
+    var ctx = document.getElementById('cotch');
+    if (!ctx) return;
+    new Chart(ctx, {
+      type: 'bar',
+      data: { labels: ['NQ','ES (div10)','YM'], datasets: [
+        { label: 'Asset Manager Net', data: [Math.abs((c.nq && c.nq.assetManagerNet) || 0), Math.abs((c.es && c.es.assetManagerNet) || 0) / 10, Math.abs((c.ym && c.ym.assetManagerNet) || 0)], backgroundColor: 'rgba(34,197,94,0.7)', borderRadius: 4 },
+        { label: 'Lev Funds Net abs', data: [Math.abs((c.nq && c.nq.leveragedFundsNet) || 0), Math.abs((c.es && c.es.leveragedFundsNet) || 0) / 10, Math.abs((c.ym && c.ym.leveragedFundsNet) || 0)], backgroundColor: 'rgba(239,68,68,0.7)', borderRadius: 4 }
+      ]},
+      options: { responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { labels: { color: '#909090', font: { size: 11 } } } },
+        scales: { x: { ticks: { color: '#909090' }, grid: { color: '#1c1c1c' } }, y: { ticks: { color: '#505050', font: { size: 10 }, callback: function(v){ return v.toLocaleString('it-IT'); } }, grid: { color: '#1c1c1c' } } } }
+    });
+  }, 150);
+}
+
+function ctab(n, b) {
+  document.querySelectorAll('.cpanel').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.ctab').forEach(function(t){ t.classList.remove('active'); });
+  document.getElementById('cp-' + n).classList.add('active');
+  b.classList.add('active');
+}
+
+function renderNews() {
+  var el = document.getElementById('newsc');
+  var c = ST.combined;
+  if (!c || c._err) { el.innerHTML = '<div class="al ae">Errore nei dati. Vedi tab Debug.</div>'; return; }
+
+  function evCard(ev) {
+    return '<div class="nc"><div class="nh"><div><div class="nn">' + ev.name + '</div><div class="nt">' + ev.date + ' · ' + ev.timeCET + ' (' + ev.timeET + ')</div></div><span class="badge brr">***</span></div>' +
+      ((ev.previous || ev.forecast || ev.actual) ? '<table class="dtbl"><thead><tr><th>Precedente</th><th>Atteso</th><th>Attuale</th></tr></thead><tbody><tr><td>' + (ev.previous || '—') + '</td><td>' + (ev.forecast || '—') + '</td><td class="' + (ev.actual ? 'up' : '') + '">' + (ev.actual || '—') + '</td></tr></tbody></table>' : '') +
+      (ev.analysisIT ? '<div class="inset" style="font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:10px">' + ev.analysisIT + '</div>' : '') +
+      ((ev.scenarioPositive || ev.scenarioNegative) ? '<div class="sg"><div class="sb sbull"><div class="sl">Migliore — NQ</div><div class="st">' + (ev.scenarioPositive || '—') + '</div></div><div class="sb sneu"><div class="sl">In linea</div><div class="st">Reazione contenuta</div></div><div class="sb sbear"><div class="sl">Peggiore — NQ</div><div class="st">' + (ev.scenarioNegative || '—') + '</div></div></div>' : '') +
       '</div>';
-  };
+  }
 
-  el.innerHTML=
-    (c.reportDate?'<div class="al ai">CFTC Futures Only · dati al <strong>'+c.reportDate+'</strong></div>':'')+
-    '<div class="cg3">'+
-    ['nq','es','ym'].map(k=>{const d=c[k]||{};const lf=Number(d.leveragedFundsNet)||0;return'<div class="ci"><div class="cin">'+k.toUpperCase()+' LF Net</div><div class="civ '+(lf<0?'dn':'up')+'">'+(lf>0?'+':'')+lf.toLocaleString('it-IT')+'</div><div class="cis '+(lf<0?'dn':'up')+'">'+(lf<0?'NET SHORT':'NET LONG')+'</div></div>';}).join('')+
-    ['nq','es','ym'].map(k=>{const d=c[k]||{};const am=Number(d.assetManagerNet)||0;return'<div class="ci"><div class="cin">'+k.toUpperCase()+' AM Net</div><div class="civ '+(am>0?'up':'dn')+'">'+(am>0?'+':'')+am.toLocaleString('it-IT')+'</div><div class="cis '+(am>0?'up':'dn')+'">'+(am>0?'NET LONG':'NET SHORT')+'</div></div>';}).join('')+
-    '</div>'+
-    '<div class="card"><div class="ctitle">AM Net vs LF Net (assoluto)</div><div style="position:relative;height:200px"><canvas id="cotch"></canvas></div></div>'+
-    (c.cotAnalysis?'<div class="inset" style="font-size:12px;color:var(--text2);line-height:1.7;margin-bottom:14px"><strong style="color:var(--text)">Analisi integrata:</strong> '+c.cotAnalysis+'</div>':'')+
-    '<div class="sep"></div><div class="ctabs">'+
-    '<button class="ctab active" onclick="ctab('nq',this)">NQ #209742</button>'+
-    '<button class="ctab" onclick="ctab('es',this)">ES #13874+</button>'+
-    '<button class="ctab" onclick="ctab('ym',this)">YM #124603</button></div>'+
-    '<div class="cpanel active" id="cp-nq">'+detail('E-mini Nasdaq-100 CME #209742',c.nq)+'</div>'+
-    '<div class="cpanel" id="cp-es">'+detail('S&P 500 Consolidated CME #13874+',c.es)+'</div>'+
-    '<div class="cpanel" id="cp-ym">'+detail('DJIA x$5 CBOT #124603',c.ym)+'</div>';
-
-  setTimeout(()=>{
-    const ctx=document.getElementById('cotch');if(!ctx)return;
-    new Chart(ctx,{type:'bar',data:{labels:['NQ','ES (div10)','YM'],datasets:[
-      {label:'Asset Manager Net',data:[Math.abs(c.nq&&c.nq.assetManagerNet||0),Math.abs(c.es&&c.es.assetManagerNet||0)/10,Math.abs(c.ym&&c.ym.assetManagerNet||0)],backgroundColor:'rgba(34,197,94,0.7)',borderRadius:4},
-      {label:'Lev Funds Net abs',data:[Math.abs(c.nq&&c.nq.leveragedFundsNet||0),Math.abs(c.es&&c.es.leveragedFundsNet||0)/10,Math.abs(c.ym&&c.ym.leveragedFundsNet||0)],backgroundColor:'rgba(239,68,68,0.7)',borderRadius:4}
-    ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#909090',font:{size:11}}}},scales:{x:{ticks:{color:'#909090'},grid:{color:'#1c1c1c'}},y:{ticks:{color:'#505050',font:{size:10},callback:v=>v.toLocaleString('it-IT')},grid:{color:'#1c1c1c'}}}}});
-  },150);
+  var tevs = c.todayEvents || [];
+  var wevs = c.weekEvents || [];
+  var h = '<div class="sh" style="margin-bottom:4px">News Macro US Oggi — ' + DS2 + '</div><div class="ssub">Solo eventi *** US</div>';
+  h += (c.noEventsToday || tevs.length === 0) ? '<div class="al ai">Nessun evento 3 stelle US per oggi. Il mercato si muovera su geopolitica o sentiment.</div>' : tevs.map(evCard).join('');
+  if (c.geopoliticalAlert) h += '<div class="al aw" style="margin-top:6px"><strong>Alert geopolitico:</strong> ' + c.geopoliticalAlert + '</div>';
+  h += '<div class="sep"></div><div class="sh" style="margin-bottom:4px">Radar Macro Settimana — ' + TMR + ' fino ' + FRI + '</div><div class="ssub">Tutti gli eventi *** US prossimi giorni</div>';
+  h += wevs.length === 0 ? '<div class="al ai">Nessun evento 3 stelle per il resto della settimana.</div>' :
+    wevs.map(function(ev) {
+      return '<div class="wc"><div class="wd">' + ev.date + '</div>' +
+        '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;gap:10px"><div><div class="wn">' + ev.name + '</div><div class="wt">' + ev.timeCET + ' (' + ev.timeET + ')</div></div><span class="badge brr">***</span></div>' +
+        ((ev.previous || ev.forecast) ? '<table class="dtbl" style="margin-bottom:8px"><thead><tr><th>Precedente</th><th>Previsto</th><th>Attuale</th></tr></thead><tbody><tr><td>' + (ev.previous || '—') + '</td><td>' + (ev.forecast || '—') + '</td><td class="' + (ev.actual ? 'up' : '') + '">' + (ev.actual || '—') + '</td></tr></tbody></table>' : '') +
+        (ev.analysisIT ? '<div style="font-size:11px;color:var(--text2);line-height:1.5;margin-bottom:6px">' + ev.analysisIT + '</div>' : '') +
+        ((ev.scenarioPositive || ev.scenarioNegative) ? '<div style="display:flex;gap:6px;flex-wrap:wrap"><span class="badge bgg" style="font-size:10px">+ ' + (ev.scenarioPositive || '') + '</span><span class="badge brr" style="font-size:10px">- ' + (ev.scenarioNegative || '') + '</span></div>' : '') +
+        '</div>';
+    }).join('');
+  el.innerHTML = h;
 }
 
-function ctab(n,b){document.querySelectorAll('.cpanel').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.ctab').forEach(t=>t.classList.remove('active'));document.getElementById('cp-'+n).classList.add('active');b.classList.add('active');}
-
-function renderNews(){
-  const el=document.getElementById('newsc'),c=ST.combined;
-  if(!c||c._err){el.innerHTML='<div class="al ae">Errore nei dati combinati. Vedi tab Debug.</div>';return;}
-
-  const ec=ev=>'<div class="nc"><div class="nh"><div><div class="nn">'+ev.name+'</div><div class="nt">'+ev.date+' · '+ev.timeCET+' ('+ev.timeET+')</div></div><span class="badge brr">***</span></div>'+
-    (ev.previous||ev.forecast||ev.actual?'<table class="dtbl"><thead><tr><th>Precedente</th><th>Atteso</th><th>Attuale</th></tr></thead><tbody><tr><td>'+(ev.previous||'—')+'</td><td>'+(ev.forecast||'—')+'</td><td class="'+(ev.actual?'up':'')+'">'+(ev.actual||'—')+'</td></tr></tbody></table>':'')+
-    (ev.analysisIT?'<div class="inset" style="font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:10px">'+ev.analysisIT+'</div>':'')+
-    (ev.scenarioPositive||ev.scenarioNegative?'<div class="sg"><div class="sb sbull"><div class="sl">Migliore NQ</div><div class="st">'+(ev.scenarioPositive||'—')+'</div></div><div class="sb sneu"><div class="sl">In linea</div><div class="st">Reazione contenuta</div></div><div class="sb sbear"><div class="sl">Peggiore NQ</div><div class="st">'+(ev.scenarioNegative||'—')+'</div></div></div>':'')+
-    '</div>';
-
-  const tevs=c.todayEvents||[],wevs=c.weekEvents||[];
-  let h='<div class="sh" style="margin-bottom:4px">News Macro US Oggi — '+DS2+'</div><div class="ssub">Solo eventi *** US</div>';
-  h+=(c.noEventsToday||tevs.length===0)?'<div class="al ai">Nessun evento 3 stelle US per oggi. Mercato si muovera su geopolitica o sentiment.</div>':tevs.map(ec).join('');
-  if(c.geopoliticalAlert)h+='<div class="al aw" style="margin-top:6px"><strong>Alert geopolitico:</strong> '+c.geopoliticalAlert+'</div>';
-  h+='<div class="sep"></div><div class="sh" style="margin-bottom:4px">Radar Macro Settimana — '+TMR+' fino '+FRI+'</div><div class="ssub">Tutti gli eventi *** US prossimi giorni</div>';
-  h+=wevs.length===0?'<div class="al ai">Nessun evento 3 stelle per il resto della settimana.</div>':wevs.map(ev=>
-    '<div class="wc"><div class="wd">'+ev.date+'</div><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;gap:10px"><div><div class="wn">'+ev.name+'</div><div class="wt">'+ev.timeCET+' ('+ev.timeET+')</div></div><span class="badge brr">***</span></div>'+
-    (ev.previous||ev.forecast?'<table class="dtbl" style="margin-bottom:8px"><thead><tr><th>Precedente</th><th>Previsto</th><th>Attuale</th></tr></thead><tbody><tr><td>'+(ev.previous||'—')+'</td><td>'+(ev.forecast||'—')+'</td><td class="'+(ev.actual?'up':'')+'">'+(ev.actual||'—')+'</td></tr></tbody></table>':'')+
-    (ev.analysisIT?'<div style="font-size:11px;color:var(--text2);line-height:1.5;margin-bottom:6px">'+ev.analysisIT+'</div>':'')+
-    (ev.scenarioPositive||ev.scenarioNegative?'<div style="display:flex;gap:6px;flex-wrap:wrap"><span class="badge bgg" style="font-size:10px">+'+( ev.scenarioPositive||'')+'</span><span class="badge brr" style="font-size:10px">-'+(ev.scenarioNegative||'')+'</span></div>':'')+
-    '</div>'
-  ).join('');
-  el.innerHTML=h;
-}
-
-function renderFED(){
-  const el=document.getElementById('fedc'),fed=ST.fed;
-  if(!fed||fed._err){el.innerHTML='<div class="al ae">'+(fed&&fed._err||'Dati mancanti')+'</div>';return;}
-  el.innerHTML=
-    '<div class="mg" style="margin-bottom:14px">'+
-    '<div class="mc"><div class="lbl">Fed Funds Rate</div><div class="val">'+(fed.currentRate||'—')+'</div></div>'+
-    '<div class="mc"><div class="lbl">Prossimo FOMC</div><div class="val" style="font-size:13px">'+(fed.nextFOMCDate||'—')+'</div></div>'+
-    '<div class="mc"><div class="lbl">Hold Prob.</div><div class="val up">'+(fed.holdProbabilityNext||'—')+'</div><div class="sub">CME FedWatch</div></div>'+
-    '<div class="mc"><div class="lbl">Hike 2026</div><div class="val dn">'+(fed.hikeProbability2026||'—')+'</div></div></div>'+
-    '<div class="card"><div class="ctitle">Indicatori macro chiave</div><table class="fitbl"><thead><tr><th>Indicatore</th><th>Dato</th><th>Trend</th></tr></thead><tbody>'+
-    '<tr><td>CPI Headline YoY</td><td><strong>'+(fed.cpiHeadline||'—')+'</strong></td><td class="tup">Inflazione</td></tr>'+
-    '<tr><td>CPI Core YoY</td><td><strong>'+(fed.cpiCore||'—')+'</strong></td><td class="tup">Persistente</td></tr>'+
-    '<tr><td>PCE Core YoY</td><td><strong>'+(fed.pceCore||'—')+'</strong></td><td class="tup">Sopra target</td></tr>'+
-    '<tr><td>NFP</td><td><strong>'+(fed.nfpLast||'—')+'</strong></td><td class="tneu">Solido</td></tr>'+
-    '<tr><td>ISM Prices Paid</td><td><strong>'+(fed.ismPricesPaid||'—')+'</strong></td><td class="tup">Stagflationary</td></tr>'+
-    '<tr><td>Import Prices MoM</td><td><strong>'+(fed.importPrices||'—')+'</strong></td><td class="tup">Oil shock</td></tr>'+
-    '<tr><td>Disoccupazione</td><td><strong>'+(fed.unemployment||'—')+'</strong></td><td class="tneu">Stabile</td></tr>'+
-    '</tbody></table></div>'+
-    (fed.fedStance||fed.outlookNQ?'<div class="card"><div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">'+
-    (fed.fedStance?'<div><div class="ctitle">Stance FED</div><div style="font-size:12px;color:var(--text2);line-height:1.7">'+fed.fedStance+'</div></div>':'')+
-    (fed.outlookNQ?'<div><div class="ctitle">Meccanismo NQ</div><div style="font-size:12px;color:var(--text2);line-height:1.7">'+fed.outlookNQ+'</div></div>':'')+
-    '</div></div>':'')+
-    (fed.keyRisks?'<div class="al aw"><strong>Rischi:</strong> '+fed.keyRisks+'</div>':'');
+function renderFED() {
+  var el = document.getElementById('fedc');
+  var fed = ST.fed;
+  if (!fed || fed._err) { el.innerHTML = '<div class="al ae">' + (fed && fed._err || 'Dati mancanti') + '</div>'; return; }
+  el.innerHTML =
+    '<div class="mg" style="margin-bottom:14px">' +
+    '<div class="mc"><div class="lbl">Fed Funds Rate</div><div class="val">' + (fed.currentRate || '—') + '</div></div>' +
+    '<div class="mc"><div class="lbl">Prossimo FOMC</div><div class="val" style="font-size:13px">' + (fed.nextFOMCDate || '—') + '</div></div>' +
+    '<div class="mc"><div class="lbl">Hold Probability</div><div class="val up">' + (fed.holdProbabilityNext || '—') + '</div><div class="sub">CME FedWatch</div></div>' +
+    '<div class="mc"><div class="lbl">Hike entro 2026</div><div class="val dn">' + (fed.hikeProbability2026 || '—') + '</div></div></div>' +
+    '<div class="card"><div class="ctitle">Indicatori macro chiave</div><table class="fitbl"><thead><tr><th>Indicatore</th><th>Dato</th><th>Trend</th></tr></thead><tbody>' +
+    '<tr><td>CPI Headline YoY</td><td><strong>' + (fed.cpiHeadline || '—') + '</strong></td><td class="tup">Inflazione</td></tr>' +
+    '<tr><td>CPI Core YoY</td><td><strong>' + (fed.cpiCore || '—') + '</strong></td><td class="tup">Persistente</td></tr>' +
+    '<tr><td>PCE Core YoY</td><td><strong>' + (fed.pceCore || '—') + '</strong></td><td class="tup">Sopra target</td></tr>' +
+    '<tr><td>NFP</td><td><strong>' + (fed.nfpLast || '—') + '</strong></td><td class="tneu">Solido</td></tr>' +
+    '<tr><td>ISM Prices Paid</td><td><strong>' + (fed.ismPricesPaid || '—') + '</strong></td><td class="tup">Stagflationary</td></tr>' +
+    '<tr><td>Import Prices MoM</td><td><strong>' + (fed.importPrices || '—') + '</strong></td><td class="tup">Oil shock</td></tr>' +
+    '<tr><td>Disoccupazione</td><td><strong>' + (fed.unemployment || '—') + '</strong></td><td class="tneu">Stabile</td></tr>' +
+    '</tbody></table></div>' +
+    ((fed.fedStance || fed.outlookNQ) ?
+      '<div class="card"><div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">' +
+      (fed.fedStance ? '<div><div class="ctitle">Stance FED</div><div style="font-size:12px;color:var(--text2);line-height:1.7">' + fed.fedStance + '</div></div>' : '') +
+      (fed.outlookNQ ? '<div><div class="ctitle">Meccanismo NQ</div><div style="font-size:12px;color:var(--text2);line-height:1.7">' + fed.outlookNQ + '</div></div>' : '') +
+      '</div></div>' : '') +
+    (fed.keyRisks ? '<div class="al aw"><strong>Rischi chiave:</strong> ' + fed.keyRisks + '</div>' : '');
 }
 </script>
 </body>
