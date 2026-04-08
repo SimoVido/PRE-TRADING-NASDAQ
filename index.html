@@ -182,13 +182,14 @@ textarea{width:100%;min-height:58px;padding:7px 10px;background:var(--bg3);borde
   </div>
 
   <button class="btnp" id="gbtn" onclick="generate()">Genera analisi pre-trading completa</button>
-  <div style="font-size:11px;color:var(--text3);text-align:center;margin-bottom:12px;display:none" id="tnote">⏱ Circa 90 secondi — non chiudere la pagina</div>
+  <div style="font-size:11px;color:var(--text3);text-align:center;margin-bottom:12px;display:none" id="tnote">⏱ Circa 60-90 secondi — non chiudere la pagina</div>
 
   <div id="parea" style="display:none;margin-bottom:14px">
-    <div class="pw"><div class="pr"><div class="pd" id="d1"></div>1 — COT CFTC + News macro (unica ricerca web)</div><div class="pbar"><div class="pfill" id="p1"></div></div><div class="pnote" id="n1"></div></div>
+    <div class="pw"><div class="pr"><div class="pd" id="d1"></div>1 — COT CFTC (download diretto da cftc.gov — nessuna API)</div><div class="pbar"><div class="pfill" id="p1"></div></div><div class="pnote" id="n1"></div></div>
     <div class="pw"><div class="pr"><div class="pd" id="d2"></div>2 — Livelli opzionari CME (calcolo locale)</div><div class="pbar"><div class="pfill" id="p2"></div></div></div>
-    <div class="pw"><div class="pr"><div class="pd" id="d3"></div>3 — Scenario FED</div><div class="pbar"><div class="pfill" id="p3"></div></div><div class="pnote" id="n3"></div></div>
-    <div class="pw"><div class="pr"><div class="pd" id="d4"></div>4 — Sintesi operativa</div><div class="pbar"><div class="pfill" id="p4"></div></div><div class="pnote" id="n4"></div></div>
+    <div class="pw"><div class="pr"><div class="pd" id="d3"></div>3 — News macro US + Radar settimana (web search)</div><div class="pbar"><div class="pfill" id="p3"></div></div><div class="pnote" id="n3"></div></div>
+    <div class="pw"><div class="pr"><div class="pd" id="d4"></div>4 — Scenario FED</div><div class="pbar"><div class="pfill" id="p4"></div></div><div class="pnote" id="n4"></div></div>
+    <div class="pw"><div class="pr"><div class="pd" id="d5"></div>5 — Sintesi operativa</div><div class="pbar"><div class="pfill" id="p5"></div></div><div class="pnote" id="n5"></div></div>
   </div>
 
   <div id="ovres" style="display:none">
@@ -206,14 +207,14 @@ textarea{width:100%;min-height:58px;padding:7px 10px;background:var(--bg3);borde
       <div style="position:relative;height:200px"><canvas id="lvchart"></canvas></div>
       <div id="lvlist" style="margin-top:10px"></div>
     </div>
-    <div class="al ai" style="font-size:11px;margin-top:6px">Report a scopo informativo. Verifica prezzi live su DeepCharts prima di operare.</div>
+    <div class="al ai" style="font-size:11px;margin-top:6px">Report a scopo informativo. COT scaricato da CFTC.gov. Verifica prezzi live su DeepCharts prima di operare.</div>
   </div>
 </div>
 
 <!-- COT -->
 <div class="tab" id="t-cot">
   <div class="sh">COT — Commitment of Traders</div>
-  <div class="ssub">Non-Commercial vs Commercial · NQ ES YM · CFTC.gov</div>
+  <div class="ssub">Scaricato direttamente da CFTC.gov · Futures Only · NQ ES YM</div>
   <div id="cotc"><div class="al ai">Genera il report dalla tab Panoramica.</div></div>
 </div>
 
@@ -263,15 +264,15 @@ textarea{width:100%;min-height:58px;padding:7px 10px;background:var(--bg3);borde
     <div class="fg"><label class="fl">Andamento settimana</label>
       <select id="ps-ws"><option>Settimana positiva</option><option>Settimana negativa</option><option>Neutro</option><option>Primo giorno settimana</option><option>Drawdown prolungato</option></select></div>
   </div>
-  <button class="btns" id="psbtn" onclick="savePsych()">Salva note</button>
+  <button class="btns" id="psbtn" onclick="showTmp('psaved')">Salva note</button>
   <div id="psaved" style="display:none;font-size:11px;color:var(--green);text-align:center;margin-top:4px">Salvate</div>
 </div>
 
 <!-- DEBUG -->
 <div class="tab" id="t-debug">
-  <div class="sh">Debug — Risposte Raw API</div>
-  <div class="ssub">Cosa ha risposto il modello per ogni step</div>
-  <div id="debugpanel"><div class="al ai">Genera il report per vedere le risposte raw.</div></div>
+  <div class="sh">Debug — Log completo</div>
+  <div class="ssub">Risposta raw di ogni step per diagnosticare problemi</div>
+  <div id="debugpanel"><div class="al ai">Genera il report per vedere i log.</div></div>
 </div>
 
 <!-- SETTINGS -->
@@ -284,18 +285,19 @@ textarea{width:100%;min-height:58px;padding:7px 10px;background:var(--bg3);borde
     <div id="sset" style="display:none;font-size:11px;color:var(--green);margin-top:4px">Salvata</div>
   </div>
   <div class="card">
-    <div class="ctitle">Info</div>
-    <div class="dr"><span class="dk">Strumento</span><span class="dv">NQ Nasdaq CFD</span></div>
-    <div class="dr"><span class="dk">Broker</span><span class="dv">FP Markets / cTrader</span></div>
-    <div class="dr"><span class="dk">Versione</span><span class="dv">2.4.0</span></div>
+    <div class="ctitle">Info — v3.0</div>
+    <div class="dr"><span class="dk">COT</span><span class="dv">Download diretto CFTC.gov (no API)</span></div>
+    <div class="dr"><span class="dk">News</span><span class="dv">1 chiamata Anthropic web_search</span></div>
+    <div class="dr"><span class="dk">FED + Sintesi</span><span class="dv">2 chiamate Anthropic senza web_search</span></div>
+    <div class="dr"><span class="dk">Strumento</span><span class="dv">NQ Nasdaq CFD · FP Markets</span></div>
   </div>
 </div>
 
-</div><!-- /content -->
+</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script>
-// === DATE SETUP ===
+// === DATE ===
 var T = new Date();
 var DAYS = ['Domenica','Lunedi','Martedi','Mercoledi','Giovedi','Venerdi','Sabato'];
 var MONS = ['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
@@ -308,8 +310,11 @@ var tmr = new Date(T); tmr.setDate(T.getDate() + 1);
 var TMR = DAYS[tmr.getDay()] + ' ' + tmr.getDate() + ' ' + MONS[tmr.getMonth()];
 
 // === STATE ===
-var ST = { combined: {}, fed: {}, synth: {} };
-var OPT = { s: 0, c: 0, p: 0, r: 0, sup: 0 };
+var COT = {};
+var NEWS = {};
+var FED = {};
+var SYNTH = {};
+var OPT = {s:0,c:0,p:0,r:0,sup:0};
 var lvChart = null;
 var RAW = {};
 
@@ -321,7 +326,7 @@ function goTab(name, btn) {
   if (btn) btn.classList.add('active');
 }
 
-// === API KEY ===
+// === KEYS ===
 function getKey() { return localStorage.getItem('pt_k') || ''; }
 function saveKey() {
   var k = document.getElementById('apiin').value.trim();
@@ -331,7 +336,6 @@ function saveKeyS() {
   var k = document.getElementById('set-ak').value.trim();
   if (k) { localStorage.setItem('pt_k', k); showTmp('sset'); }
 }
-function savePsych() { showTmp('psaved'); }
 function showTmp(id) {
   var el = document.getElementById(id);
   el.style.display = 'block';
@@ -343,195 +347,279 @@ window.addEventListener('load', function() {
   else document.getElementById('set-ak').value = k;
 });
 
-// === OPTIONS CALC ===
+// === OPTIONS ===
 function calcOpt() {
   var s = parseFloat(document.getElementById('inp-s').value) || 0;
   var c = parseFloat(document.getElementById('inp-c').value) || 0;
   var p = parseFloat(document.getElementById('inp-p').value) || 0;
-  OPT = { s: s, c: c, p: p, r: s + c + p, sup: s - c - p };
-  function f(n) { return n ? n.toLocaleString('it-IT', {minimumFractionDigits:2, maximumFractionDigits:2}) : '—'; }
+  OPT = {s:s, c:c, p:p, r:s+c+p, sup:s-c-p};
+  function f(n) { return n ? n.toLocaleString('it-IT',{minimumFractionDigits:2,maximumFractionDigits:2}) : '—'; }
   document.getElementById('rm').textContent = f(OPT.r);
   document.getElementById('sm').textContent = f(OPT.s);
   document.getElementById('supm').textContent = f(OPT.sup);
-  var os = document.getElementById('o-s'); if (os) os.value = s || '';
-  var oc = document.getElementById('o-c'); if (oc) oc.value = c || '';
-  var op = document.getElementById('o-p'); if (op) op.value = p || '';
+  var os=document.getElementById('o-s'); if(os) os.value = s||'';
+  var oc=document.getElementById('o-c'); if(oc) oc.value = c||'';
+  var op=document.getElementById('o-p'); if(op) op.value = p||'';
   renderOptDetail();
 }
 function syncOpt() {
-  var os = document.getElementById('o-s'); if (os) document.getElementById('inp-s').value = os.value;
-  var oc = document.getElementById('o-c'); if (oc) document.getElementById('inp-c').value = oc.value;
-  var op = document.getElementById('o-p'); if (op) document.getElementById('inp-p').value = op.value;
+  var os=document.getElementById('o-s'); if(os) document.getElementById('inp-s').value = os.value;
+  var oc=document.getElementById('o-c'); if(oc) document.getElementById('inp-c').value = oc.value;
+  var op=document.getElementById('o-p'); if(op) document.getElementById('inp-p').value = op.value;
   calcOpt();
 }
 function renderOptDetail() {
   var el = document.getElementById('optdetail');
   if (!OPT.s) { el.innerHTML = '<div class="al ai">Inserisci i valori sopra.</div>'; return; }
-  function f(n) { return n.toLocaleString('it-IT', {minimumFractionDigits:2, maximumFractionDigits:2}); }
+  function f(n) { return n.toLocaleString('it-IT',{minimumFractionDigits:2,maximumFractionDigits:2}); }
   el.innerHTML = '<div class="og3" style="margin-bottom:14px">' +
-    '<div class="lvlb lvlr"><div class="lvll">RESISTENZA MM</div><div class="lvlv">' + f(OPT.r) + '</div>' +
-    '<div style="font-size:10px;color:var(--red);margin-top:3px">' + f(OPT.s) + ' + ' + f(OPT.c) + ' + ' + f(OPT.p) + '</div></div>' +
+    '<div class="lvlb lvlr"><div class="lvll">RESISTENZA MM</div><div class="lvlv">' + f(OPT.r) + '</div><div style="font-size:10px;color:var(--red);margin-top:3px">' + f(OPT.s) + ' + ' + f(OPT.c) + ' + ' + f(OPT.p) + '</div></div>' +
     '<div class="lvlb lvln"><div class="lvll">SETTLEMENT</div><div class="lvlv" style="color:var(--text)">' + f(OPT.s) + '</div></div>' +
-    '<div class="lvlb lvls"><div class="lvll">SUPPORTO MM</div><div class="lvlv">' + f(OPT.sup) + '</div>' +
-    '<div style="font-size:10px;color:var(--green);margin-top:3px">' + f(OPT.s) + ' - ' + f(OPT.c) + ' - ' + f(OPT.p) + '</div></div></div>' +
-    '<div class="inset" style="font-size:12px;color:var(--text2);line-height:1.7">' +
-    'Sopra Settlement: bullish verso R (' + f(OPT.r) + '). Sotto: bearish verso S (' + f(OPT.sup) + '). Entro 50pt da R/S monitorare DeepDOM.</div>';
+    '<div class="lvlb lvls"><div class="lvll">SUPPORTO MM</div><div class="lvlv">' + f(OPT.sup) + '</div><div style="font-size:10px;color:var(--green);margin-top:3px">' + f(OPT.s) + ' - ' + f(OPT.c) + ' - ' + f(OPT.p) + '</div></div></div>' +
+    '<div class="inset" style="font-size:12px;color:var(--text2);line-height:1.7">Sopra Settlement: bullish verso R (' + f(OPT.r) + '). Sotto: bearish verso S (' + f(OPT.sup) + '). Entro 50pt da R/S monitorare orderflow su DeepDOM.</div>';
 }
 
 // === UTILS ===
-function sleep(ms) { return new Promise(function(r){ setTimeout(r, ms); }); }
-function fmt(n, d) {
-  d = d === undefined ? 2 : d;
-  if (n == null || isNaN(n)) return '—';
-  return Number(n).toLocaleString('it-IT', {minimumFractionDigits:d, maximumFractionDigits:d});
-}
+function sleep(ms) { return new Promise(function(r){ setTimeout(r,ms); }); }
+function fmt(n,d) { d=d===undefined?2:d; if(n==null||isNaN(n)) return '—'; return Number(n).toLocaleString('it-IT',{minimumFractionDigits:d,maximumFractionDigits:d}); }
 function sbadge(s) {
   if (!s) return '<span class="badge bgr">—</span>';
-  var l = s.toLowerCase();
-  if (l.indexOf('bull') >= 0) return '<span class="badge bgg">' + s + '</span>';
-  if (l.indexOf('bear') >= 0) return '<span class="badge brr">' + s + '</span>';
+  var l = (s||'').toLowerCase();
+  if (l.indexOf('bull')>=0) return '<span class="badge bgg">' + s + '</span>';
+  if (l.indexOf('bear')>=0) return '<span class="badge brr">' + s + '</span>';
   return '<span class="badge baa">' + s + '</span>';
 }
-function sgnc(n) { return n > 0 ? 'up' : n < 0 ? 'dn' : ''; }
-function esc(s) {
-  return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-
-// Robust JSON parser
+function esc(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 function pJSON(raw) {
-  if (!raw) return { _err: 'Risposta vuota' };
+  if (!raw) return {_err:'Risposta vuota'};
   var c = raw.replace(/```json/gi,'').replace(/```/g,'').trim();
-  var s = c.indexOf('{');
-  var e = c.lastIndexOf('}');
-  if (s < 0 || e < s) return { _err: 'Nessun JSON (' + raw.length + ' chars)', _raw: raw.substring(0,500) };
-  var snip = c.slice(s, e + 1);
-  var tries = ['', '}', ' }', '}}', '}}}'];
-  for (var i = 0; i < tries.length; i++) {
-    try { return JSON.parse(snip + tries[i]); } catch(ex) {}
-  }
-  return { _err: 'JSON malformato', _raw: snip.substring(0,500) };
+  var s = c.indexOf('{'), e = c.lastIndexOf('}');
+  if (s<0||e<s) return {_err:'Nessun JSON trovato ('+raw.length+' chars)', _raw:raw.substring(0,400)};
+  var snip = c.slice(s, e+1);
+  var tries = ['','}',' }','}}','}}}',' }}',' }}}',' }}}'];
+  for (var i=0; i<tries.length; i++) { try { return JSON.parse(snip+tries[i]); } catch(ex){} }
+  return {_err:'JSON malformato', _raw:snip.substring(0,400)};
 }
-
-// Progress bar
-function prog(n, state, note) {
-  var f = document.getElementById('p' + n);
-  var d = document.getElementById('d' + n);
-  var no = document.getElementById('n' + n);
-  if (d) d.className = 'pd ' + (state === 'active' ? 'run' : state === 'done' ? 'ok' : state === 'err' ? 'err' : '');
-  if (f) {
-    f.className = 'pfill' + (state === 'done' ? ' ok' : state === 'err' ? ' err' : '');
-    f.style.width = state === 'active' ? '15%' : '100%';
-  }
-  if (no && note !== undefined) no.textContent = note;
+function prog(n,state,note) {
+  var f=document.getElementById('p'+n), d=document.getElementById('d'+n), no=document.getElementById('n'+n);
+  if (d) d.className = 'pd ' + (state==='active'?'run':state==='done'?'ok':state==='err'?'err':'');
+  if (f) { f.className='pfill'+(state==='done'?' ok':state==='err'?' err':''); f.style.width=state==='active'?'15%':'100%'; }
+  if (no && note!==undefined) no.textContent = note;
 }
-
 function getPS() {
   return {
-    ieri: document.getElementById('yr').value || '',
-    stato: document.getElementById('ms').value || '',
-    settimana: document.getElementById('ws').value || '',
-    bias: document.getElementById('bias').value || '',
-    noteT: document.getElementById('yt').value || '',
-    noteM: document.getElementById('ym').value || ''
+    ieri:document.getElementById('yr').value||'',
+    stato:document.getElementById('ms').value||'',
+    settimana:document.getElementById('ws').value||'',
+    bias:document.getElementById('bias').value||'',
+    noteT:document.getElementById('yt').value||'',
+    noteM:document.getElementById('ym').value||''
   };
 }
 
-// === API CALL ===
-// v2.4.0: SINGLE web_search call — avoids 429 (10K output tokens/min limit)
+// ===================================================================
+// STEP 1: FETCH COT DIRETTAMENTE DA CFTC.GOV VIA CORS PROXY
+// Nessuna chiamata API Anthropic — nessun rischio 429
+// CFTC pubblica ogni venerdi. Il file e' testo puro, parsabile in JS.
+// ===================================================================
+function fetchCOT() {
+  var CFTC_URL = 'https://www.cftc.gov/dea/futures/financial_lf.htm';
+  // Lista proxy CORS fallback
+  var proxies = [
+    'https://api.allorigins.win/get?url=' + encodeURIComponent(CFTC_URL),
+    'https://api.codetabs.com/v1/proxy/?quest=' + encodeURIComponent(CFTC_URL),
+    'https://corsproxy.io/?' + encodeURIComponent(CFTC_URL)
+  ];
+  return tryProxies(proxies, 0);
+}
+
+function tryProxies(proxies, idx) {
+  if (idx >= proxies.length) return Promise.reject(new Error('Tutti i proxy CORS falliti'));
+  var url = proxies[idx];
+  return fetch(url, {signal: AbortSignal.timeout(12000)})
+  .then(function(r) {
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return r.text();
+  })
+  .then(function(raw) {
+    // allorigins restituisce JSON con campo contents
+    var text = raw;
+    if (raw.charAt(0) === '{') {
+      try { text = JSON.parse(raw).contents || raw; } catch(e) {}
+    }
+    return parseCFTC(text);
+  })
+  .catch(function(e) {
+    console.warn('Proxy ' + idx + ' fallito:', e.message);
+    return tryProxies(proxies, idx+1);
+  });
+}
+
+function parseCFTC(text) {
+  // Cerca i tre blocchi NQ (#209742), ES (#13874+), YM (#124603)
+  var result = {reportDate:'', nq:{}, es:{}, ym:{}};
+
+  // Estrai data report
+  var dateMatch = text.match(/Positions as of\s+(\w+ \d+, \d{4})/i);
+  if (dateMatch) result.reportDate = dateMatch[1];
+
+  result.nq = extractCOTBlock(text, '209742');
+  result.es = extractCOTBlock(text, '13874');
+  result.ym = extractCOTBlock(text, '124603');
+
+  return result;
+}
+
+function extractCOTBlock(text, code) {
+  // Trova il blocco del codice CFTC cercando il codice e la riga Positions
+  var idx = text.indexOf(code);
+  if (idx < 0) return {_err:'Codice ' + code + ' non trovato'};
+
+  // Dal punto trovato cerca la riga "Positions" successiva
+  var block = text.substring(idx, idx + 2000);
+  var posIdx = block.indexOf('Positions\n');
+  if (posIdx < 0) posIdx = block.indexOf('Positions\r\n');
+  if (posIdx < 0) return {_err:'Riga Positions non trovata per ' + code};
+
+  // Prendi le righe dopo "Positions"
+  var rest = block.substring(posIdx + 10);
+  var lines = rest.split(/\r?\n/);
+
+  // La prima riga non vuota dopo "Positions" contiene i numeri
+  var numLine = '';
+  for (var i=0; i<lines.length; i++) {
+    var l = lines[i].trim();
+    if (l.length > 20 && l.match(/^\d/)) { numLine = l; break; }
+  }
+  if (!numLine) return {_err:'Riga numeri non trovata per ' + code};
+
+  // Estrai tutti i numeri dalla riga (formato: 47,382  84,485  3,856 ...)
+  var nums = numLine.replace(/,/g,'').match(/\d+/g);
+  if (!nums || nums.length < 9) return {_err:'Numeri insufficienti (' + (nums?nums.length:0) + ') per ' + code};
+
+  // Colonne: Dealer L, Dealer S, Dealer Spr, AM L, AM S, AM Spr, LF L, LF S, LF Spr, Other L, Other S, ...
+  var amL  = parseInt(nums[3]) || 0;
+  var amS  = parseInt(nums[4]) || 0;
+  var lfL  = parseInt(nums[6]) || 0;
+  var lfS  = parseInt(nums[7]) || 0;
+
+  // OI: cerca "Open Interest is   NNN"
+  var oiMatch = block.match(/Open Interest is\s+([\d,]+)/i);
+  var oi = oiMatch ? parseInt(oiMatch[1].replace(/,/g,'')) : 0;
+
+  // Changes: riga dopo "Changes from:"
+  var chgLine = '';
+  var chgIdx = block.indexOf('Changes from:');
+  if (chgIdx >= 0) {
+    var chgBlock = block.substring(chgIdx);
+    var chgLines = chgBlock.split(/\r?\n/);
+    for (var j=1; j<chgLines.length; j++) {
+      var cl = chgLines[j].trim();
+      if (cl.length > 10 && cl.match(/^-?\d/)) { chgLine = cl; break; }
+    }
+  }
+  var weeklyChangeLF = 0;
+  if (chgLine) {
+    var chgNums = chgLine.replace(/,/g,'').match(/-?\d+/g);
+    if (chgNums && chgNums.length >= 8) {
+      // Change LF net = change LF Long - change LF Short
+      weeklyChangeLF = (parseInt(chgNums[6])||0) - (parseInt(chgNums[7])||0);
+    }
+  }
+
+  var lfNet = lfL - lfS;
+  var amNet = amL - amS;
+
+  return {
+    leveragedFundsLong: lfL,
+    leveragedFundsShort: lfS,
+    leveragedFundsNet: lfNet,
+    assetManagerLong: amL,
+    assetManagerShort: amS,
+    assetManagerNet: amNet,
+    openInterest: oi,
+    weeklyChangeLF: weeklyChangeLF,
+    signal: lfNet < 0 ? 'bearish' : lfNet > 0 ? 'bullish' : 'neutro'
+  };
+}
+
+// === API CALL (per News, FED, Sintesi) ===
 function callClaude(sys, usr, ws, attempt) {
   attempt = attempt || 0;
   var k = getKey();
   if (!k) return Promise.reject(new Error('API key non configurata'));
-  var maxTok = ws ? 3000 : 1200;
-  var body = {
-    model: 'claude-haiku-4-5-20251001',
-    max_tokens: maxTok,
-    system: sys,
-    messages: [{ role: 'user', content: usr }]
-  };
-  if (ws) body.tools = [{ type: 'web_search_20250305', name: 'web_search' }];
+  var maxTok = ws ? 2000 : 1200;
+  var body = {model:'claude-haiku-4-5-20251001', max_tokens:maxTok, system:sys, messages:[{role:'user',content:usr}]};
+  if (ws) body.tools = [{type:'web_search_20250305', name:'web_search'}];
   return fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': k,
-      'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-direct-browser-access': 'true'
-    },
-    body: JSON.stringify(body)
+    method:'POST',
+    headers:{'Content-Type':'application/json','x-api-key':k,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+    body:JSON.stringify(body)
   }).then(function(r) {
     if (r.status === 429) {
-      if (attempt >= 2) throw new Error('429 persistente — attendi 2 min e riprova');
-      var w = 45000 + attempt * 20000;
-      return sleep(w).then(function(){ return callClaude(sys, usr, ws, attempt + 1); });
+      if (attempt >= 2) throw new Error('429 — rate limit. Attendi 2 minuti e riprova.');
+      return sleep(45000 + attempt*20000).then(function(){ return callClaude(sys,usr,ws,attempt+1); });
     }
-    if (!r.ok) return r.json().then(function(e){ throw new Error(r.status + ' — ' + (e.error && e.error.message || 'Errore')); });
+    if (!r.ok) return r.json().then(function(e){ throw new Error(r.status+' — '+(e.error&&e.error.message||'Errore')); });
     return r.json();
   }).then(function(data) {
     var txt = '';
-    (data.content || []).forEach(function(b){ if (b.type === 'text') txt += b.text; });
-    return { text: txt, data: data };
+    (data.content||[]).forEach(function(b){ if(b.type==='text') txt+=b.text; });
+    return {text:txt, data:data};
   });
 }
 
 // === PROMPTS ===
-function buildCombined(ds, tmr, fri) {
-  return 'Oggi e ' + ds + '. Esegui DUE ricerche e restituisci UN SOLO JSON.\n\n' +
-    'RICERCA 1 — COT CFTC piu recenti (Traders in Financial Futures, Futures Only):\n' +
-    'NQ=#209742 CME, ES=#13874+ CME, YM=#124603 CBOT\n' +
-    'Fonti: tradingster.com/cot/futures/fin/ o cftc.gov/dea/futures/financial_lf.htm\n' +
-    'Campi per ognuno: leveragedFundsLong, leveragedFundsShort, leveragedFundsNet (Long-Short), assetManagerLong, assetManagerShort, assetManagerNet, openInterest, weeklyChangeLF, signal (bearish/bullish), trend (max 8 parole).\n\n' +
-    'RICERCA 2 — Calendario economico USA:\n' +
-    'Cerca su investing.com/economic-calendar eventi USA a 3 stelle di OGGI ' + ds + ' e da ' + tmr + ' a ' + fri + '.\n' +
-    'Per ogni evento: name, date, timeCET, timeET, previous, forecast, actual (vuoto se non uscito), analysisIT (max 30 parole), scenarioPositive (max 12 parole NQ), scenarioNegative (max 12 parole NQ).\n' +
-    'Se nessun evento oggi: noEventsToday=true, todayEvents=[].\n' +
+function buildNews() {
+  return 'Oggi e ' + DS + '. Cerca su https://www.investing.com/economic-calendar/ gli eventi macro USA ad alta importanza (3 stelle).\n\n' +
+    'OGGI ' + DS + ': elenca TUTTI gli eventi USA *** di OGGI. Se nessuno noEventsToday=true.\n' +
+    TMR + ' fino a ' + FRI + ': elenca TUTTI gli eventi USA *** dei prossimi giorni fino a venerdi.\n\n' +
+    'Per ogni evento: name, date (es "Mer 8 Apr"), timeCET (es "20:00 CET"), timeET (es "14:00 ET"), previous, forecast, actual (vuoto se non uscito), analysisIT (max 40 parole), scenarioPositive (max 12 parole NQ), scenarioNegative (max 12 parole NQ).\n' +
     'geopoliticalAlert: alert attivi (Iran/tariffe/ecc) o stringa vuota.\n\n' +
-    'RISPOSTA: SOLO questo JSON esatto, zero testo prima o dopo:\n' +
-    '{"reportDate":"","nq":{"leveragedFundsLong":0,"leveragedFundsShort":0,"leveragedFundsNet":0,"assetManagerLong":0,"assetManagerShort":0,"assetManagerNet":0,"openInterest":0,"weeklyChangeLF":0,"signal":"","trend":""},' +
-    '"es":{"leveragedFundsLong":0,"leveragedFundsShort":0,"leveragedFundsNet":0,"assetManagerLong":0,"assetManagerShort":0,"assetManagerNet":0,"openInterest":0,"weeklyChangeLF":0,"signal":"","trend":""},' +
-    '"ym":{"leveragedFundsLong":0,"leveragedFundsShort":0,"leveragedFundsNet":0,"assetManagerLong":0,"assetManagerShort":0,"assetManagerNet":0,"openInterest":0,"weeklyChangeLF":0,"signal":"","trend":""},' +
-    '"cotAnalysis":"","todayEvents":[{"name":"","date":"","timeCET":"","timeET":"","previous":"","forecast":"","actual":"","analysisIT":"","scenarioPositive":"","scenarioNegative":""}],' +
-    '"weekEvents":[{"name":"","date":"","timeCET":"","timeET":"","previous":"","forecast":"","actual":"","analysisIT":"","scenarioPositive":"","scenarioNegative":""}],"noEventsToday":false,"geopoliticalAlert":""}';
+    'SOLO JSON, zero testo prima o dopo:\n' +
+    '{"todayEvents":[{"name":"","date":"","timeCET":"","timeET":"","previous":"","forecast":"","actual":"","analysisIT":"","scenarioPositive":"","scenarioNegative":""}],' +
+    '"weekEvents":[{"name":"","date":"","timeCET":"","timeET":"","previous":"","forecast":"","actual":"","analysisIT":"","scenarioPositive":"","scenarioNegative":""}],' +
+    '"noEventsToday":false,"geopoliticalAlert":""}';
 }
 
-function buildFED(ds) {
-  return 'Dati macro FED aggiornati al ' + ds + '. SOLO questo JSON, zero testo prima o dopo:\n' +
+function buildFED() {
+  return 'Dati macro FED aggiornati al ' + DS + '. SOLO JSON zero testo prima o dopo:\n' +
     '{"currentRate":"","nextFOMCDate":"","holdProbabilityNext":"","hikeProbability2026":"",' +
     '"cpiHeadline":"","cpiCore":"","pceCore":"","unemployment":"","nfpLast":"",' +
     '"ismPricesPaid":"","importPrices":"","fedStance":"","outlookNQ":"","keyRisks":""}';
 }
 
-function buildSynth(ps, ds) {
-  var r = OPT.r || 0; var sup = OPT.sup || 0; var sett = OPT.s || 0;
-  var nq = ST.combined.nq || {};
-  var es = ST.combined.es || {};
-  var ym = ST.combined.ym || {};
-  var ev0 = (ST.combined.todayEvents && ST.combined.todayEvents[0]) || {};
-  return 'Trader NQ Nasdaq. Sintesi operativa OGGI ' + ds + '. SOLO JSON, zero testo prima o dopo.\n\n' +
-    'COT NQ: LF=' + (nq.leveragedFundsNet || 'ND') + ' AM=' + (nq.assetManagerNet || 'ND') + ' signal=' + (nq.signal || 'ND') + '\n' +
-    'COT ES signal=' + (es.signal || 'ND') + ' YM signal=' + (ym.signal || 'ND') + '\n' +
-    'NQ livelli: S=' + (sett || 'ND') + ' R=' + (r || 'ND') + ' Sup=' + (sup || 'ND') + '\n' +
-    'News oggi: ' + ((ST.combined.todayEvents && ST.combined.todayEvents.length) || 0) + ' eventi' + (ev0.name ? ' — ' + ev0.name + ' ' + ev0.timeCET : '') + '\n' +
-    'Geo: ' + (ST.combined.geopoliticalAlert || 'nessuna') + '\n' +
-    'FED: ' + (ST.fed.currentRate || 'ND') + ' hold=' + (ST.fed.holdProbabilityNext || 'ND') + ' hike=' + (ST.fed.hikeProbability2026 || 'ND') + '\n' +
-    'Psico: ieri=' + (ps.ieri || 'ND') + ' stato=' + (ps.stato || 'ND') + ' settimana=' + (ps.settimana || 'ND') + ' bias=' + (ps.bias || 'ND') + '\n\n' +
+function buildSynth(ps) {
+  var r=OPT.r||0, sup=OPT.sup||0, sett=OPT.s||0;
+  var nq=COT.nq||{}, es=COT.es||{}, ym=COT.ym||{};
+  var ev0=(NEWS.todayEvents&&NEWS.todayEvents[0])||{};
+  return 'Trader NQ Nasdaq. Sintesi OGGI ' + DS + '. SOLO JSON zero testo prima o dopo.\n\n' +
+    'COT NQ: LF=' + (nq.leveragedFundsNet||'ND') + ' AM=' + (nq.assetManagerNet||'ND') + ' signal=' + (nq.signal||'ND') + '\n' +
+    'COT ES signal=' + (es.signal||'ND') + ' YM signal=' + (ym.signal||'ND') + '\n' +
+    'NQ: S=' + (sett||'ND') + ' R=' + (r||'ND') + ' Sup=' + (sup||'ND') + '\n' +
+    'News oggi: ' + ((NEWS.todayEvents&&NEWS.todayEvents.length)||0) + ' eventi' + (ev0.name?' — '+ev0.name+' '+ev0.timeCET:'') + '\n' +
+    'Geo: ' + (NEWS.geopoliticalAlert||'nessuna') + '\n' +
+    'FED: ' + (FED.currentRate||'ND') + ' hold=' + (FED.holdProbabilityNext||'ND') + ' hike=' + (FED.hikeProbability2026||'ND') + '\n' +
+    'Psico: ieri=' + (ps.ieri||'ND') + ' stato=' + (ps.stato||'ND') + ' settimana=' + (ps.settimana||'ND') + ' bias=' + (ps.bias||'ND') + '\n\n' +
     '{"bias":"","biasReason":"","scenarios":[' +
     '{"name":"","probability":"","descriptionIT":"","entryZone":"","target1":0,"target2":0,"stopLoss":0,"triggerIT":""},' +
     '{"name":"","probability":"","descriptionIT":"","entryZone":"","target1":0,"target2":0,"stopLoss":0,"triggerIT":""},' +
     '{"name":"","probability":"","descriptionIT":"","entryZone":"","target1":0,"target2":0,"stopLoss":0,"triggerIT":""}],' +
     '"psychWarnings":["","","",""],' +
     '"keyLevels":{"r2":0,"r1":' + r + ',"pivot":' + sett + ',"s1":' + sup + ',"s2":0,"s3":0}}\n\n' +
-    'bias es SHORT/CAUTELOSO, biasReason 50 parole italiano, 3 scenari NQ realistici, 4 psychWarnings personalizzati max 18 parole.';
+    'bias es SHORT/CAUTELOSO. biasReason 50 parole italiano. 3 scenari NQ con livelli realistici. 4 psychWarnings max 18 parole personalizzati.';
 }
 
 // === GENERATE ===
-// Architettura v2.4.0:
-// Step1: COT+News COMBINED (1 sola web_search) → risolve il 429 da 10K output/min
-// Step2: Opzioni locale
-// Step3: FED (no web_search)
-// Step4: Sintesi (no web_search)
+// v3.0 architecture:
+// Step1: COT da CFTC.gov (JS puro, nessuna API, veloce)
+// Step2: Opzioni (locale)
+// Step3: News (1 chiamata web_search)
+// Step4: FED (no web_search) — dopo 30s di pausa
+// Step5: Sintesi (no web_search) — dopo 10s
+// Totale: 1 sola chiamata web_search = impossibile 429
 function generate() {
-  if (!getKey()) { document.getElementById('apibanner').style.display = 'block'; return; }
+  if (!getKey()) { document.getElementById('apibanner').style.display='block'; return; }
   var btn = document.getElementById('gbtn');
   btn.disabled = true;
   btn.innerHTML = '<span class="spin"></span>Generazione in corso...';
@@ -539,52 +627,81 @@ function generate() {
   document.getElementById('tnote').style.display = 'block';
   document.getElementById('ovres').style.display = 'none';
   document.getElementById('sdot').className = 'sdot run';
-  ST = { combined: {}, fed: {}, synth: {} };
-  RAW = {};
+  COT={}; NEWS={}; FED={}; SYNTH={}; RAW={};
   var ps = getPS();
+  var SYS = 'Rispondi SOLO con JSON valido. Zero testo prima o dopo il JSON.';
 
-  var SYS_JSON = 'Rispondi SOLO con JSON valido. Zero testo prima o dopo il JSON.';
-
-  // STEP 1 — COT + News combined (single web_search)
-  prog(1, 'active', 'Ricerca COT CFTC + news macro US...');
-  callClaude(SYS_JSON, buildCombined(DS, TMR, FRI), true)
-  .then(function(res) {
-    RAW.combined = res.text;
-    ST.combined = pJSON(res.text);
-    var ok = !ST.combined._err && ST.combined.nq && ST.combined.nq.openInterest && ST.combined.nq.openInterest !== 0;
-    var nev = (ST.combined.todayEvents && ST.combined.todayEvents.length) || 0;
-    var wev = (ST.combined.weekEvents && ST.combined.weekEvents.length) || 0;
-    if (ok) prog(1, 'done', 'COT al ' + ST.combined.reportDate + ' | NQ LF ' + Number(ST.combined.nq.leveragedFundsNet).toLocaleString('it-IT') + ' | News oggi: ' + nev + ', settimana: ' + wev);
-    else prog(1, 'done', 'Dati parziali — vedi tab Debug');
+  // STEP 1: COT da CFTC (nessuna API!)
+  prog(1,'active','Download da cftc.gov...');
+  fetchCOT()
+  .then(function(cot) {
+    COT = cot;
+    RAW.cotDate = cot.reportDate;
+    var nq = cot.nq||{};
+    var ok = !nq._err && nq.openInterest && nq.openInterest > 0;
+    if (ok) {
+      prog(1,'done','COT al '+cot.reportDate+' | NQ LF '+Number(nq.leveragedFundsNet).toLocaleString('it-IT')+' | ES LF '+Number((cot.es||{}).leveragedFundsNet||0).toLocaleString('it-IT'));
+    } else {
+      prog(1,'done','COT parziale — '+( nq._err||'dati limitati')+'. Vedi Debug.');
+    }
   })
-  .catch(function(e) { ST.combined = { _err: e.message }; RAW.combinedErr = e.message; prog(1, 'err', 'x ' + e.message.substring(0,80)); })
+  .catch(function(e) {
+    COT={nq:{_err:e.message},es:{},ym:{}}; RAW.cotErr=e.message;
+    prog(1,'err','CFTC non raggiungibile: '+e.message.substring(0,60));
+  })
 
-  // STEP 2 — Opzioni locale
-  .then(function() { prog(2, 'active'); calcOpt(); renderOptDetail(); return sleep(500); })
-  .then(function() { prog(2, 'done'); return sleep(30000); }) // 30s pausa dopo web_search
-
-  // STEP 3 — FED (no web_search)
+  // STEP 2: Opzioni (locale, immediato)
   .then(function() {
-    prog(3, 'active');
-    return callClaude(SYS_JSON, buildFED(DS), false);
+    prog(2,'active');
+    calcOpt(); renderOptDetail();
+    return sleep(300);
+  })
+  .then(function() { prog(2,'done'); })
+
+  // STEP 3: News (unica chiamata web_search)
+  .then(function() {
+    prog(3,'active','Ricerca news macro US su investing.com...');
+    return callClaude(SYS, buildNews(), true);
   })
   .then(function(res) {
-    RAW.fed = res.text; ST.fed = pJSON(res.text);
-    prog(3, 'done', ST.fed._err ? 'Parsing fallito' : ST.fed.currentRate + ' | hold ' + ST.fed.holdProbabilityNext);
+    RAW.news = res.text; NEWS = pJSON(res.text);
+    var n=(NEWS.todayEvents&&NEWS.todayEvents.length)||0, w=(NEWS.weekEvents&&NEWS.weekEvents.length)||0;
+    prog(3,'done', NEWS._err ? 'Parsing fallito — vedi Debug' : 'Oggi: '+n+' eventi | Settimana: '+w);
+    return sleep(30000); // 30s pausa dopo web_search
+  })
+  .catch(function(e) {
+    NEWS={_err:e.message}; RAW.newsErr=e.message;
+    prog(3,'err',e.message.substring(0,70));
+    return sleep(30000);
+  })
+
+  // STEP 4: FED (no web_search)
+  .then(function() {
+    prog(4,'active');
+    return callClaude(SYS, buildFED(), false);
+  })
+  .then(function(res) {
+    RAW.fed = res.text; FED = pJSON(res.text);
+    prog(4,'done', FED._err ? 'Parsing fallito' : (FED.currentRate||'—')+' | Hold '+FED.holdProbabilityNext);
     return sleep(10000);
   })
-  .catch(function(e) { ST.fed = { _err: e.message }; prog(3, 'err', 'x ' + e.message.substring(0,80)); return sleep(10000); })
+  .catch(function(e) {
+    FED={_err:e.message}; prog(4,'err',e.message.substring(0,70));
+    return sleep(10000);
+  })
 
-  // STEP 4 — Sintesi (no web_search)
+  // STEP 5: Sintesi (no web_search)
   .then(function() {
-    prog(4, 'active');
-    return callClaude('Trader NQ. ' + SYS_JSON, buildSynth(ps, DS), false);
+    prog(5,'active');
+    return callClaude('Trader NQ. ' + SYS, buildSynth(ps), false);
   })
   .then(function(res) {
-    RAW.synth = res.text; ST.synth = pJSON(res.text);
-    prog(4, 'done', ST.synth._err ? 'Parsing fallito' : 'Bias: ' + ST.synth.bias);
+    RAW.synth = res.text; SYNTH = pJSON(res.text);
+    prog(5,'done', SYNTH._err ? 'Parsing fallito' : 'Bias: '+SYNTH.bias);
   })
-  .catch(function(e) { ST.synth = { _err: e.message }; prog(4, 'err', 'x ' + e.message.substring(0,80)); })
+  .catch(function(e) {
+    SYNTH={_err:e.message}; prog(5,'err',e.message.substring(0,70));
+  })
 
   // FINALE
   .then(function() {
@@ -600,207 +717,194 @@ function generate() {
 // === DEBUG ===
 function renderDebug() {
   var items = [
-    { k: 'combined', l: 'Step 1 — COT + News (web search)' },
-    { k: 'fed', l: 'Step 3 — FED' },
-    { k: 'synth', l: 'Step 4 — Sintesi' }
+    {k:'cotDate',l:'Step 1 — COT (CFTC.gov direct fetch)'},
+    {k:'news',l:'Step 3 — News (web search)'},
+    {k:'fed',l:'Step 4 — FED'},
+    {k:'synth',l:'Step 5 — Sintesi'}
   ];
-  document.getElementById('debugpanel').innerHTML = items.map(function(it) {
-    var raw = RAW[it.k] || RAW[it.k + 'Err'] || '(vuoto)';
-    var s = ST[it.k] || {};
-    var err = s._err;
-    return '<details class="dbg"' + (err ? ' open' : '') + '><summary>' + (err ? 'x ' : 'v ') + it.l + (err ? ' — ' + err : ' (' + raw.length + ' chars)') + '</summary><pre>' + esc(raw.substring(0,4000)) + '</pre></details>';
-  }).join('');
+  var out = '';
+  // COT debug
+  out += '<details class="dbg"><summary>COT raw — NQ #209742</summary><pre>' + esc(JSON.stringify(COT.nq,null,2)) + '</pre></details>';
+  out += '<details class="dbg"><summary>COT raw — ES #13874+</summary><pre>' + esc(JSON.stringify(COT.es,null,2)) + '</pre></details>';
+  out += '<details class="dbg"><summary>COT raw — YM #124603</summary><pre>' + esc(JSON.stringify(COT.ym,null,2)) + '</pre></details>';
+  out += '<details class="dbg"' + (NEWS._err?' open':'') + '><summary>' + (NEWS._err?'x ':'v ') + 'Step 3 — News' + (NEWS._err?' — '+NEWS._err:'') + ' (' + ((RAW.news||'').length) + ' chars)</summary><pre>' + esc((RAW.news||RAW.newsErr||'').substring(0,4000)) + '</pre></details>';
+  out += '<details class="dbg"' + (FED._err?' open':'') + '><summary>' + (FED._err?'x ':'v ') + 'Step 4 — FED' + (FED._err?' — '+FED._err:'') + '</summary><pre>' + esc((RAW.fed||'').substring(0,2000)) + '</pre></details>';
+  out += '<details class="dbg"' + (SYNTH._err?' open':'') + '><summary>' + (SYNTH._err?'x ':'v ') + 'Step 5 — Sintesi' + (SYNTH._err?' — '+SYNTH._err:'') + '</summary><pre>' + esc((RAW.synth||'').substring(0,3000)) + '</pre></details>';
+  document.getElementById('debugpanel').innerHTML = out;
 }
 
 // === RENDER ===
 function renderAll(ps) { renderOverview(ps); renderCOT(); renderNews(); renderFED(); }
 
 function renderOverview(ps) {
-  var b = ST.synth.bias || '—';
-  var il = b.toLowerCase().indexOf('long') >= 0;
-  var is_ = b.toLowerCase().indexOf('short') >= 0;
-  var bc = il ? 'bgg' : is_ ? 'brr' : 'baa';
-  var bco = il ? 'up' : is_ ? 'dn' : 'neu';
-  var nq = ST.combined.nq || {};
+  var b = SYNTH.bias || '—';
+  var il = b.toLowerCase().indexOf('long')>=0, is_=b.toLowerCase().indexOf('short')>=0;
+  var bc = il?'bgg':is_?'brr':'baa', bco = il?'up':is_?'dn':'neu';
+  var nq = COT.nq || {};
 
   document.getElementById('ovmet').innerHTML =
-    '<div class="mc"><div class="lbl">Bias del giorno</div><div class="val ' + bco + '" style="font-size:13px">' + b + '</div></div>' +
-    '<div class="mc"><div class="lbl">Settlement NQ</div><div class="val" style="font-size:15px">' + (OPT.s ? fmt(OPT.s) : '—') + '</div><div class="sub">CME Options</div></div>' +
-    '<div class="mc"><div class="lbl">Resistenza MM</div><div class="val up">' + (OPT.r ? fmt(OPT.r) : '—') + '</div><div class="sub">S+C+P</div></div>' +
-    '<div class="mc"><div class="lbl">Supporto MM</div><div class="val dn">' + (OPT.sup ? fmt(OPT.sup) : '—') + '</div><div class="sub">S-C-P</div></div>' +
-    '<div class="mc"><div class="lbl">Fed Rate</div><div class="val" style="font-size:14px">' + (ST.fed.currentRate || '—') + '</div><div class="sub">' + (ST.fed.holdProbabilityNext ? 'Hold ' + ST.fed.holdProbabilityNext : '') + '</div></div>' +
-    '<div class="mc"><div class="lbl">COT NQ Signal</div><div class="val" style="margin-top:4px">' + sbadge(nq.signal) + '</div><div class="sub">LF ' + (nq.leveragedFundsNet != null ? (Number(nq.leveragedFundsNet) > 0 ? '+' : '') + Number(nq.leveragedFundsNet).toLocaleString('it-IT') : '—') + '</div></div>';
+    '<div class="mc"><div class="lbl">Bias</div><div class="val ' + bco + '" style="font-size:13px">' + b + '</div></div>' +
+    '<div class="mc"><div class="lbl">Settlement NQ</div><div class="val" style="font-size:15px">' + (OPT.s?fmt(OPT.s):'—') + '</div><div class="sub">CME Options</div></div>' +
+    '<div class="mc"><div class="lbl">Resistenza MM</div><div class="val up">' + (OPT.r?fmt(OPT.r):'—') + '</div><div class="sub">S+C+P</div></div>' +
+    '<div class="mc"><div class="lbl">Supporto MM</div><div class="val dn">' + (OPT.sup?fmt(OPT.sup):'—') + '</div><div class="sub">S-C-P</div></div>' +
+    '<div class="mc"><div class="lbl">Fed Rate</div><div class="val" style="font-size:14px">' + (FED.currentRate||'—') + '</div><div class="sub">' + (FED.holdProbabilityNext?'Hold '+FED.holdProbabilityNext:'') + '</div></div>' +
+    '<div class="mc"><div class="lbl">COT NQ</div><div class="val" style="margin-top:4px">' + sbadge(nq.signal) + '</div><div class="sub">LF ' + (nq.leveragedFundsNet!=null?(Number(nq.leveragedFundsNet)>0?'+':'')+Number(nq.leveragedFundsNet).toLocaleString('it-IT'):'—') + '</div></div>';
 
-  var wl = ST.synth.psychWarnings;
-  document.getElementById('ovpsych').innerHTML = (wl && wl.length) ?
-    '<div style="font-size:13px;font-weight:600;margin-bottom:8px;margin-top:4px">Avvertenze Psicologiche</div><ul class="psyl">' + wl.map(function(w){ return '<li>' + w + '</li>'; }).join('') + '</ul>' : '';
+  var wl = SYNTH.psychWarnings;
+  document.getElementById('ovpsych').innerHTML = (wl&&wl.length) ?
+    '<div style="font-size:13px;font-weight:600;margin-bottom:8px;margin-top:4px">Avvertenze Psicologiche</div><ul class="psyl">' + wl.map(function(w){return '<li>'+w+'</li>';}).join('') + '</ul>' : '';
 
   document.getElementById('ovbias').innerHTML =
     '<div style="margin-bottom:12px"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><span class="badge ' + bc + '" style="font-size:12px;padding:4px 14px">BIAS: ' + b + '</span></div>' +
-    '<div style="font-size:13px;color:var(--text2);line-height:1.7">' + (ST.synth.biasReason || '') + '</div></div>';
+    '<div style="font-size:13px;color:var(--text2);line-height:1.7">' + (SYNTH.biasReason||'') + '</div></div>';
 
-  var sc = ST.synth.scenarios || [];
-  document.getElementById('ovscen').innerHTML = sc.length ? sc.map(function(s, i) {
-    var cc = i === 0 ? 'brr' : i === 2 ? 'bgg' : 'baa';
-    return '<div class="so"><div class="soh"><span class="son">' + (s.name || 'Scenario ' + (i+1)) + '</span><span class="badge ' + cc + '">' + (s.probability || '') + '</span></div>' +
-      '<div class="sod">' + (s.descriptionIT || '') + '</div><div class="sotr">Trigger: ' + (s.triggerIT || '') + '</div>' +
-      '<div class="sols"><div class="sli"><span class="lbl">Entry Zone</span><span class="v">' + (s.entryZone || '—') + '</span></div>' +
-      '<div class="sli"><span class="lbl">Target 1</span><span class="v up">' + (s.target1 ? fmt(s.target1, 0) : '—') + '</span></div>' +
-      '<div class="sli"><span class="lbl">Target 2</span><span class="v up">' + (s.target2 ? fmt(s.target2, 0) : '—') + '</span></div>' +
-      '<div class="sli"><span class="lbl">Stop Loss</span><span class="v dn">' + (s.stopLoss ? fmt(s.stopLoss, 0) : '—') + '</span></div></div></div>';
+  var sc = SYNTH.scenarios || [];
+  document.getElementById('ovscen').innerHTML = sc.length ? sc.map(function(s,i){
+    var cc = i===0?'brr':i===2?'bgg':'baa';
+    return '<div class="so"><div class="soh"><span class="son">'+(s.name||'Scenario '+(i+1))+'</span><span class="badge '+cc+'">'+(s.probability||'')+'</span></div>' +
+      '<div class="sod">'+(s.descriptionIT||'')+'</div><div class="sotr">Trigger: '+(s.triggerIT||'')+'</div>' +
+      '<div class="sols"><div class="sli"><span class="lbl">Entry Zone</span><span class="v">'+(s.entryZone||'—')+'</span></div>' +
+      '<div class="sli"><span class="lbl">Target 1</span><span class="v up">'+(s.target1?fmt(s.target1,0):'—')+'</span></div>' +
+      '<div class="sli"><span class="lbl">Target 2</span><span class="v up">'+(s.target2?fmt(s.target2,0):'—')+'</span></div>' +
+      '<div class="sli"><span class="lbl">Stop Loss</span><span class="v dn">'+(s.stopLoss?fmt(s.stopLoss,0):'—')+'</span></div></div></div>';
   }).join('') : '<div class="al aw">Scenari non disponibili.</div>';
 
-  var kl = ST.synth.keyLevels || {};
-  if (!kl.pivot && OPT.s) kl.pivot = OPT.s;
-  if (!kl.r1 && OPT.r) kl.r1 = OPT.r;
-  if (!kl.s1 && OPT.sup) kl.s1 = OPT.sup;
+  var kl = SYNTH.keyLevels || {};
+  if(!kl.pivot&&OPT.s) kl.pivot=OPT.s;
+  if(!kl.r1&&OPT.r) kl.r1=OPT.r;
+  if(!kl.s1&&OPT.sup) kl.s1=OPT.sup;
   renderLvChart(kl);
   document.getElementById('lvlist').innerHTML =
-    '<div class="dr"><span class="dk">R2</span><span class="dv up">' + (kl.r2 ? fmt(kl.r2, 0) : '—') + '</span></div>' +
-    '<div class="dr"><span class="dk">R1</span><span class="dv up">' + (kl.r1 ? fmt(kl.r1, 0) : '—') + '</span></div>' +
-    '<div class="dr"><span class="dk">Settlement / Pivot</span><span class="dv">' + (kl.pivot ? fmt(kl.pivot, 0) : '—') + '</span></div>' +
-    '<div class="dr"><span class="dk">S1</span><span class="dv dn">' + (kl.s1 ? fmt(kl.s1, 0) : '—') + '</span></div>' +
-    '<div class="dr"><span class="dk">S2</span><span class="dv dn">' + (kl.s2 ? fmt(kl.s2, 0) : '—') + '</span></div>' +
-    '<div class="dr"><span class="dk">S3</span><span class="dv dn">' + (kl.s3 ? fmt(kl.s3, 0) : '—') + '</span></div>';
+    '<div class="dr"><span class="dk">R2</span><span class="dv up">'+(kl.r2?fmt(kl.r2,0):'—')+'</span></div>' +
+    '<div class="dr"><span class="dk">R1</span><span class="dv up">'+(kl.r1?fmt(kl.r1,0):'—')+'</span></div>' +
+    '<div class="dr"><span class="dk">Settlement</span><span class="dv">'+(kl.pivot?fmt(kl.pivot,0):'—')+'</span></div>' +
+    '<div class="dr"><span class="dk">S1</span><span class="dv dn">'+(kl.s1?fmt(kl.s1,0):'—')+'</span></div>' +
+    '<div class="dr"><span class="dk">S2</span><span class="dv dn">'+(kl.s2?fmt(kl.s2,0):'—')+'</span></div>' +
+    '<div class="dr"><span class="dk">S3</span><span class="dv dn">'+(kl.s3?fmt(kl.s3,0):'—')+'</span></div>';
   document.getElementById('ovres').style.display = 'block';
 }
 
 function renderLvChart(kl) {
-  var ctx = document.getElementById('lvchart');
-  if (!ctx) return;
-  if (lvChart) lvChart.destroy();
-  var v = [kl.s3, kl.s2, kl.s1, kl.pivot, kl.r1, kl.r2].map(function(x){ return x || 0; });
-  lvChart = new Chart(ctx, {
-    type: 'bar',
-    data: { labels: ['S3','S2','S1','Pivot','R1','R2'], datasets: [{ data: v, backgroundColor: ['#22c55e','#16a34a','#4ade80','#3b82f6','#f87171','#ef4444'], borderRadius: 4, borderSkipped: false }] },
-    options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
-      scales: { x: { ticks: { color: '#505050', font: { size: 10 }, callback: function(v){ return v.toLocaleString('it-IT'); } }, grid: { color: '#1c1c1c' } }, y: { ticks: { color: '#909090', font: { size: 11 } }, grid: { display: false } } } }
-  });
+  var ctx=document.getElementById('lvchart'); if(!ctx) return;
+  if(lvChart) lvChart.destroy();
+  var v=[kl.s3,kl.s2,kl.s1,kl.pivot,kl.r1,kl.r2].map(function(x){return x||0;});
+  lvChart=new Chart(ctx,{type:'bar',
+    data:{labels:['S3','S2','S1','Pivot','R1','R2'],datasets:[{data:v,backgroundColor:['#22c55e','#16a34a','#4ade80','#3b82f6','#f87171','#ef4444'],borderRadius:4,borderSkipped:false}]},
+    options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+      scales:{x:{ticks:{color:'#505050',font:{size:10},callback:function(v){return v.toLocaleString('it-IT');}},grid:{color:'#1c1c1c'}},y:{ticks:{color:'#909090',font:{size:11}},grid:{display:false}}}}});
 }
 
 function renderCOT() {
-  var el = document.getElementById('cotc');
-  var c = ST.combined;
-  if (!c || c._err) { el.innerHTML = '<div class="al ae">Errore: ' + (c && c._err || 'Dati mancanti') + '</div><div class="al aw">Vai tab Debug per vedere la risposta raw.</div>'; return; }
+  var el=document.getElementById('cotc'), cot=COT;
+  var nq=cot.nq||{}, es=cot.es||{}, ym=cot.ym||{};
 
-  function detail(label, d) {
-    if (!d) return '<div class="al aw">Dati non disponibili.</div>';
-    var lf = Number(d.leveragedFundsNet) || 0;
-    var am = Number(d.assetManagerNet) || 0;
-    var wc = Number(d.weeklyChangeLF) || 0;
-    return '<div class="card">' +
-      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><span style="font-size:13px;font-weight:700">' + label + '</span>' + sbadge(d.signal) + '</div>' +
-      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">' +
-      '<div class="inset"><div class="lbl">Non-Commercial (LF) netto</div><div style="font-size:20px;font-weight:700;' + (lf < 0 ? 'color:var(--red)' : 'color:var(--green)') + '">' + (lf > 0 ? '+' : '') + lf.toLocaleString('it-IT') + '</div><div style="font-size:10px;color:var(--text3)">OI ' + Number(d.openInterest || 0).toLocaleString('it-IT') + ' · ' + (lf < 0 ? 'NET SHORT' : 'NET LONG') + '</div></div>' +
-      '<div class="inset"><div class="lbl">Commercial (AM) netto</div><div style="font-size:20px;font-weight:700;' + (am > 0 ? 'color:var(--green)' : 'color:var(--red)') + '">' + (am > 0 ? '+' : '') + am.toLocaleString('it-IT') + '</div><div style="font-size:10px;color:var(--text3)">' + (am > 0 ? 'NET LONG' : 'NET SHORT') + '</div></div></div>' +
-      '<div class="dr"><span class="dk">Non-Comm Long</span><span class="dv up">' + Number(d.leveragedFundsLong || 0).toLocaleString('it-IT') + '</span></div>' +
-      '<div class="dr"><span class="dk">Non-Comm Short</span><span class="dv dn">' + Number(d.leveragedFundsShort || 0).toLocaleString('it-IT') + '</span></div>' +
-      '<div class="dr"><span class="dk">Commercial Long</span><span class="dv">' + Number(d.assetManagerLong || 0).toLocaleString('it-IT') + '</span></div>' +
-      '<div class="dr"><span class="dk">Commercial Short</span><span class="dv">' + Number(d.assetManagerShort || 0).toLocaleString('it-IT') + '</span></div>' +
-      '<div class="dr"><span class="dk">Variazione sett. LF</span><span class="dv ' + sgnc(wc) + '">' + (wc > 0 ? '+' : '') + wc.toLocaleString('it-IT') + '</span></div>' +
-      '<div class="dr"><span class="dk">Open Interest</span><span class="dv">' + Number(d.openInterest || 0).toLocaleString('it-IT') + '</span></div>' +
-      '<div class="dr"><span class="dk">Trend</span><span class="dv" style="font-size:11px;max-width:220px;text-align:right">' + (d.trend || '—') + '</span></div></div>';
+  if (nq._err) {
+    el.innerHTML='<div class="al ae">COT non disponibile: '+nq._err+'</div>' +
+      '<div class="al aw">Il sito cftc.gov potrebbe essere temporaneamente irraggiungibile. Riprova tra qualche minuto.</div>';
+    return;
   }
 
-  el.innerHTML =
-    (c.reportDate ? '<div class="al ai">CFTC Futures Only · dati al <strong>' + c.reportDate + '</strong></div>' : '') +
-    '<div class="cg3">' +
-    ['nq','es','ym'].map(function(k) {
-      var d = c[k] || {}; var lf = Number(d.leveragedFundsNet) || 0;
-      return '<div class="ci"><div class="cin">' + k.toUpperCase() + ' · LF Net</div><div class="civ ' + (lf < 0 ? 'dn' : 'up') + '">' + (lf > 0 ? '+' : '') + lf.toLocaleString('it-IT') + '</div><div class="cis ' + (lf < 0 ? 'dn' : 'up') + '">' + (lf < 0 ? 'NET SHORT' : 'NET LONG') + '</div></div>';
-    }).join('') +
-    ['nq','es','ym'].map(function(k) {
-      var d = c[k] || {}; var am = Number(d.assetManagerNet) || 0;
-      return '<div class="ci"><div class="cin">' + k.toUpperCase() + ' · AM Net</div><div class="civ ' + (am > 0 ? 'up' : 'dn') + '">' + (am > 0 ? '+' : '') + am.toLocaleString('it-IT') + '</div><div class="cis ' + (am > 0 ? 'up' : 'dn') + '">' + (am > 0 ? 'NET LONG' : 'NET SHORT') + '</div></div>';
-    }).join('') +
-    '</div>' +
-    '<div class="card"><div class="ctitle">AM Net vs LF Net (valore assoluto)</div><div style="position:relative;height:200px"><canvas id="cotch"></canvas></div></div>' +
-    (c.cotAnalysis ? '<div class="inset" style="font-size:12px;color:var(--text2);line-height:1.7;margin-bottom:14px"><strong style="color:var(--text)">Analisi integrata:</strong> ' + c.cotAnalysis + '</div>' : '') +
-    '<div class="sep"></div>' +
-    '<div class="ctabs"><button class="ctab active" onclick="ctab(\'nq\',this)">NQ #209742</button><button class="ctab" onclick="ctab(\'es\',this)">ES #13874+</button><button class="ctab" onclick="ctab(\'ym\',this)">YM #124603</button></div>' +
-    '<div class="cpanel active" id="cp-nq">' + detail('E-mini Nasdaq-100 · CME · #209742', c.nq) + '</div>' +
-    '<div class="cpanel" id="cp-es">' + detail('S&P 500 Consolidated · CME · #13874+', c.es) + '</div>' +
-    '<div class="cpanel" id="cp-ym">' + detail('DJIA x$5 · CBOT · #124603', c.ym) + '</div>';
-
-  setTimeout(function() {
-    var ctx = document.getElementById('cotch');
-    if (!ctx) return;
-    new Chart(ctx, {
-      type: 'bar',
-      data: { labels: ['NQ','ES (div10)','YM'], datasets: [
-        { label: 'Asset Manager Net', data: [Math.abs((c.nq && c.nq.assetManagerNet) || 0), Math.abs((c.es && c.es.assetManagerNet) || 0) / 10, Math.abs((c.ym && c.ym.assetManagerNet) || 0)], backgroundColor: 'rgba(34,197,94,0.7)', borderRadius: 4 },
-        { label: 'Lev Funds Net abs', data: [Math.abs((c.nq && c.nq.leveragedFundsNet) || 0), Math.abs((c.es && c.es.leveragedFundsNet) || 0) / 10, Math.abs((c.ym && c.ym.leveragedFundsNet) || 0)], backgroundColor: 'rgba(239,68,68,0.7)', borderRadius: 4 }
-      ]},
-      options: { responsive: true, maintainAspectRatio: false,
-        plugins: { legend: { labels: { color: '#909090', font: { size: 11 } } } },
-        scales: { x: { ticks: { color: '#909090' }, grid: { color: '#1c1c1c' } }, y: { ticks: { color: '#505050', font: { size: 10 }, callback: function(v){ return v.toLocaleString('it-IT'); } }, grid: { color: '#1c1c1c' } } } }
-    });
-  }, 150);
-}
-
-function ctab(n, b) {
-  document.querySelectorAll('.cpanel').forEach(function(p){ p.classList.remove('active'); });
-  document.querySelectorAll('.ctab').forEach(function(t){ t.classList.remove('active'); });
-  document.getElementById('cp-' + n).classList.add('active');
-  b.classList.add('active');
-}
-
-function renderNews() {
-  var el = document.getElementById('newsc');
-  var c = ST.combined;
-  if (!c || c._err) { el.innerHTML = '<div class="al ae">Errore nei dati. Vedi tab Debug.</div>'; return; }
-
-  function evCard(ev) {
-    return '<div class="nc"><div class="nh"><div><div class="nn">' + ev.name + '</div><div class="nt">' + ev.date + ' · ' + ev.timeCET + ' (' + ev.timeET + ')</div></div><span class="badge brr">***</span></div>' +
-      ((ev.previous || ev.forecast || ev.actual) ? '<table class="dtbl"><thead><tr><th>Precedente</th><th>Atteso</th><th>Attuale</th></tr></thead><tbody><tr><td>' + (ev.previous || '—') + '</td><td>' + (ev.forecast || '—') + '</td><td class="' + (ev.actual ? 'up' : '') + '">' + (ev.actual || '—') + '</td></tr></tbody></table>' : '') +
-      (ev.analysisIT ? '<div class="inset" style="font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:10px">' + ev.analysisIT + '</div>' : '') +
-      ((ev.scenarioPositive || ev.scenarioNegative) ? '<div class="sg"><div class="sb sbull"><div class="sl">Migliore — NQ</div><div class="st">' + (ev.scenarioPositive || '—') + '</div></div><div class="sb sneu"><div class="sl">In linea</div><div class="st">Reazione contenuta</div></div><div class="sb sbear"><div class="sl">Peggiore — NQ</div><div class="st">' + (ev.scenarioNegative || '—') + '</div></div></div>' : '') +
+  function detail(label, d) {
+    if(!d) return '<div class="al aw">Dati non disponibili.</div>';
+    var lf=Number(d.leveragedFundsNet)||0, am=Number(d.assetManagerNet)||0, wc=Number(d.weeklyChangeLF)||0;
+    return '<div class="card">' +
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><span style="font-size:13px;font-weight:700">'+label+'</span>'+sbadge(d.signal)+'</div>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">' +
+      '<div class="inset"><div class="lbl">Non-Commercial LF netto</div><div style="font-size:20px;font-weight:700;'+(lf<0?'color:var(--red)':'color:var(--green)')+'">'+( lf>0?'+':'')+lf.toLocaleString('it-IT')+'</div><div style="font-size:10px;color:var(--text3)">OI '+Number(d.openInterest||0).toLocaleString('it-IT')+' · '+(lf<0?'NET SHORT':'NET LONG')+'</div></div>' +
+      '<div class="inset"><div class="lbl">Commercial AM netto</div><div style="font-size:20px;font-weight:700;'+(am>0?'color:var(--green)':'color:var(--red)')+'">'+( am>0?'+':'')+am.toLocaleString('it-IT')+'</div><div style="font-size:10px;color:var(--text3)">'+(am>0?'NET LONG':'NET SHORT')+'</div></div></div>' +
+      '<div class="dr"><span class="dk">Non-Comm Long</span><span class="dv up">'+Number(d.leveragedFundsLong||0).toLocaleString('it-IT')+'</span></div>' +
+      '<div class="dr"><span class="dk">Non-Comm Short</span><span class="dv dn">'+Number(d.leveragedFundsShort||0).toLocaleString('it-IT')+'</span></div>' +
+      '<div class="dr"><span class="dk">Commercial Long</span><span class="dv">'+Number(d.assetManagerLong||0).toLocaleString('it-IT')+'</span></div>' +
+      '<div class="dr"><span class="dk">Commercial Short</span><span class="dv">'+Number(d.assetManagerShort||0).toLocaleString('it-IT')+'</span></div>' +
+      '<div class="dr"><span class="dk">Variazione sett. LF</span><span class="dv '+(wc>0?'up':wc<0?'dn':'')+'">'+(wc>0?'+':'')+wc.toLocaleString('it-IT')+'</span></div>' +
+      '<div class="dr"><span class="dk">Open Interest</span><span class="dv">'+Number(d.openInterest||0).toLocaleString('it-IT')+'</span></div>' +
       '</div>';
   }
 
-  var tevs = c.todayEvents || [];
-  var wevs = c.weekEvents || [];
-  var h = '<div class="sh" style="margin-bottom:4px">News Macro US Oggi — ' + DS2 + '</div><div class="ssub">Solo eventi *** US</div>';
-  h += (c.noEventsToday || tevs.length === 0) ? '<div class="al ai">Nessun evento 3 stelle US per oggi. Il mercato si muovera su geopolitica o sentiment.</div>' : tevs.map(evCard).join('');
-  if (c.geopoliticalAlert) h += '<div class="al aw" style="margin-top:6px"><strong>Alert geopolitico:</strong> ' + c.geopoliticalAlert + '</div>';
-  h += '<div class="sep"></div><div class="sh" style="margin-bottom:4px">Radar Macro Settimana — ' + TMR + ' fino ' + FRI + '</div><div class="ssub">Tutti gli eventi *** US prossimi giorni</div>';
-  h += wevs.length === 0 ? '<div class="al ai">Nessun evento 3 stelle per il resto della settimana.</div>' :
-    wevs.map(function(ev) {
-      return '<div class="wc"><div class="wd">' + ev.date + '</div>' +
-        '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;gap:10px"><div><div class="wn">' + ev.name + '</div><div class="wt">' + ev.timeCET + ' (' + ev.timeET + ')</div></div><span class="badge brr">***</span></div>' +
-        ((ev.previous || ev.forecast) ? '<table class="dtbl" style="margin-bottom:8px"><thead><tr><th>Precedente</th><th>Previsto</th><th>Attuale</th></tr></thead><tbody><tr><td>' + (ev.previous || '—') + '</td><td>' + (ev.forecast || '—') + '</td><td class="' + (ev.actual ? 'up' : '') + '">' + (ev.actual || '—') + '</td></tr></tbody></table>' : '') +
-        (ev.analysisIT ? '<div style="font-size:11px;color:var(--text2);line-height:1.5;margin-bottom:6px">' + ev.analysisIT + '</div>' : '') +
-        ((ev.scenarioPositive || ev.scenarioNegative) ? '<div style="display:flex;gap:6px;flex-wrap:wrap"><span class="badge bgg" style="font-size:10px">+ ' + (ev.scenarioPositive || '') + '</span><span class="badge brr" style="font-size:10px">- ' + (ev.scenarioNegative || '') + '</span></div>' : '') +
+  el.innerHTML =
+    (cot.reportDate?'<div class="al ai">CFTC.gov · Futures Only · Dati al <strong>'+cot.reportDate+'</strong> · Scaricato direttamente in JavaScript</div>':'') +
+    '<div class="cg3">' +
+    ['nq','es','ym'].map(function(k){var d=cot[k]||{};var lf=Number(d.leveragedFundsNet)||0;return'<div class="ci"><div class="cin">'+k.toUpperCase()+' LF Net</div><div class="civ '+(lf<0?'dn':'up')+'">'+(lf>0?'+':'')+lf.toLocaleString('it-IT')+'</div><div class="cis '+(lf<0?'dn':'up')+'">'+(lf<0?'NET SHORT':'NET LONG')+'</div></div>';}).join('') +
+    ['nq','es','ym'].map(function(k){var d=cot[k]||{};var am=Number(d.assetManagerNet)||0;return'<div class="ci"><div class="cin">'+k.toUpperCase()+' AM Net</div><div class="civ '+(am>0?'up':'dn')+'">'+(am>0?'+':'')+am.toLocaleString('it-IT')+'</div><div class="cis '+(am>0?'up':'dn')+'">'+(am>0?'NET LONG':'NET SHORT')+'</div></div>';}).join('') +
+    '</div>' +
+    '<div class="card"><div class="ctitle">LF Net vs AM Net (valore assoluto)</div><div style="position:relative;height:200px"><canvas id="cotch"></canvas></div></div>' +
+    '<div class="sep"></div>' +
+    '<div class="ctabs"><button class="ctab active" onclick="ctab(\'nq\',this)">NQ #209742</button><button class="ctab" onclick="ctab(\'es\',this)">ES #13874+</button><button class="ctab" onclick="ctab(\'ym\',this)">YM #124603</button></div>' +
+    '<div class="cpanel active" id="cp-nq">'+detail('E-mini Nasdaq-100 · CME · #209742',nq)+'</div>' +
+    '<div class="cpanel" id="cp-es">'+detail('S&P 500 Consolidated · CME · #13874+',es)+'</div>' +
+    '<div class="cpanel" id="cp-ym">'+detail('DJIA x$5 · CBOT · #124603',ym)+'</div>';
+
+  setTimeout(function(){
+    var ctx=document.getElementById('cotch'); if(!ctx) return;
+    new Chart(ctx,{type:'bar',
+      data:{labels:['NQ','ES (div10)','YM'],datasets:[
+        {label:'Asset Manager Net',data:[Math.abs(nq.assetManagerNet||0),Math.abs(es.assetManagerNet||0)/10,Math.abs(ym.assetManagerNet||0)],backgroundColor:'rgba(34,197,94,0.7)',borderRadius:4},
+        {label:'LF Net abs',data:[Math.abs(nq.leveragedFundsNet||0),Math.abs(es.leveragedFundsNet||0)/10,Math.abs(ym.leveragedFundsNet||0)],backgroundColor:'rgba(239,68,68,0.7)',borderRadius:4}
+      ]},
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{labels:{color:'#909090',font:{size:11}}}},
+        scales:{x:{ticks:{color:'#909090'},grid:{color:'#1c1c1c'}},y:{ticks:{color:'#505050',font:{size:10},callback:function(v){return v>=1000?(v/1000).toFixed(0)+'K':v;}},grid:{color:'#1c1c1c'}}}}});
+  },150);
+}
+
+function ctab(n,b) {
+  document.querySelectorAll('.cpanel').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.ctab').forEach(function(t){t.classList.remove('active');});
+  document.getElementById('cp-'+n).classList.add('active'); b.classList.add('active');
+}
+
+function renderNews() {
+  var el=document.getElementById('newsc'), news=NEWS;
+  if(!news||news._err){el.innerHTML='<div class="al ae">Errore: '+(news&&news._err||'Dati mancanti')+'</div><div class="al aw">Vedi tab Debug.</div>';return;}
+
+  function evCard(ev) {
+    return '<div class="nc"><div class="nh"><div><div class="nn">'+ev.name+'</div><div class="nt">'+ev.date+' · '+ev.timeCET+' ('+ev.timeET+')</div></div><span class="badge brr">***</span></div>' +
+      ((ev.previous||ev.forecast||ev.actual)?'<table class="dtbl"><thead><tr><th>Precedente</th><th>Atteso</th><th>Attuale</th></tr></thead><tbody><tr><td>'+(ev.previous||'—')+'</td><td>'+(ev.forecast||'—')+'</td><td class="'+(ev.actual?'up':'')+'">'+(ev.actual||'—')+'</td></tr></tbody></table>':'') +
+      (ev.analysisIT?'<div class="inset" style="font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:10px">'+ev.analysisIT+'</div>':'') +
+      ((ev.scenarioPositive||ev.scenarioNegative)?'<div class="sg"><div class="sb sbull"><div class="sl">Migliore NQ</div><div class="st">'+(ev.scenarioPositive||'—')+'</div></div><div class="sb sneu"><div class="sl">In linea</div><div class="st">Reazione contenuta</div></div><div class="sb sbear"><div class="sl">Peggiore NQ</div><div class="st">'+(ev.scenarioNegative||'—')+'</div></div></div>':'') +
+      '</div>';
+  }
+
+  var tevs=news.todayEvents||[], wevs=news.weekEvents||[];
+  var h='<div class="sh" style="margin-bottom:4px">News Macro US Oggi — '+DS2+'</div><div class="ssub">Solo eventi *** US</div>';
+  h+=(news.noEventsToday||tevs.length===0)?'<div class="al ai">Nessun evento 3 stelle US per oggi. Il mercato si muovera su geopolitica o sentiment.</div>':tevs.map(evCard).join('');
+  if(news.geopoliticalAlert) h+='<div class="al aw" style="margin-top:6px"><strong>Alert geopolitico:</strong> '+news.geopoliticalAlert+'</div>';
+  h+='<div class="sep"></div><div class="sh" style="margin-bottom:4px">Radar Macro Settimana — '+TMR+' fino '+FRI+'</div><div class="ssub">Tutti gli eventi *** US prossimi giorni</div>';
+  h+=wevs.length===0?'<div class="al ai">Nessun evento 3 stelle per il resto della settimana.</div>':
+    wevs.map(function(ev){
+      return '<div class="wc"><div class="wd">'+ev.date+'</div>' +
+        '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;gap:10px"><div><div class="wn">'+ev.name+'</div><div class="wt">'+ev.timeCET+' ('+ev.timeET+')</div></div><span class="badge brr">***</span></div>' +
+        ((ev.previous||ev.forecast)?'<table class="dtbl" style="margin-bottom:8px"><thead><tr><th>Precedente</th><th>Previsto</th><th>Attuale</th></tr></thead><tbody><tr><td>'+(ev.previous||'—')+'</td><td>'+(ev.forecast||'—')+'</td><td class="'+(ev.actual?'up':'')+'">'+(ev.actual||'—')+'</td></tr></tbody></table>':'') +
+        (ev.analysisIT?'<div style="font-size:11px;color:var(--text2);line-height:1.5;margin-bottom:6px">'+ev.analysisIT+'</div>':'') +
+        ((ev.scenarioPositive||ev.scenarioNegative)?'<div style="display:flex;gap:6px;flex-wrap:wrap"><span class="badge bgg" style="font-size:10px">+ '+(ev.scenarioPositive||'')+'</span><span class="badge brr" style="font-size:10px">- '+(ev.scenarioNegative||'')+'</span></div>':'') +
         '</div>';
     }).join('');
-  el.innerHTML = h;
+  el.innerHTML=h;
 }
 
 function renderFED() {
-  var el = document.getElementById('fedc');
-  var fed = ST.fed;
-  if (!fed || fed._err) { el.innerHTML = '<div class="al ae">' + (fed && fed._err || 'Dati mancanti') + '</div>'; return; }
-  el.innerHTML =
+  var el=document.getElementById('fedc'), fed=FED;
+  if(!fed||fed._err){el.innerHTML='<div class="al ae">'+(fed&&fed._err||'Dati mancanti')+'</div>';return;}
+  el.innerHTML=
     '<div class="mg" style="margin-bottom:14px">' +
-    '<div class="mc"><div class="lbl">Fed Funds Rate</div><div class="val">' + (fed.currentRate || '—') + '</div></div>' +
-    '<div class="mc"><div class="lbl">Prossimo FOMC</div><div class="val" style="font-size:13px">' + (fed.nextFOMCDate || '—') + '</div></div>' +
-    '<div class="mc"><div class="lbl">Hold Probability</div><div class="val up">' + (fed.holdProbabilityNext || '—') + '</div><div class="sub">CME FedWatch</div></div>' +
-    '<div class="mc"><div class="lbl">Hike entro 2026</div><div class="val dn">' + (fed.hikeProbability2026 || '—') + '</div></div></div>' +
+    '<div class="mc"><div class="lbl">Fed Funds Rate</div><div class="val">'+(fed.currentRate||'—')+'</div></div>' +
+    '<div class="mc"><div class="lbl">Prossimo FOMC</div><div class="val" style="font-size:13px">'+(fed.nextFOMCDate||'—')+'</div></div>' +
+    '<div class="mc"><div class="lbl">Hold Prob.</div><div class="val up">'+(fed.holdProbabilityNext||'—')+'</div><div class="sub">CME FedWatch</div></div>' +
+    '<div class="mc"><div class="lbl">Hike 2026</div><div class="val dn">'+(fed.hikeProbability2026||'—')+'</div></div></div>' +
     '<div class="card"><div class="ctitle">Indicatori macro chiave</div><table class="fitbl"><thead><tr><th>Indicatore</th><th>Dato</th><th>Trend</th></tr></thead><tbody>' +
-    '<tr><td>CPI Headline YoY</td><td><strong>' + (fed.cpiHeadline || '—') + '</strong></td><td class="tup">Inflazione</td></tr>' +
-    '<tr><td>CPI Core YoY</td><td><strong>' + (fed.cpiCore || '—') + '</strong></td><td class="tup">Persistente</td></tr>' +
-    '<tr><td>PCE Core YoY</td><td><strong>' + (fed.pceCore || '—') + '</strong></td><td class="tup">Sopra target</td></tr>' +
-    '<tr><td>NFP</td><td><strong>' + (fed.nfpLast || '—') + '</strong></td><td class="tneu">Solido</td></tr>' +
-    '<tr><td>ISM Prices Paid</td><td><strong>' + (fed.ismPricesPaid || '—') + '</strong></td><td class="tup">Stagflationary</td></tr>' +
-    '<tr><td>Import Prices MoM</td><td><strong>' + (fed.importPrices || '—') + '</strong></td><td class="tup">Oil shock</td></tr>' +
-    '<tr><td>Disoccupazione</td><td><strong>' + (fed.unemployment || '—') + '</strong></td><td class="tneu">Stabile</td></tr>' +
+    '<tr><td>CPI Headline YoY</td><td><strong>'+(fed.cpiHeadline||'—')+'</strong></td><td class="tup">Inflazione</td></tr>' +
+    '<tr><td>CPI Core YoY</td><td><strong>'+(fed.cpiCore||'—')+'</strong></td><td class="tup">Persistente</td></tr>' +
+    '<tr><td>PCE Core YoY</td><td><strong>'+(fed.pceCore||'—')+'</strong></td><td class="tup">Sopra target</td></tr>' +
+    '<tr><td>NFP</td><td><strong>'+(fed.nfpLast||'—')+'</strong></td><td class="tneu">Solido</td></tr>' +
+    '<tr><td>ISM Prices Paid</td><td><strong>'+(fed.ismPricesPaid||'—')+'</strong></td><td class="tup">Stagflationary</td></tr>' +
+    '<tr><td>Import Prices MoM</td><td><strong>'+(fed.importPrices||'—')+'</strong></td><td class="tup">Oil shock</td></tr>' +
+    '<tr><td>Disoccupazione</td><td><strong>'+(fed.unemployment||'—')+'</strong></td><td class="tneu">Stabile</td></tr>' +
     '</tbody></table></div>' +
-    ((fed.fedStance || fed.outlookNQ) ?
-      '<div class="card"><div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">' +
-      (fed.fedStance ? '<div><div class="ctitle">Stance FED</div><div style="font-size:12px;color:var(--text2);line-height:1.7">' + fed.fedStance + '</div></div>' : '') +
-      (fed.outlookNQ ? '<div><div class="ctitle">Meccanismo NQ</div><div style="font-size:12px;color:var(--text2);line-height:1.7">' + fed.outlookNQ + '</div></div>' : '') +
-      '</div></div>' : '') +
-    (fed.keyRisks ? '<div class="al aw"><strong>Rischi chiave:</strong> ' + fed.keyRisks + '</div>' : '');
+    ((fed.fedStance||fed.outlookNQ)?'<div class="card"><div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">' +
+    (fed.fedStance?'<div><div class="ctitle">Stance FED</div><div style="font-size:12px;color:var(--text2);line-height:1.7">'+fed.fedStance+'</div></div>':'') +
+    (fed.outlookNQ?'<div><div class="ctitle">Meccanismo NQ</div><div style="font-size:12px;color:var(--text2);line-height:1.7">'+fed.outlookNQ+'</div></div>':'') +
+    '</div></div>':'') +
+    (fed.keyRisks?'<div class="al aw"><strong>Rischi:</strong> '+fed.keyRisks+'</div>':'');
 }
 </script>
 </body>
