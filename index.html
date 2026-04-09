@@ -615,20 +615,25 @@ function searchNews(){
   return callClaude(sys,usr,true);
 }
 
-function formatNews(txt){
-  var sys='You are a JSON-only formatter. You must respond with ONLY a valid JSON object, starting with { and ending with }. No explanations, no markdown, no other text whatsoever.';
-  var usr='Today is '+DS+' ('+DS2+'). Convert the following economic calendar data into JSON.\n\n'+
-    'DATA:\n'+txt.substring(0,2500)+'\n\n'+
-    'RULES: todayEvents = US 3-star events on '+DS2+' only. weekEvents = US 3-star events from '+TMR+' to '+FRI2+'. noEventsToday=true only if no US 3-star events today.\n\n'+
-    'OUTPUT (ONLY this JSON, nothing else):\n'+
-    '{"todayEvents":[{"name":"","date":"","timeCET":"","timeET":"","previous":"","forecast":"","actual":"","analysisIT":"","scenarioPositive":"","scenarioNegative":""}],"weekEvents":[{"name":"","date":"","timeCET":"","timeET":"","previous":"","forecast":"","actual":"","analysisIT":"","scenarioPositive":"","scenarioNegative":""}],"noEventsToday":false,"geopoliticalAlert":""}';
+function formatNewsAndFED(txt){
+  /* Combina news + FED in una sola chiamata — il testo di ricerca contiene gia' tutti i dati */
+  var sys='You extract structured data from text and return ONLY a JSON object. Start with { end with }. No markdown, no explanation.';
+  var usr='Today is '+DS+' ('+DS2+'). Extract data from this research text and return ONE JSON object.\n\nRESEARCH TEXT:\n'+txt.substring(0,4000)+'\n\n'+
+    'Return this EXACT JSON structure (fill all fields from the text above):\n'+
+    '{\n'+
+    '  "todayEvents": [{"name":"","date":"","timeCET":"e.g. 14:30 CET","timeET":"e.g. 8:30 ET","previous":"","forecast":"","actual":"","analysisIT":"max 30 words Italian","scenarioPositive":"max 10 words NQ reaction","scenarioNegative":"max 10 words NQ reaction"}],\n'+
+    '  "weekEvents": [{"name":"","date":"","timeCET":"","timeET":"","previous":"","forecast":"","actual":"","analysisIT":"","scenarioPositive":"","scenarioNegative":""}],\n'+
+    '  "noEventsToday": false,\n'+
+    '  "geopoliticalAlert": "one Italian sentence about active risks or empty string",\n'+
+    '  "fed": {"currentRate":"e.g. 3.50-3.75%","nextFOMCDate":"","holdProbabilityNext":"","hikeProbability2026":"","cpiHeadline":"","cpiCore":"","pceCore":"","unemployment":"","nfpLast":"","fedStance":"max 30 words Italian","outlookNQ":"max 40 words Italian","keyRisks":"max 20 words Italian"}\n'+
+    '}\n\n'+
+    'RULES:\n'+
+    '- todayEvents = ONLY high-impact US events scheduled for TODAY '+DS2+'\n'+
+    '- weekEvents = high-impact US events from '+TMR+' through '+FRI2+'\n'+
+    '- Extract all times, previous values, forecasts from the text\n'+
+    '- For fed fields use data mentioned in the text (CPI forecasts, FedWatch probabilities, NFP numbers etc.)\n'+
+    '- Return ONLY the JSON object, nothing else';
   return callClaude(sys,usr,false);
-}
-
-function callFED(){
-  return callClaude('Return ONLY valid JSON, no other text.',
-    'Current Fed macro data as of '+DS+':\n{"currentRate":"","nextFOMCDate":"","holdProbabilityNext":"","hikeProbability2026":"","cpiHeadline":"","cpiCore":"","pceCore":"","unemployment":"","nfpLast":"","ismPricesPaid":"","importPrices":"","fedStance":"","outlookNQ":"","keyRisks":""}',
-    false);
 }
 
 function callSyn(ps){
@@ -700,43 +705,59 @@ function generate(){
     var cachedNews=loadNewsCache();
     if(cachedNews){
       NEWS=cachedNews;
+      /* Controlla se FED e' gia' in cache */
+      var cachedFedCheck=loadFedCache();
+      if(cachedFedCheck){FED=cachedFedCheck;}
       prog(3,'ok','News dalla cache (0 costo API) · Oggi: '+((NEWS.todayEvents&&NEWS.todayEvents.length)||0)+' · Settimana: '+((NEWS.weekEvents&&NEWS.weekEvents.length)||0));
       prog(4,'ok','Cache valida per oggi '+DS2);
       return Promise.resolve();
     }
-    prog(3,'run','Prima ricerca di oggi su investing.com...');
+    prog(3,'run','Prima ricerca di oggi (news + dati FED)...');
     return searchNews()
     .then(function(res){
       RAW.newsSearch=res.text;
-      prog(3,'ok','Trovati '+res.text.length+' chars — formatto...');
+      prog(3,'ok','Trovati '+res.text.length+' chars — estraggo news+FED...');
       prog(4,'run');
-      return formatNews(res.text);
+      return formatNewsAndFED(res.text);
     })
     .then(function(res){
       RAW.newsFormat=res.text;
-      NEWS=pJSON(res.text);
-      if(!NEWS._err)saveNewsCache(NEWS);
-      var n=(NEWS.todayEvents&&NEWS.todayEvents.length)||0;
-      var w=(NEWS.weekEvents&&NEWS.weekEvents.length)||0;
-      prog(4,'ok',NEWS._err?'Errore — vedi Debug':'Oggi: '+n+' · Settimana: '+w+' · in cache');
+      var parsed=pJSON(res.text);
+      if(!parsed._err){
+        /* Separo news e fed dal risultato combinato */
+        NEWS={todayEvents:parsed.todayEvents||[],weekEvents:parsed.weekEvents||[],noEventsToday:parsed.noEventsToday||false,geopoliticalAlert:parsed.geopoliticalAlert||''};
+        if(parsed.fed&&parsed.fed.currentRate){FED=parsed.fed;saveFedCache(FED);}
+        saveNewsCache(NEWS);
+        var n=(NEWS.todayEvents&&NEWS.todayEvents.length)||0;
+        var w=(NEWS.weekEvents&&NEWS.weekEvents.length)||0;
+        prog(4,'ok','Oggi: '+n+' eventi · Settimana: '+w+' · in cache');
+      } else {
+        NEWS={_err:parsed._err};
+        prog(4,'err','Parsing fallito — vedi Debug');
+      }
     })
     .catch(function(e){NEWS={_err:e.message};RAW.newsErr=e.message;prog(3,'err',e.message.substring(0,70));prog(4,'err','');});
   })
-  /* STEP 4 — FED cache settimanale */
+  /* STEP 4 — FED (gia' estratto da formatNewsAndFED o dalla cache) */
   .then(function(){
+    /* FED potrebbe gia' essere stato riempito da formatNewsAndFED */
+    if(FED&&FED.currentRate){
+      prog(5,'ok','FED estratto dalla ricerca news · '+FED.currentRate);
+      return Promise.resolve();
+    }
     var cachedFed=loadFedCache();
     if(cachedFed){
       FED=cachedFed;
-      prog(5,'ok','FED dalla cache (0 costo API) · '+FED.currentRate+' · hold '+FED.holdProbabilityNext);
+      prog(5,'ok','FED dalla cache · '+FED.currentRate+' · hold '+FED.holdProbabilityNext);
       return Promise.resolve();
     }
+    /* Fallback: chiedi a Claude con dati dal testo di ricerca */
     prog(5,'run');
-    return callFED().then(function(res){
-      RAW.fed=res.text;FED=pJSON(res.text);
-      if(!FED._err)saveFedCache(FED);
-      prog(5,'ok',FED._err?'Errore':FED.currentRate+' · hold '+FED.holdProbabilityNext+' · in cache');
-      return sleep(5000);
-    }).catch(function(e){FED={_err:e.message};prog(5,'err',e.message.substring(0,50));return sleep(5000);});
+    var fedPrompt='Extract Federal Reserve macro data from this text and return ONLY JSON:\n'+(RAW.newsSearch||'').substring(0,2000)+'\n\n'+
+      '{"currentRate":"","nextFOMCDate":"","holdProbabilityNext":"","hikeProbability2026":"","cpiHeadline":"","cpiCore":"","pceCore":"","unemployment":"","nfpLast":"","ismPricesPaid":"","importPrices":"","fedStance":"","outlookNQ":"","keyRisks":""}';
+    return callClaude('Extract data and return ONLY JSON.',fedPrompt,false)
+    .then(function(res){RAW.fed=res.text;FED=pJSON(res.text);if(!FED._err)saveFedCache(FED);prog(5,'ok',FED._err?'Errore':FED.currentRate);return sleep(3000);})
+    .catch(function(e){FED={_err:e.message};prog(5,'err',e.message.substring(0,50));return sleep(3000);});
   })
   /* STEP 5 — Sintesi (no cache — istantanea, no web_search, <1 cent) */
   .then(function(){prog(6,'run');return callSyn(ps);})
