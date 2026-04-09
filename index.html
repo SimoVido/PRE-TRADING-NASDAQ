@@ -276,13 +276,23 @@ textarea{width:100%;min-height:54px;padding:6px 9px;background:var(--bg3);border
     <button class="btns" onclick="saveKeyS()">Salva</button>
     <div id="sset" style="display:none;font-size:11px;color:var(--gr);margin-top:4px">Salvata</div>
   </div>
+  <div class="card">
+    <div class="ct">Costo per generazione</div>
+    <div class="al as" style="font-size:12px;margin-bottom:9px">COT: <strong>GRATIS</strong> (browser fetch) · News: <strong>~€0,01</strong> solo prima volta al giorno poi gratis · FED: <strong>~€0,001</strong> solo prima volta a settimana · Sintesi: <strong>~€0,002</strong> ogni volta</div>
+    <div class="dr"><span class="dk">Costo giornaliero tipico</span><span class="dv" style="color:var(--gr)">~€0,01-0,02 totali</span></div>
+    <div class="dr"><span class="dk">Rigenerazioni successive</span><span class="dv" style="color:var(--gr)">~€0,002 (solo sintesi)</span></div>
+  </div>
+  <div class="card">
+    <div class="ct">Cache</div>
+    <div id="cache-info" style="font-size:11px;color:var(--tx2);margin-bottom:9px"></div>
+    <button class="btns" onclick="clearAllCache()">Reset cache (forza aggiornamento tutto)</button>
+  </div>
   <div class="card"><div class="ct">v7.0 — Architettura</div>
     <div class="dr"><span class="dk">COT</span><span class="dv" style="color:var(--gr)">Browser fetch CFTC.gov — zero token API</span></div>
-    <div class="dr"><span class="dk">Cache COT</span><span class="dv">localStorage — valido tutta la settimana</span></div>
-    <div class="dr"><span class="dk">News (search)</span><span class="dv">1 web_search → testo libero</span></div>
-    <div class="dr"><span class="dk">News (format)</span><span class="dv">no web_search → JSON</span></div>
-    <div class="dr"><span class="dk">FED + Sintesi</span><span class="dv">no web_search</span></div>
-    <div class="dr"><span class="dk">429 possibile?</span><span class="dv" style="color:var(--gr)">NO — 1 sola web_search</span></div>
+    <div class="dr"><span class="dk">News</span><span class="dv">1 web_search al giorno poi cache</span></div>
+    <div class="dr"><span class="dk">FED</span><span class="dv">1 call a settimana poi cache</span></div>
+    <div class="dr"><span class="dk">Sintesi</span><span class="dv">no web_search — ~€0,002</span></div>
+    <div class="dr"><span class="dk">429 possibile?</span><span class="dv" style="color:var(--gr)">NO — 1 sola web_search al giorno</span></div>
   </div>
 </div>
 
@@ -319,7 +329,24 @@ function goTab(n,b){
 var getKey=function(){return localStorage.getItem('pt_k')||'';};
 function saveKey(){var k=document.getElementById('apiin').value.trim();if(k){localStorage.setItem('pt_k',k);document.getElementById('apibanner').style.display='none';}}
 function saveKeyS(){var k=document.getElementById('set-ak').value.trim();if(k){localStorage.setItem('pt_k',k);showTmp('sset');}}
-window.addEventListener('load',function(){var k=getKey();if(!k)document.getElementById('apibanner').style.display='block';else document.getElementById('set-ak').value=k;});
+window.addEventListener('load',function(){
+  var k=getKey();
+  if(!k)document.getElementById('apibanner').style.display='block';
+  else document.getElementById('set-ak').value=k;
+  updateCacheInfo();
+});
+function updateCacheInfo(){
+  var el=document.getElementById('cache-info');
+  if(!el)return;
+  var lines=[];
+  var cot=loadCotCache();
+  lines.push('COT: '+(cot?'in cache al '+cot.reportDate:'non in cache'));
+  var nc=loadNewsCache();
+  lines.push('News: '+(nc?'in cache per oggi '+DS2+' ('+((nc.todayEvents&&nc.todayEvents.length)||0)+' eventi)':'non in cache — verrà scaricata'));
+  var fc=loadFedCache();
+  lines.push('FED: '+(fc?'in cache ('+fc.currentRate+')':'non in cache'));
+  el.textContent=lines.join(' · ');
+}
 function showTmp(id){var e=document.getElementById(id);e.style.display='block';setTimeout(function(){e.style.display='none';},2000);}
 
 /* OPTIONS */
@@ -377,6 +404,55 @@ function prog(n,st,note){
   if(no&&note!==undefined)no.textContent=note;
 }
 function getPS(){return{ieri:document.getElementById('yr').value||'',stato:document.getElementById('ms').value||'',settimana:document.getElementById('ws').value||'',bias:document.getElementById('bias').value||'',noteT:document.getElementById('yt').value||'',noteM:document.getElementById('ym').value||''};}
+
+/* ================================================================
+   CACHE GIORNALIERA NEWS + SETTIMANALE FED
+   News cached per tutto il giorno — 1 sola web_search al giorno
+   FED cached per tutta la settimana
+   COT cached per tutta la settimana
+   COSTO REALE: 2-3 centesimi/giorno (prima gen) poi GRATIS
+   ================================================================ */
+
+function newsCacheKey(){
+  var d=new Date();
+  return'news_v7_'+d.getFullYear()+'_'+d.getMonth()+'_'+d.getDate();
+}
+function saveNewsCache(data){
+  try{
+    localStorage.setItem(newsCacheKey(),JSON.stringify(data));
+    localStorage.setItem(newsCacheKey()+'_raw',data._rawSearch||'');
+  }catch(e){}
+}
+function loadNewsCache(){
+  try{
+    var r=localStorage.getItem(newsCacheKey());
+    if(!r)return null;
+    var d=JSON.parse(r);
+    return(d&&!d._err)?d:null;
+  }catch(e){return null;}
+}
+
+function fedCacheKey(){
+  var d=new Date(),y=d.getFullYear();
+  var jan4=new Date(y,0,4);
+  var wk=Math.ceil(((d-jan4)/86400000+jan4.getDay()+1)/7);
+  return'fed_v7_'+y+'_w'+wk;
+}
+function saveFedCache(data){try{localStorage.setItem(fedCacheKey(),JSON.stringify(data));}catch(e){}}
+function loadFedCache(){
+  try{var r=localStorage.getItem(fedCacheKey());if(!r)return null;var d=JSON.parse(r);return(d&&d.currentRate&&!d._err)?d:null;}
+  catch(e){return null;}
+}
+
+function clearAllCache(){
+  try{
+    Object.keys(localStorage).forEach(function(k){
+      if(k.startsWith('cot_v7_')||k.startsWith('news_v7_')||k.startsWith('fed_v7_'))
+        localStorage.removeItem(k);
+    });
+    alert('Cache cancellata. La prossima generazione riscarica tutto.');
+  }catch(e){}
+}
 
 /* ================================================================
    COT FETCH — Direttamente da CFTC.gov via proxy CORS nel browser.
@@ -510,7 +586,7 @@ function tryProxy(proxies,i){
 function callClaude(sys,usr,ws,attempt){
   attempt=attempt||0;
   var k=getKey();if(!k)return Promise.reject(new Error('API key mancante'));
-  var body={model:'claude-haiku-4-5-20251001',max_tokens:ws?2000:1500,system:sys,messages:[{role:'user',content:usr}]};
+  var body={model:'claude-haiku-4-5-20251001',max_tokens:ws?2000:2000,system:sys,messages:[{role:'user',content:usr}]};
   if(ws)body.tools=[{type:'web_search_20250305',name:'web_search'}];
   return fetch('https://api.anthropic.com/v1/messages',{method:'POST',
     headers:{'Content-Type':'application/json','x-api-key':k,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
@@ -540,12 +616,12 @@ function searchNews(){
 }
 
 function formatNews(txt){
-  var sys='JSON formatter. Return ONLY valid JSON, no other text.';
-  var usr='Convert this economic calendar data to JSON:\n\n'+txt+'\n\n'+
-    'Today='+DS2+'. todayEvents=events for today only. weekEvents=events from tomorrow '+TMR+' through '+FRI2+'.\n'+
-    'noEventsToday=true only if genuinely no 3-star US events today.\n'+
-    '{"todayEvents":[{"name":"","date":"","timeCET":"","timeET":"","previous":"","forecast":"","actual":"","analysisIT":"","scenarioPositive":"","scenarioNegative":""}],"weekEvents":[{"name":"","date":"","timeCET":"","timeET":"","previous":"","forecast":"","actual":"","analysisIT":"","scenarioPositive":"","scenarioNegative":""}],"noEventsToday":false,"geopoliticalAlert":""}\n'+
-    'analysisIT max 35 words Italian. scenarioPositive/Negative max 12 words Italian NQ reaction. ONLY JSON.';
+  var sys='You are a JSON-only formatter. You must respond with ONLY a valid JSON object, starting with { and ending with }. No explanations, no markdown, no other text whatsoever.';
+  var usr='Today is '+DS+' ('+DS2+'). Convert the following economic calendar data into JSON.\n\n'+
+    'DATA:\n'+txt.substring(0,2500)+'\n\n'+
+    'RULES: todayEvents = US 3-star events on '+DS2+' only. weekEvents = US 3-star events from '+TMR+' to '+FRI2+'. noEventsToday=true only if no US 3-star events today.\n\n'+
+    'OUTPUT (ONLY this JSON, nothing else):\n'+
+    '{"todayEvents":[{"name":"","date":"","timeCET":"","timeET":"","previous":"","forecast":"","actual":"","analysisIT":"","scenarioPositive":"","scenarioNegative":""}],"weekEvents":[{"name":"","date":"","timeCET":"","timeET":"","previous":"","forecast":"","actual":"","analysisIT":"","scenarioPositive":"","scenarioNegative":""}],"noEventsToday":false,"geopoliticalAlert":""}';
   return callClaude(sys,usr,false);
 }
 
@@ -619,33 +695,53 @@ function generate(){
   /* STEP 2 — Opzioni */
   .then(function(){prog(2,'run');calcOpt();renderOptDetail();prog(2,'ok');})
 
-  /* STEP 3a — News search */
-  .then(function(){prog(3,'run','Ricerca su investing.com...');return searchNews();})
-  .then(function(res){
-    RAW.newsSearch=res.text;
-    prog(3,'ok','Trovati '+res.text.length+' chars');
-    prog(4,'run');
-    return formatNews(res.text);
+  /* STEP 3+4 — News cache giornaliera + FED cache settimanale */
+  .then(function(){
+    var cachedNews=loadNewsCache();
+    if(cachedNews){
+      NEWS=cachedNews;
+      prog(3,'ok','News dalla cache (0 costo API) · Oggi: '+((NEWS.todayEvents&&NEWS.todayEvents.length)||0)+' · Settimana: '+((NEWS.weekEvents&&NEWS.weekEvents.length)||0));
+      prog(4,'ok','Cache valida per oggi '+DS2);
+      return Promise.resolve();
+    }
+    prog(3,'run','Prima ricerca di oggi su investing.com...');
+    return searchNews()
+    .then(function(res){
+      RAW.newsSearch=res.text;
+      prog(3,'ok','Trovati '+res.text.length+' chars — formatto...');
+      prog(4,'run');
+      return formatNews(res.text);
+    })
+    .then(function(res){
+      RAW.newsFormat=res.text;
+      NEWS=pJSON(res.text);
+      if(!NEWS._err)saveNewsCache(NEWS);
+      var n=(NEWS.todayEvents&&NEWS.todayEvents.length)||0;
+      var w=(NEWS.weekEvents&&NEWS.weekEvents.length)||0;
+      prog(4,'ok',NEWS._err?'Errore — vedi Debug':'Oggi: '+n+' · Settimana: '+w+' · in cache');
+    })
+    .catch(function(e){NEWS={_err:e.message};RAW.newsErr=e.message;prog(3,'err',e.message.substring(0,70));prog(4,'err','');});
   })
-  .then(function(res){
-    RAW.newsFormat=res.text;
-    NEWS=pJSON(res.text);
-    var n=(NEWS.todayEvents&&NEWS.todayEvents.length)||0;
-    var w=(NEWS.weekEvents&&NEWS.weekEvents.length)||0;
-    prog(4,'ok',NEWS._err?'Errore parsing — vedi Debug':'Oggi: '+n+' · Settimana: '+w);
+  /* STEP 4 — FED cache settimanale */
+  .then(function(){
+    var cachedFed=loadFedCache();
+    if(cachedFed){
+      FED=cachedFed;
+      prog(5,'ok','FED dalla cache (0 costo API) · '+FED.currentRate+' · hold '+FED.holdProbabilityNext);
+      return Promise.resolve();
+    }
+    prog(5,'run');
+    return callFED().then(function(res){
+      RAW.fed=res.text;FED=pJSON(res.text);
+      if(!FED._err)saveFedCache(FED);
+      prog(5,'ok',FED._err?'Errore':FED.currentRate+' · hold '+FED.holdProbabilityNext+' · in cache');
+      return sleep(5000);
+    }).catch(function(e){FED={_err:e.message};prog(5,'err',e.message.substring(0,50));return sleep(5000);});
   })
-  .catch(function(e){NEWS={_err:e.message};RAW.newsErr=e.message;prog(3,'err',e.message.substring(0,70));prog(4,'err','');})
-
-  /* STEP 4 — FED */
-  .then(function(){prog(5,'run');return callFED();})
-  .then(function(res){RAW.fed=res.text;FED=pJSON(res.text);prog(5,'ok',FED._err?'Errore':FED.currentRate+' · hold '+FED.holdProbabilityNext);return sleep(7000);})
-  .catch(function(e){FED={_err:e.message};prog(5,'err',e.message.substring(0,50));return sleep(7000);})
-
-  /* STEP 5 — Sintesi */
+  /* STEP 5 — Sintesi (no cache — istantanea, no web_search, <1 cent) */
   .then(function(){prog(6,'run');return callSyn(ps);})
   .then(function(res){RAW.syn=res.text;SYN=pJSON(res.text);prog(6,'ok',SYN._err?'Errore':'Bias: '+SYN.bias);})
   .catch(function(e){SYN={_err:e.message};prog(6,'err',e.message.substring(0,50));})
-
   .then(function(){
     renderAll(ps);renderDebug();
     document.getElementById('sdot').className='sdot ok';
