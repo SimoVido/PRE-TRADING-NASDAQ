@@ -438,27 +438,27 @@ function callClaude(sys,usr,ws,attempt){
 
 /* ── PROMPTS ── */
 function pCOT(){
-  return 'Fetch the page https://www.cftc.gov/dea/futures/financial_lf.htm and extract the "Traders in Financial Futures - Futures Only" data for these three contracts:\n'+
-  '1. NASDAQ MINI code 209742 (E-mini Nasdaq-100)\n'+
-  '2. S&P 500 Consolidated code 13874+\n'+
-  '3. DJIA x$5 code 124603\n\n'+
-  'For each: read the Positions row and extract:\n'+
-  'Column order: DealerL, DealerS, DealerSpr, AssetManagerL, AssetManagerS, AssetManagerSpr, LeveragedL, LeveragedS, LeveragedSpr, OtherL, OtherS...\n'+
-  'So: leveragedFundsLong=col7, leveragedFundsShort=col8, leveragedFundsNet=col7-col8\n'+
-  'assetManagerLong=col4, assetManagerShort=col5, assetManagerNet=col4-col5\n'+
-  'openInterest from "Open Interest is NNN"\n'+
-  'weeklyChangeLF from Changes row: changeLFLong-changeLFShort\n\n'+
+  return 'Go to https://www.cftc.gov/dea/futures/financial_lf.htm and extract data for:\n'+
+  '1. NASDAQ MINI #209742, 2. S&P 500 Consolidated #13874+, 3. DJIA x$5 #124603\n\n'+
+  'Column layout (TFF Futures Only): Dealer(L,S,Spr) | AssetManager(L,S,Spr) | Leveraged(L,S,Spr) | Other(L,S,Spr) | Nonreportable(L,S)\n\n'+
+  'For each contract extract TWO rows:\n'+
+  'POSITIONS row: assetManagerLong, assetManagerShort, leveragedFundsLong, leveragedFundsShort, openInterest\n'+
+  'CHANGES row (week-over-week): changeLFLong, changeLFShort, changeAMLong, changeAMShort, changeOI\n\n'+
+  'Calculate: leveragedFundsNet=LFLong-LFShort, assetManagerNet=AMLong-AMShort\n'+
+  'weeklyChangeLFNet=changeLFLong-changeLFShort (positive=more longs added, negative=more shorts added)\n'+
+  'signal: "bearish" if leveragedFundsNet<0, "bullish" if >0\n\n'+
   'ONLY return this JSON, no other text:\n'+
-  '{"reportDate":"","nq":{"leveragedFundsLong":0,"leveragedFundsShort":0,"leveragedFundsNet":0,"assetManagerLong":0,"assetManagerShort":0,"assetManagerNet":0,"openInterest":0,"weeklyChangeLF":0,"signal":"","trend":""},"es":{"leveragedFundsLong":0,"leveragedFundsShort":0,"leveragedFundsNet":0,"assetManagerLong":0,"assetManagerShort":0,"assetManagerNet":0,"openInterest":0,"weeklyChangeLF":0,"signal":"","trend":""},"ym":{"leveragedFundsLong":0,"leveragedFundsShort":0,"leveragedFundsNet":0,"assetManagerLong":0,"assetManagerShort":0,"assetManagerNet":0,"openInterest":0,"weeklyChangeLF":0,"signal":"","trend":""},"cotAnalysis":""}';
+  '{"reportDate":"","nq":{"leveragedFundsLong":0,"leveragedFundsShort":0,"leveragedFundsNet":0,"assetManagerLong":0,"assetManagerShort":0,"assetManagerNet":0,"openInterest":0,"weeklyChangeLFLong":0,"weeklyChangeLFShort":0,"weeklyChangeLFNet":0,"weeklyChangeAMLong":0,"weeklyChangeAMShort":0,"changeOI":0,"signal":"","lfPctOI":0},"es":{"leveragedFundsLong":0,"leveragedFundsShort":0,"leveragedFundsNet":0,"assetManagerLong":0,"assetManagerShort":0,"assetManagerNet":0,"openInterest":0,"weeklyChangeLFLong":0,"weeklyChangeLFShort":0,"weeklyChangeLFNet":0,"weeklyChangeAMLong":0,"weeklyChangeAMShort":0,"changeOI":0,"signal":"","lfPctOI":0},"ym":{"leveragedFundsLong":0,"leveragedFundsShort":0,"leveragedFundsNet":0,"assetManagerLong":0,"assetManagerShort":0,"assetManagerNet":0,"openInterest":0,"weeklyChangeLFLong":0,"weeklyChangeLFShort":0,"weeklyChangeLFNet":0,"weeklyChangeAMLong":0,"weeklyChangeAMShort":0,"changeOI":0,"signal":"","lfPctOI":0},"cotAnalysis":""}';
 }
 
 function pNews(){
-  return 'Oggi e '+DS+'. Fetch https://www.investing.com/economic-calendar/ and list ALL US high-impact events (3 stars, red) for TODAY '+DS+' and for '+TMR+' through '+FRI+'.\n\n'+
-  'todayEvents: ONLY events for TODAY. If none, noEventsToday=true and empty array.\n'+
-  'weekEvents: events from '+TMR+' to '+FRI+'.\n'+
-  'For each event: name, date (eg "Mer 8 Apr"), timeCET (eg "15:30 CET"), timeET (eg "9:30 ET"), previous, forecast, actual (empty if not yet released), analysisIT (max 35 words Italian), scenarioPositive (max 12 words Italian NQ), scenarioNegative (max 12 words Italian NQ).\n'+
-  'geopoliticalAlert: active alerts (Iran/Hormuz/tariffs/etc) or empty string.\n\n'+
-  'ONLY this JSON, no other text:\n'+
+  var radarLabel = TMR===FRI ? FRI : TMR+' fino a '+FRI;
+  return 'IMPORTANT: Today is '+DS+' ('+DS2+'). Search for the US economic calendar on investing.com/economic-calendar for HIGH IMPACT (3 stars, red flag) US events.\n\n'+
+  'SECTION A — TODAY '+DS+': Search specifically for these types of events scheduled for TODAY: PCE, CPI, NFP, ISM, GDP, FOMC, Fed speeches, Jobless Claims, Durable Goods, Retail Sales, EIA oil inventories, PPI. Check if any are scheduled TODAY '+DS2+'. If you find events today, noEventsToday=false.\n\n'+
+  'SECTION B — RADAR '+radarLabel+': Find all US 3-star events for the remaining days of the week.\n\n'+
+  'For each event: name, date (eg "Gio 9 Apr"), timeCET (eg "14:30 CET"), timeET (eg "8:30 ET"), previous (with units), forecast (with units), actual (empty string if not released yet), analysisIT (max 35 words Italian explaining market importance), scenarioPositive (max 12 words Italian — NQ reaction if better than expected), scenarioNegative (max 12 words Italian — NQ reaction if worse).\n'+
+  'geopoliticalAlert: any active geopolitical risk (Iran ceasefire, tariffs, Fed speakers, etc) as a single Italian sentence, or empty string.\n\n'+
+  'ONLY return this JSON, no other text:\n'+
   '{"todayEvents":[{"name":"","date":"","timeCET":"","timeET":"","previous":"","forecast":"","actual":"","analysisIT":"","scenarioPositive":"","scenarioNegative":""}],"weekEvents":[{"name":"","date":"","timeCET":"","timeET":"","previous":"","forecast":"","actual":"","analysisIT":"","scenarioPositive":"","scenarioNegative":""}],"noEventsToday":false,"geopoliticalAlert":""}';
 }
 
@@ -685,30 +685,44 @@ function renderCOT(){
     el.innerHTML='<div class="al ae">Errore COT: '+nq._err+'</div><div class="al aw">Vedi tab Debug per la risposta raw. Se il problema persiste, controlla che la tua API key abbia accesso a web_search.</div>';
     return;
   }
+  function sgn(n){return n>0?'<span class="up">+'+Number(n).toLocaleString('it-IT')+'</span>':'<span class="'+(n<0?'dn':'')+'">'+Number(n).toLocaleString('it-IT')+'</span>';}
   function det(label,d){
     if(!d||d._err)return'<div class="al aw">Dati non disponibili'+(d&&d._err?' ('+d._err+')':'')+'.</div>';
-    var lf=Number(d.leveragedFundsNet)||0,am=Number(d.assetManagerNet)||0,wc=Number(d.weeklyChangeLF)||0;
+    var lf=Number(d.leveragedFundsNet)||0,am=Number(d.assetManagerNet)||0;
+    var lfL=Number(d.leveragedFundsLong)||0,lfS=Number(d.leveragedFundsShort)||0;
+    var amL=Number(d.assetManagerLong)||0,amS=Number(d.assetManagerShort)||0;
+    var oi=Number(d.openInterest)||0;
+    var chLFL=Number(d.weeklyChangeLFLong)||0,chLFS=Number(d.weeklyChangeLFShort)||0,chLFN=Number(d.weeklyChangeLFNet)||0;
+    var chAML=Number(d.weeklyChangeAMLong)||0,chAMS=Number(d.weeklyChangeAMShort)||0;
+    var chOI=Number(d.changeOI)||0;
+    var lfPct=d.lfPctOI||( oi>0?(Math.abs(lfS)/oi*100).toFixed(1):0);
     return'<div class="card">'+
       '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:11px"><span style="font-size:13px;font-weight:700">'+label+'</span>'+sbadge(d.signal)+'</div>'+
       '<div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:11px">'+
-      '<div class="ins"><div style="font-size:10px;color:var(--tx3);text-transform:uppercase;margin-bottom:3px">LF (Non-Commercial) netto</div>'+
-      '<div style="font-size:19px;font-weight:700;'+(lf<0?'color:var(--rd)':'color:var(--gr)')+'">'+( lf>0?'+':'')+lf.toLocaleString('it-IT')+'</div>'+
-      '<div style="font-size:10px;color:var(--tx3)">OI '+Number(d.openInterest||0).toLocaleString('it-IT')+' · '+(lf<0?'NET SHORT':'NET LONG')+'</div></div>'+
       '<div class="ins"><div style="font-size:10px;color:var(--tx3);text-transform:uppercase;margin-bottom:3px">AM (Commercial) netto</div>'+
       '<div style="font-size:19px;font-weight:700;'+(am>0?'color:var(--gr)':'color:var(--rd)')+'">'+( am>0?'+':'')+am.toLocaleString('it-IT')+'</div>'+
-      '<div style="font-size:10px;color:var(--tx3)">'+(am>0?'NET LONG':'NET SHORT')+'</div></div></div>'+
-      '<div class="dr"><span class="dk">Non-Comm Long</span><span class="dv up">'+Number(d.leveragedFundsLong||0).toLocaleString('it-IT')+'</span></div>'+
-      '<div class="dr"><span class="dk">Non-Comm Short</span><span class="dv dn">'+Number(d.leveragedFundsShort||0).toLocaleString('it-IT')+'</span></div>'+
-      '<div class="dr"><span class="dk">Commercial Long</span><span class="dv">'+Number(d.assetManagerLong||0).toLocaleString('it-IT')+'</span></div>'+
-      '<div class="dr"><span class="dk">Commercial Short</span><span class="dv">'+Number(d.assetManagerShort||0).toLocaleString('it-IT')+'</span></div>'+
-      '<div class="dr"><span class="dk">Var. sett. LF</span><span class="dv '+(wc>0?'up':wc<0?'dn':'')+'">'+(wc>0?'+':'')+wc.toLocaleString('it-IT')+'</span></div>'+
-      '<div class="dr"><span class="dk">Open Interest</span><span class="dv">'+Number(d.openInterest||0).toLocaleString('it-IT')+'</span></div></div>';
+      '<div style="font-size:10px;color:var(--tx3)">'+(am>0?'NET LONG':'NET SHORT')+'</div></div>'+
+      '<div class="ins"><div style="font-size:10px;color:var(--tx3);text-transform:uppercase;margin-bottom:3px">LF (Non-Commercial) netto</div>'+
+      '<div style="font-size:19px;font-weight:700;'+(lf<0?'color:var(--rd)':'color:var(--gr)')+'">'+( lf>0?'+':'')+lf.toLocaleString('it-IT')+'</div>'+
+      '<div style="font-size:10px;color:var(--tx3)">OI '+oi.toLocaleString('it-IT')+' · '+(lf<0?'NET SHORT':'NET LONG')+'</div></div></div>'+
+      '<div class="dr"><span class="dk">AM Long / Short</span><span class="dv">'+amL.toLocaleString('it-IT')+' / '+amS.toLocaleString('it-IT')+'</span></div>'+
+      '<div class="dr"><span class="dk">LF Long / Short</span><span class="dv">'+lfL.toLocaleString('it-IT')+' / '+lfS.toLocaleString('it-IT')+'</span></div>'+
+      '<div class="dr"><span class="dk">LF % OI Short</span><span class="dv dn">'+Number(lfPct).toFixed(1)+'%</span></div>'+
+      '<div style="height:1px;background:var(--bd);margin:9px 0"></div>'+
+      '<div style="font-size:10px;color:var(--tx3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Variazioni settimana (Changes)</div>'+
+      '<div class="dr"><span class="dk">LF Long (var. sett.)</span><span class="dv">'+sgn(chLFL)+'</span></div>'+
+      '<div class="dr"><span class="dk">LF Short (var. sett.)</span><span class="dv">'+sgn(-chLFS)+'</span></div>'+
+      '<div class="dr"><span class="dk">LF Net (var. sett.)</span><span class="dv">'+sgn(chLFN)+'</span></div>'+
+      '<div class="dr"><span class="dk">AM Long (var. sett.)</span><span class="dv">'+sgn(chAML)+'</span></div>'+
+      '<div class="dr"><span class="dk">AM Short (var. sett.)</span><span class="dv">'+sgn(-chAMS)+'</span></div>'+
+      '<div class="dr"><span class="dk">Change Open Interest</span><span class="dv">'+sgn(chOI)+'</span></div>'+
+      '</div>';
   }
   el.innerHTML=
     (cot.reportDate?'<div class="al ai">CFTC.gov · Futures Only · dati al <strong>'+cot.reportDate+'</strong></div>':'')+
     '<div class="cg3">'+
-    ['nq','es','ym'].map(function(k){var d=cot[k]||{};var lf=Number(d.leveragedFundsNet)||0;return'<div class="ci"><div class="cin">'+k.toUpperCase()+' LF Net</div><div class="civ '+(lf<0?'dn':'up')+'">'+(lf>0?'+':'')+lf.toLocaleString('it-IT')+'</div><div class="cis '+(lf<0?'dn':'up')+'">'+(lf<0?'NET SHORT':'NET LONG')+'</div></div>';}).join('')+
-    ['nq','es','ym'].map(function(k){var d=cot[k]||{};var am=Number(d.assetManagerNet)||0;return'<div class="ci"><div class="cin">'+k.toUpperCase()+' AM Net</div><div class="civ '+(am>0?'up':'dn')+'">'+(am>0?'+':'')+am.toLocaleString('it-IT')+'</div><div class="cis '+(am>0?'up':'dn')+'">'+(am>0?'NET LONG':'NET SHORT')+'</div></div>';}).join('')+
+    ['nq','es','ym'].map(function(k){var d=cot[k]||{};var lf=Number(d.leveragedFundsNet)||0;var chN=Number(d.weeklyChangeLFNet)||0;var chStr=chN!==0?(' <span style="font-size:10px;color:'+(chN>0?'var(--gr)':'var(--rd)')+';">'+(chN>0?'+':'')+chN.toLocaleString('it-IT')+'</span>'):'';return'<div class="ci"><div class="cin">'+k.toUpperCase()+' LF Net</div><div class="civ '+(lf<0?'dn':'up')+'">'+(lf>0?'+':'')+lf.toLocaleString('it-IT')+'</div><div class="cis" style="display:flex;justify-content:space-between;align-items:center"><span class="'+(lf<0?'dn':'up')+'">'+(lf<0?'NET SHORT':'NET LONG')+'</span>'+chStr+'</div></div>';}).join('')+
+    ['nq','es','ym'].map(function(k){var d=cot[k]||{};var am=Number(d.assetManagerNet)||0;var oi=Number(d.openInterest)||0;var lfPct=d.lfPctOI||(oi>0?(Math.abs(Number(d.leveragedFundsShort)||0)/oi*100).toFixed(1):0);return'<div class="ci"><div class="cin">'+k.toUpperCase()+' AM Net</div><div class="civ '+(am>0?'up':'dn')+'">'+(am>0?'+':'')+am.toLocaleString('it-IT')+'</div><div class="cis" style="display:flex;justify-content:space-between"><span class="'+(am>0?'up':'dn')+'">'+(am>0?'NET LONG':'NET SHORT')+'</span><span style="color:var(--tx3);font-size:10px">LF%OI '+Number(lfPct).toFixed(1)+'%</span></div></div>';}).join('')+
     '</div>'+
     '<div class="card"><div class="ct">LF Net vs AM Net (assoluto)</div><div style="position:relative;height:190px"><canvas id="cotch"></canvas></div></div>'+
     (cot.cotAnalysis?'<div class="ins" style="font-size:12px;color:var(--tx2);line-height:1.7;margin-bottom:13px"><strong style="color:var(--tx)">Analisi integrata:</strong> '+cot.cotAnalysis+'</div>':'')+
