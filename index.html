@@ -403,6 +403,22 @@ function prog(n,st,note){
   if(f){f.className='pfill'+(st==='ok'?' ok':st==='err'?' err':'');f.style.width=st==='run'?'15%':st==='ok'||st==='err'?'100%':'0';}
   if(no&&note!==undefined)no.textContent=note;
 }
+/* fs = safe field string: handles nested objects, returns string */
+function fs(v){
+  if(v==null||v===undefined)return'—';
+  if(typeof v==='string')return v||'—';
+  if(typeof v==='number')return String(v);
+  if(typeof v==='object'){
+    /* Try common nested patterns */
+    if(v.forecast)return v.forecast;
+    if(v.value)return v.value;
+    if(v.yearOverYear)return v.yearOverYear;
+    if(v.yoy_forecast)return v.yoy_forecast;
+    /* Fallback: join key values */
+    return Object.values(v).filter(function(x){return typeof x==='string';}).slice(0,2).join(' / ')||'—';
+  }
+  return String(v)||'—';
+}
 function getPS(){return{ieri:document.getElementById('yr').value||'',stato:document.getElementById('ms').value||'',settimana:document.getElementById('ws').value||'',bias:document.getElementById('bias').value||'',noteT:document.getElementById('yt').value||'',noteM:document.getElementById('ym').value||''};}
 
 /* ================================================================
@@ -586,7 +602,7 @@ function tryProxy(proxies,i){
 function callClaude(sys,usr,ws,attempt){
   attempt=attempt||0;
   var k=getKey();if(!k)return Promise.reject(new Error('API key mancante'));
-  var body={model:'claude-haiku-4-5-20251001',max_tokens:ws?2000:2000,system:sys,messages:[{role:'user',content:usr}]};
+  var body={model:'claude-haiku-4-5-20251001',max_tokens:ws?2000:4000,system:sys,messages:[{role:'user',content:usr}]};
   if(ws)body.tools=[{type:'web_search_20250305',name:'web_search'}];
   return fetch('https://api.anthropic.com/v1/messages',{method:'POST',
     headers:{'Content-Type':'application/json','x-api-key':k,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
@@ -616,23 +632,17 @@ function searchNews(){
 }
 
 function formatNewsAndFED(txt){
-  /* Combina news + FED in una sola chiamata — il testo di ricerca contiene gia' tutti i dati */
-  var sys='You extract structured data from text and return ONLY a JSON object. Start with { end with }. No markdown, no explanation.';
-  var usr='Today is '+DS+' ('+DS2+'). Extract data from this research text and return ONE JSON object.\n\nRESEARCH TEXT:\n'+txt.substring(0,4000)+'\n\n'+
-    'Return this EXACT JSON structure (fill all fields from the text above):\n'+
-    '{\n'+
-    '  "todayEvents": [{"name":"","date":"","timeCET":"e.g. 14:30 CET","timeET":"e.g. 8:30 ET","previous":"","forecast":"","actual":"","analysisIT":"max 30 words Italian","scenarioPositive":"max 10 words NQ reaction","scenarioNegative":"max 10 words NQ reaction"}],\n'+
-    '  "weekEvents": [{"name":"","date":"","timeCET":"","timeET":"","previous":"","forecast":"","actual":"","analysisIT":"","scenarioPositive":"","scenarioNegative":""}],\n'+
-    '  "noEventsToday": false,\n'+
-    '  "geopoliticalAlert": "one Italian sentence about active risks or empty string",\n'+
-    '  "fed": {"currentRate":"e.g. 3.50-3.75%","nextFOMCDate":"","holdProbabilityNext":"","hikeProbability2026":"","cpiHeadline":"","cpiCore":"","pceCore":"","unemployment":"","nfpLast":"","fedStance":"max 30 words Italian","outlookNQ":"max 40 words Italian","keyRisks":"max 20 words Italian"}\n'+
-    '}\n\n'+
-    'RULES:\n'+
-    '- todayEvents = ONLY high-impact US events scheduled for TODAY '+DS2+'\n'+
-    '- weekEvents = high-impact US events from '+TMR+' through '+FRI2+'\n'+
-    '- Extract all times, previous values, forecasts from the text\n'+
-    '- For fed fields use data mentioned in the text (CPI forecasts, FedWatch probabilities, NFP numbers etc.)\n'+
-    '- Return ONLY the JSON object, nothing else';
+  var sys='You are a JSON formatter. Return ONLY a raw JSON object. No markdown fences. No nested objects. All values must be plain strings or numbers or booleans. Start response with { directly.';
+  var today_events_ex='[{"name":"PCE Price Index","date":"Gio 9 Apr","timeCET":"14:30 CET","timeET":"8:30 ET","previous":"0.4% MoM","forecast":"0.4% MoM","actual":"","analysisIT":"Misura preferita FED per inflazione; sopra attese = hawkish, sotto = dovish per NQ","scenarioPositive":"PCE basso: tassi giu, NQ rimbalzo +200pt","scenarioNegative":"PCE alto: tassi su, NQ sell-off -300pt"}]';
+  var usr='TEXT:\n'+txt.substring(0,3500)+'\n\n'+
+    'Today='+DS+' ('+DS2+'). Extract and return this JSON (ALL string values, NO nested objects):\n'+
+    '{"todayEvents":'+today_events_ex+',"weekEvents":[{"name":"CPI Marzo","date":"Ven 10 Apr","timeCET":"13:30 CET","timeET":"7:30 ET","previous":"0.3% MoM","forecast":"1.0% MoM","actual":"","analysisIT":"Primo CPI con shock Iran-oil; +3.1% YoY atteso","scenarioPositive":"CPI basso: NQ rally +300pt","scenarioNegative":"CPI hot: NQ sell-off -400pt"}],"noEventsToday":false,"geopoliticalAlert":"Iran-Hormuz closure drives stagflation risk; CME FedWatch: zero tagli 2026.","fed":{"currentRate":"3.50-3.75%","nextFOMCDate":"Apr 28-29 2026","holdProbabilityNext":"95%","hikeProbability2026":"50%","cpiHeadline":"3.1% YoY atteso Marzo","cpiCore":"2.7% YoY","pceCore":"3.1% YoY","unemployment":"4.1%","nfpLast":"+178K Marzo","ismPricesPaid":"62.4","importPrices":"+0.4% MoM","fedStance":"Hold con rischio hike. Inflazione sopra target, occupazione solida.","outlookNQ":"Multipli sotto pressione. Ogni dato inflazione hot = -2% NQ. Scenario stagflationary.","keyRisks":"Iran/Hormuz, CPI Marzo, Michigan sentiment, tagli esclusi 2026"}}\n\n'+
+    'CRITICAL RULES:\n'+
+    '1. Fill ALL fields with REAL values from the TEXT above (not from the example)\n'+
+    '2. todayEvents = US 3-star events on '+DS2+' ONLY. List each event separately.\n'+
+    '3. weekEvents = US 3-star events from '+TMR+' to '+FRI2+'. List each event separately.\n'+
+    '4. ALL values must be plain strings - NO nested objects like {"date":...} inside field values\n'+
+    '5. Return ONLY the JSON, starting with { and ending with }. No markdown.';
   return callClaude(sys,usr,false);
 }
 
@@ -944,18 +954,18 @@ function renderFED(){
   if(!fed||fed._err){el.innerHTML='<div class="al ae">'+(fed&&fed._err||'dati mancanti')+'</div>';return;}
   el.innerHTML=
     '<div class="mg" style="margin-bottom:13px">'+
-    '<div class="mc"><div class="lb">Fed Rate</div><div class="vl">'+(fed.currentRate||'—')+'</div></div>'+
-    '<div class="mc"><div class="lb">Prossimo FOMC</div><div class="vl" style="font-size:12px">'+(fed.nextFOMCDate||'—')+'</div></div>'+
-    '<div class="mc"><div class="lb">Hold Prob.</div><div class="vl up">'+(fed.holdProbabilityNext||'—')+'</div><div class="sb">CME FedWatch</div></div>'+
-    '<div class="mc"><div class="lb">Hike 2026</div><div class="vl dn">'+(fed.hikeProbability2026||'—')+'</div></div></div>'+
+    '<div class="mc"><div class="lb">Fed Rate</div><div class="vl">'+fs(fed.currentRate)+'</div></div>'+
+    '<div class="mc"><div class="lb">Prossimo FOMC</div><div class="vl" style="font-size:12px">'+fs(fed.nextFOMCDate)+'</div></div>'+
+    '<div class="mc"><div class="lb">Hold Prob.</div><div class="vl up">'+fs(fed.holdProbabilityNext)+'</div><div class="sb">CME FedWatch</div></div>'+
+    '<div class="mc"><div class="lb">Hike 2026</div><div class="vl dn">'+fs(fed.hikeProbability2026)+'</div></div></div>'+
     '<div class="card"><div class="ct">Indicatori macro</div><table class="fitbl"><thead><tr><th>Indicatore</th><th>Dato</th><th>Segnale</th></tr></thead><tbody>'+
-    '<tr><td>CPI Headline YoY</td><td><strong>'+(fed.cpiHeadline||'—')+'</strong></td><td class="tup">Inflazione</td></tr>'+
-    '<tr><td>CPI Core YoY</td><td><strong>'+(fed.cpiCore||'—')+'</strong></td><td class="tup">Persistente</td></tr>'+
-    '<tr><td>PCE Core YoY</td><td><strong>'+(fed.pceCore||'—')+'</strong></td><td class="tup">Sopra target</td></tr>'+
-    '<tr><td>NFP</td><td><strong>'+(fed.nfpLast||'—')+'</strong></td><td class="tneu">Solido</td></tr>'+
-    '<tr><td>ISM Prices Paid</td><td><strong>'+(fed.ismPricesPaid||'—')+'</strong></td><td class="tup">Stagflationary</td></tr>'+
-    '<tr><td>Import Prices MoM</td><td><strong>'+(fed.importPrices||'—')+'</strong></td><td class="tneu">Oil shock</td></tr>'+
-    '<tr><td>Disoccupazione</td><td><strong>'+(fed.unemployment||'—')+'</strong></td><td class="tneu">Stabile</td></tr>'+
+    '<tr><td>CPI Headline YoY</td><td><strong>'+fs(fed.cpiHeadline)+'</strong></td><td class="tup">Inflazione</td></tr>'+
+    '<tr><td>CPI Core YoY</td><td><strong>'+fs(fed.cpiCore)+'</strong></td><td class="tup">Persistente</td></tr>'+
+    '<tr><td>PCE Core YoY</td><td><strong>'+fs(fed.pceCore)+'</strong></td><td class="tup">Sopra target</td></tr>'+
+    '<tr><td>NFP</td><td><strong>'+fs(fed.nfpLast)+'</strong></td><td class="tneu">Solido</td></tr>'+
+    '<tr><td>ISM Prices Paid</td><td><strong>'+fs(fed.ismPricesPaid)+'</strong></td><td class="tup">Stagflationary</td></tr>'+
+    '<tr><td>Import Prices MoM</td><td><strong>'+fs(fed.importPrices)+'</strong></td><td class="tneu">Oil shock</td></tr>'+
+    '<tr><td>Disoccupazione</td><td><strong>'+fs(fed.unemployment)+'</strong></td><td class="tneu">Stabile</td></tr>'+
     '</tbody></table></div>'+
     ((fed.fedStance||fed.outlookNQ)?'<div class="card"><div style="display:grid;grid-template-columns:1fr 1fr;gap:15px">'+
     (fed.fedStance?'<div><div class="ct">Stance FED</div><div style="font-size:12px;color:var(--tx2);line-height:1.7">'+fed.fedStance+'</div></div>':'')+
