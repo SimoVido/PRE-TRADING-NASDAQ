@@ -52,21 +52,20 @@ textarea{width:100%;min-height:54px;padding:6px 9px;background:var(--bg3);border
 .btnp{width:100%;padding:11px;background:var(--tx);color:var(--bg);border:none;border-radius:5px;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:9px}
 .btnp:disabled{opacity:.3;cursor:not-allowed}
 .btns{width:100%;padding:8px;background:transparent;color:var(--tx2);border:1px solid var(--bd2);border-radius:5px;font-size:12px;cursor:pointer;margin-bottom:5px}
+.btns:hover{color:var(--tx);border-color:var(--tx2)}
 .spin{display:inline-block;width:12px;height:12px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:ro .7s linear infinite;vertical-align:middle;margin-right:5px}
 @keyframes ro{to{transform:rotate(360deg)}}
 .pw{margin-bottom:8px}
 .pr{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--tx2);margin-bottom:2px}
 .pd{width:7px;height:7px;border-radius:50%;background:var(--bg5);flex-shrink:0}
-.pd.run{background:var(--bl);animation:pu 1s infinite}.pd.ok{background:var(--gr)}.pd.err{background:var(--rd)}.pd.wt{background:var(--am);animation:pu 1s infinite}
+.pd.run{background:var(--bl);animation:pu 1s infinite}.pd.ok{background:var(--gr)}.pd.err{background:var(--rd)}
 .pbar{height:3px;background:var(--bg5);border-radius:3px;overflow:hidden}
 .pfill{height:3px;border-radius:3px;background:var(--bl);width:0;transition:width .5s}
 .pfill.ok{background:var(--gr)}.pfill.err{background:var(--rd)}
 .pnt{font-size:10px;color:var(--tx3);margin-top:2px;min-height:13px}
 .og3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px}
 .lvb{border-radius:5px;padding:11px;text-align:center}
-.lvr{background:var(--rdd);border:1px solid var(--rb)}
-.lvn{background:var(--bg3);border:1px solid var(--bd2)}
-.lvs{background:var(--gd);border:1px solid var(--gb)}
+.lvr{background:var(--rdd);border:1px solid var(--rb)}.lvn{background:var(--bg3);border:1px solid var(--bd2)}.lvs{background:var(--gd);border:1px solid var(--gb)}
 .lvl{font-size:10px;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px}
 .lvr .lvl{color:var(--rd)}.lvn .lvl{color:var(--tx2)}.lvs .lvl{color:var(--gr)}
 .lvv{font-size:20px;font-weight:700;font-family:'SF Mono',monospace}
@@ -114,8 +113,7 @@ textarea{width:100%;min-height:54px;padding:6px 9px;background:var(--bg3);border
 .sep{height:1px;background:var(--bd);margin:14px 0}
 .dbg{background:#0d0d0d;border:1px solid #1a2a1a;border-radius:5px;padding:9px 12px;margin-bottom:7px}
 .dbg summary{font-size:11px;color:#4a7a4a;cursor:pointer}
-.dbg pre{font-size:10px;color:#4a7a4a;overflow-x:auto;white-space:pre-wrap;word-break:break-all;margin-top:7px;max-height:280px;overflow-y:auto}
-.cdown{display:none;text-align:center;padding:7px;background:var(--amd);border:1px solid var(--amb);border-radius:5px;font-size:12px;color:var(--am);margin-top:4px}
+.dbg pre{font-size:10px;color:#4a7a4a;overflow-x:auto;white-space:pre-wrap;word-break:break-all;margin-top:7px;max-height:300px;overflow-y:auto}
 @media(max-width:580px){.og3,.cg3,.sg{grid-template-columns:1fr}.sols{flex-direction:column}}
 </style>
 </head>
@@ -153,7 +151,7 @@ textarea{width:100%;min-height:54px;padding:6px 9px;background:var(--bg3);border
   </div>
 
   <div class="card">
-    <div class="ct">Livelli Opzionari CME — NQ (inserisci ogni settimana)</div>
+    <div class="ct">Livelli Opzionari CME — NQ</div>
     <p style="font-size:11px;color:var(--tx2);margin-bottom:9px">R = Settlement + Calls + Puts &nbsp;·&nbsp; S = Settlement − Calls − Puts</p>
     <div class="og3">
       <div class="fg"><label class="fl">Settlement NQ</label><input type="number" id="inp-s" placeholder="es. 19350" step="0.25" oninput="calcOpt()"></div>
@@ -184,18 +182,15 @@ textarea{width:100%;min-height:54px;padding:6px 9px;background:var(--bg3);border
   </div>
 
   <button class="btnp" id="gbtn" onclick="generate()">Genera analisi pre-trading</button>
-  <div id="tnote" style="font-size:11px;color:var(--tx3);text-align:center;margin-bottom:11px;display:none">⏱ ~2 minuti — il countdown tra le ricerche è necessario per evitare rate limit</div>
+  <div id="tnote" style="font-size:11px;color:var(--tx3);text-align:center;margin-bottom:11px;display:none">⏱ Circa 60s — COT gratis via browser, 1 sola API call per le news</div>
 
   <div id="parea" style="display:none;margin-bottom:13px">
-    <div class="pw"><div class="pr"><div class="pd" id="d1"></div>1a — COT: ricerca su CFTC.gov</div><div class="pbar"><div class="pfill" id="p1"></div></div><div class="pnt" id="n1"></div></div>
-    <div class="pw"><div class="pr"><div class="pd" id="d2"></div>1b — COT: formattazione dati</div><div class="pbar"><div class="pfill" id="p2"></div></div></div>
-    <div class="pw"><div class="pr"><div class="pd" id="d3"></div>2 — Opzioni CME (calcolo locale)</div><div class="pbar"><div class="pfill" id="p3"></div></div></div>
-    <div class="pw"><div class="pr"><div class="pd" id="d4"></div>3 — Attesa 65s (reset rate limit output tokens)</div><div class="pbar"><div class="pfill" id="p4"></div></div>
-      <div class="cdown" id="cd4">Attesa: <span id="cds">65</span>s</div></div>
-    <div class="pw"><div class="pr"><div class="pd" id="d5"></div>4a — News: ricerca su investing.com</div><div class="pbar"><div class="pfill" id="p5"></div></div><div class="pnt" id="n5"></div></div>
-    <div class="pw"><div class="pr"><div class="pd" id="d6"></div>4b — News: formattazione dati</div><div class="pbar"><div class="pfill" id="p6"></div></div></div>
-    <div class="pw"><div class="pr"><div class="pd" id="d7"></div>5 — Scenario FED</div><div class="pbar"><div class="pfill" id="p7"></div></div></div>
-    <div class="pw"><div class="pr"><div class="pd" id="d8"></div>6 — Sintesi operativa</div><div class="pbar"><div class="pfill" id="p8"></div></div></div>
+    <div class="pw"><div class="pr"><div class="pd" id="d1"></div>1 — COT CFTC.gov (fetch browser, zero API token)</div><div class="pbar"><div class="pfill" id="p1"></div></div><div class="pnt" id="n1"></div></div>
+    <div class="pw"><div class="pr"><div class="pd" id="d2"></div>2 — Opzioni CME (calcolo locale)</div><div class="pbar"><div class="pfill" id="p2"></div></div></div>
+    <div class="pw"><div class="pr"><div class="pd" id="d3"></div>3a — News: ricerca web investing.com</div><div class="pbar"><div class="pfill" id="p3"></div></div><div class="pnt" id="n3"></div></div>
+    <div class="pw"><div class="pr"><div class="pd" id="d4"></div>3b — News: formattazione JSON</div><div class="pbar"><div class="pfill" id="p4"></div></div></div>
+    <div class="pw"><div class="pr"><div class="pd" id="d5"></div>4 — Scenario FED</div><div class="pbar"><div class="pfill" id="p5"></div></div></div>
+    <div class="pw"><div class="pr"><div class="pd" id="d6"></div>5 — Sintesi operativa</div><div class="pbar"><div class="pfill" id="p6"></div></div></div>
   </div>
 
   <div id="ovres" style="display:none">
@@ -213,14 +208,13 @@ textarea{width:100%;min-height:54px;padding:6px 9px;background:var(--bg3);border
       <div style="position:relative;height:195px"><canvas id="lvc"></canvas></div>
       <div id="lvlist" style="margin-top:9px"></div>
     </div>
-    <div class="al ai" style="font-size:11px;margin-top:5px">Report a scopo informativo. Verifica prezzi live su DeepCharts.</div>
   </div>
 </div>
 
 <!-- COT -->
 <div class="tab" id="t-cot">
   <div style="font-size:14px;font-weight:700;margin-bottom:3px">COT — Commitment of Traders</div>
-  <div style="font-size:12px;color:var(--tx2);margin-bottom:13px">CFTC.gov Futures Only · NQ ES YM · aggiornato ogni venerdì</div>
+  <div style="font-size:12px;color:var(--tx2);margin-bottom:13px">CFTC.gov · Futures Only · scaricato via browser (zero costo API)</div>
   <div id="cotc"><div class="al ai">Genera il report dalla tab Panoramica.</div></div>
 </div>
 
@@ -269,8 +263,8 @@ textarea{width:100%;min-height:54px;padding:6px 9px;background:var(--bg3);border
 
 <!-- DEBUG -->
 <div class="tab" id="t-dbg">
-  <div style="font-size:14px;font-weight:700;margin-bottom:3px">Debug — Raw API</div>
-  <div style="font-size:12px;color:var(--tx2);margin-bottom:13px">Risposta grezza di ogni step. Se COT o News mostrano 0 — controlla qui.</div>
+  <div style="font-size:14px;font-weight:700;margin-bottom:3px">Debug</div>
+  <div style="font-size:12px;color:var(--tx2);margin-bottom:13px">Log completo di ogni step</div>
   <div id="dbgp"><div class="al ai">Genera il report per vedere i log.</div></div>
 </div>
 
@@ -282,13 +276,13 @@ textarea{width:100%;min-height:54px;padding:6px 9px;background:var(--bg3);border
     <button class="btns" onclick="saveKeyS()">Salva</button>
     <div id="sset" style="display:none;font-size:11px;color:var(--gr);margin-top:4px">Salvata</div>
   </div>
-  <div class="card"><div class="ct">v5.0 — Architettura a 2 step</div>
-    <div class="dr"><span class="dk">Step 1a</span><span class="dv">web_search → testo libero (COT)</span></div>
-    <div class="dr"><span class="dk">Step 1b</span><span class="dv">no web_search → JSON da testo</span></div>
-    <div class="dr"><span class="dk">Attesa</span><span class="dv">65s countdown visibile</span></div>
-    <div class="dr"><span class="dk">Step 4a</span><span class="dv">web_search → testo libero (News)</span></div>
-    <div class="dr"><span class="dk">Step 4b</span><span class="dv">no web_search → JSON da testo</span></div>
-    <div class="dr"><span class="dk">Ragione</span><span class="dv">modello non mescola search+JSON</span></div>
+  <div class="card"><div class="ct">v7.0 — Architettura</div>
+    <div class="dr"><span class="dk">COT</span><span class="dv" style="color:var(--gr)">Browser fetch CFTC.gov — zero token API</span></div>
+    <div class="dr"><span class="dk">Cache COT</span><span class="dv">localStorage — valido tutta la settimana</span></div>
+    <div class="dr"><span class="dk">News (search)</span><span class="dv">1 web_search → testo libero</span></div>
+    <div class="dr"><span class="dk">News (format)</span><span class="dv">no web_search → JSON</span></div>
+    <div class="dr"><span class="dk">FED + Sintesi</span><span class="dv">no web_search</span></div>
+    <div class="dr"><span class="dk">429 possibile?</span><span class="dv" style="color:var(--gr)">NO — 1 sola web_search</span></div>
   </div>
 </div>
 
@@ -303,10 +297,10 @@ var MN=['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto
 var DS=DN[T.getDay()]+' '+T.getDate()+' '+MN[T.getMonth()]+' '+T.getFullYear();
 var DS2=(T.getDate()<10?'0':'')+T.getDate()+'/'+(T.getMonth()<9?'0':'')+(T.getMonth()+1)+'/'+T.getFullYear();
 document.getElementById('hdr-date').textContent=DS;
-var fri=new Date(T); fri.setDate(T.getDate()+((5-T.getDay()+7)%7||7));
+var fri=new Date(T);fri.setDate(T.getDate()+((5-T.getDay()+7)%7||7));
 var FRI=DN[fri.getDay()]+' '+fri.getDate()+' '+MN[fri.getMonth()]+' '+fri.getFullYear();
 var FRI2=(fri.getDate()<10?'0':'')+fri.getDate()+'/'+(fri.getMonth()<9?'0':'')+(fri.getMonth()+1)+'/'+fri.getFullYear();
-var tmr=new Date(T); tmr.setDate(T.getDate()+1);
+var tmr=new Date(T);tmr.setDate(T.getDate()+1);
 var TMR=DN[tmr.getDay()]+' '+tmr.getDate()+' '+MN[tmr.getMonth()];
 
 /* STATE */
@@ -357,20 +351,20 @@ function renderOptDetail(){
     '<div class="lvb lvr"><div class="lvl">RESISTENZA MM</div><div class="lvv">'+f(OPT.r)+'</div><div style="font-size:10px;color:var(--rd);margin-top:2px">'+f(OPT.s)+' + '+f(OPT.c)+' + '+f(OPT.p)+'</div></div>'+
     '<div class="lvb lvn"><div class="lvl">SETTLEMENT</div><div class="lvv" style="color:var(--tx)">'+f(OPT.s)+'</div></div>'+
     '<div class="lvb lvs"><div class="lvl">SUPPORTO MM</div><div class="lvv">'+f(OPT.sup)+'</div><div style="font-size:10px;color:var(--gr);margin-top:2px">'+f(OPT.s)+' − '+f(OPT.c)+' − '+f(OPT.p)+'</div></div></div>'+
-    '<div class="ins" style="font-size:12px;color:var(--tx2);line-height:1.7">Sopra Settlement: bullish verso R ('+f(OPT.r)+'). Sotto: bearish verso S ('+f(OPT.sup)+'). Entro 50pt da R/S: monitorare orderflow su DeepDOM.</div>';
+    '<div class="ins" style="font-size:12px;color:var(--tx2);line-height:1.7">Sopra Settlement: bullish verso R ('+f(OPT.r)+'). Sotto: bearish verso S ('+f(OPT.sup)+'). Entro 50pt: monitorare DeepDOM.</div>';
 }
 
 /* UTILS */
 function sleep(ms){return new Promise(function(r){setTimeout(r,ms);});}
 function fmt(n,d){d=d===undefined?2:d;if(n==null||isNaN(n))return'—';return Number(n).toLocaleString('it-IT',{minimumFractionDigits:d,maximumFractionDigits:d});}
 function sbadge(s){if(!s)return'<span class="bdg bgr">—</span>';var l=(s||'').toLowerCase();if(l.indexOf('bull')>=0)return'<span class="bdg bgg">'+s+'</span>';if(l.indexOf('bear')>=0)return'<span class="bdg brr">'+s+'</span>';return'<span class="bdg baa">'+s+'</span>';}
-function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function sgn(n){var v=Number(n)||0;return v>0?'<span class="up">+'+v.toLocaleString('it-IT')+'</span>':v<0?'<span class="dn">'+v.toLocaleString('it-IT')+'</span>':'<span style="color:var(--tx3)">0</span>';}
+function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function pJSON(raw){
   if(!raw)return{_err:'Risposta vuota'};
   var c=raw.replace(/```json/gi,'').replace(/```/g,'').trim();
   var s=c.indexOf('{'),e=c.lastIndexOf('}');
-  if(s<0||e<s)return{_err:'No JSON ('+raw.length+'ch)',_r:raw.substring(0,400)};
+  if(s<0||e<s)return{_err:'No JSON ('+raw.length+' chars)',_r:raw.substring(0,400)};
   var sn=c.slice(s,e+1);
   var tries=['','}',' }','}}','}}}',' }}',' }}}',' }}}'];
   for(var i=0;i<tries.length;i++){try{return JSON.parse(sn+tries[i]);}catch(x){}}
@@ -378,155 +372,215 @@ function pJSON(raw){
 }
 function prog(n,st,note){
   var f=document.getElementById('p'+n),d=document.getElementById('d'+n),no=document.getElementById('n'+n);
-  if(d)d.className='pd '+(st==='run'?'run':st==='ok'?'ok':st==='err'?'err':st==='wt'?'wt':'');
+  if(d)d.className='pd '+(st==='run'?'run':st==='ok'?'ok':st==='err'?'err':'');
   if(f){f.className='pfill'+(st==='ok'?' ok':st==='err'?' err':'');f.style.width=st==='run'?'15%':st==='ok'||st==='err'?'100%':'0';}
   if(no&&note!==undefined)no.textContent=note;
 }
 function getPS(){return{ieri:document.getElementById('yr').value||'',stato:document.getElementById('ms').value||'',settimana:document.getElementById('ws').value||'',bias:document.getElementById('bias').value||'',noteT:document.getElementById('yt').value||'',noteM:document.getElementById('ym').value||''};}
 
-/* API CALL */
+/* ================================================================
+   COT FETCH — Direttamente da CFTC.gov via proxy CORS nel browser.
+   ZERO costo API. ZERO token. ZERO 429.
+   Cache localStorage per tutta la settimana corrente.
+   ================================================================ */
+
+function cotCacheKey(){
+  var d=new Date(),y=d.getFullYear();
+  var start=new Date(y,0,1);
+  var wk=Math.ceil(((d-start)/86400000+start.getDay()+1)/7);
+  return'cot_v7_'+y+'_w'+wk;
+}
+function saveCotCache(data){try{localStorage.setItem(cotCacheKey(),JSON.stringify(data));}catch(e){}}
+function loadCotCache(){
+  try{var r=localStorage.getItem(cotCacheKey());if(!r)return null;var d=JSON.parse(r);return(d&&d.nq&&d.nq.openInterest>0)?d:null;}
+  catch(e){return null;}
+}
+
+/* Estrae i numeri da una riga di testo CFTC */
+function parseNums(line){
+  if(!line)return[];
+  return (line.match(/-?[\d,]+/g)||[]).map(function(s){return parseInt(s.replace(/,/g,''),10);}).filter(function(n){return!isNaN(n);});
+}
+
+/* Trova e analizza un blocco contratto nel testo CFTC */
+function parseBlock(text, code){
+  var idx=text.indexOf(code);
+  if(idx<0)return{_err:'Codice '+code+' non trovato nel testo CFTC'};
+  var block=text.substring(idx,idx+3000);
+
+  /* Open Interest */
+  var oiM=block.match(/Open Interest is\s+([\d,]+)/i);
+  var oi=oiM?parseInt(oiM[1].replace(/,/g,''),10):0;
+
+  /* Riga Positions — prima riga di numeri dopo "Positions" */
+  var posIdx=block.search(/Positions\s*\n/i);
+  if(posIdx<0)posIdx=block.search(/Positions\s*\r/i);
+  var posNums=[];
+  if(posIdx>=0){
+    var after=block.substring(posIdx);
+    var lines=after.split(/\r?\n/);
+    for(var i=1;i<lines.length&&i<8;i++){
+      var nums=parseNums(lines[i]);
+      if(nums.length>=6){posNums=nums;break;}
+    }
+  }
+
+  /* Riga Changes */
+  var chgIdx=block.search(/Changes from:/i);
+  var chgNums=[];
+  if(chgIdx>=0){
+    var after2=block.substring(chgIdx);
+    var lines2=after2.split(/\r?\n/);
+    for(var j=1;j<lines2.length&&j<8;j++){
+      var nums2=parseNums(lines2[j]);
+      if(nums2.length>=6){chgNums=nums2;break;}
+    }
+  }
+
+  /* Colonne TFF: DealerL,DealerS,DealerSpr, AML,AMS,AMSpr, LFL,LFS,LFSpr, OtherL,OtherS,OtherSpr, NRL,NRS */
+  var amL=posNums[3]||0, amS=posNums[4]||0;
+  var lfL=posNums[6]||0, lfS=posNums[7]||0;
+  var lfNet=lfL-lfS, amNet=amL-amS;
+
+  /* Changes: stessa struttura */
+  var chAmL=chgNums[3]||0, chAmS=chgNums[4]||0;
+  var chLfL=chgNums[6]||0, chLfS=chgNums[7]||0;
+  var chOI=0;
+  var totalM=block.match(/Total Change is:\s*(-?[\d,]+)/i);
+  if(totalM)chOI=parseInt(totalM[1].replace(/,/g,''),10);
+
+  /* Data report */
+  var dateM=block.match(/Positions as of\s+(\w+ \d+, \d{4})/i)||text.match(/Positions as of\s+(\w+ \d+, \d{4})/i);
+  var reportDate=dateM?dateM[1]:'';
+
+  return{
+    leveragedFundsLong:lfL, leveragedFundsShort:lfS, leveragedFundsNet:lfNet,
+    assetManagerLong:amL, assetManagerShort:amS, assetManagerNet:amNet,
+    openInterest:oi,
+    weeklyChangeLFLong:chLfL, weeklyChangeLFShort:chLfS, weeklyChangeLFNet:chLfL-chLfS,
+    weeklyChangeAMLong:chAmL, weeklyChangeAMShort:chAmS,
+    changeOI:chOI,
+    signal:lfNet<0?'bearish':lfNet>0?'bullish':'neutro',
+    lfPctOI:oi>0?(lfS/oi*100):0,
+    reportDate:reportDate,
+    _raw_posNums:posNums.slice(0,12).join(','),
+    _raw_chgNums:chgNums.slice(0,12).join(',')
+  };
+}
+
+function fetchCOT(){
+  var CFTC='https://www.cftc.gov/dea/futures/financial_lf.htm';
+  /* Tre proxy CORS pubblici in cascata */
+  var proxies=[
+    {url:'https://api.allorigins.win/get?url='+encodeURIComponent(CFTC), json:true},
+    {url:'https://corsproxy.io/?'+encodeURIComponent(CFTC), json:false},
+    {url:'https://api.codetabs.com/v1/proxy/?quest='+encodeURIComponent(CFTC), json:false}
+  ];
+  return tryProxy(proxies,0);
+}
+
+function tryProxy(proxies,i){
+  if(i>=proxies.length)return Promise.reject(new Error('Tutti i proxy CORS falliti. CFTC.gov potrebbe bloccare le richieste. Riprova tra qualche minuto.'));
+  var p=proxies[i];
+  return fetch(p.url,{signal:AbortSignal.timeout(12000)})
+  .then(function(r){
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    return r.text();
+  })
+  .then(function(raw){
+    var text=raw;
+    if(p.json){try{text=JSON.parse(raw).contents||raw;}catch(e){}}
+    if(!text||!text.includes('209742'))throw new Error('Testo CFTC non valido (no codice 209742)');
+    RAW.cotProxy='Proxy '+i+' OK · '+text.length+' chars';
+    RAW.cotRaw=text.substring(0,500);
+    var nq=parseBlock(text,'209742');
+    var es=parseBlock(text,'13874');
+    var ym=parseBlock(text,'124603');
+    var dateM=text.match(/Positions as of\s+(\w+ \d+, \d{4})/i);
+    var reportDate=dateM?dateM[1]:(nq.reportDate||'');
+    return{reportDate:reportDate,nq:nq,es:es,ym:ym};
+  })
+  .catch(function(e){
+    RAW['cotProxy'+i]='Fallito: '+e.message;
+    return tryProxy(proxies,i+1);
+  });
+}
+
+/* API per news, FED, sintesi */
 function callClaude(sys,usr,ws,attempt){
   attempt=attempt||0;
-  var k=getKey();
-  if(!k)return Promise.reject(new Error('API key mancante'));
+  var k=getKey();if(!k)return Promise.reject(new Error('API key mancante'));
   var body={model:'claude-haiku-4-5-20251001',max_tokens:ws?2000:1500,system:sys,messages:[{role:'user',content:usr}]};
   if(ws)body.tools=[{type:'web_search_20250305',name:'web_search'}];
-  return fetch('https://api.anthropic.com/v1/messages',{
-    method:'POST',
+  return fetch('https://api.anthropic.com/v1/messages',{method:'POST',
     headers:{'Content-Type':'application/json','x-api-key':k,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
     body:JSON.stringify(body)
   }).then(function(r){
     if(r.status===429){
-      if(attempt>=2)throw new Error('429 persistente');
+      if(attempt>=2)throw new Error('429 rate limit — attendi 1 minuto e riprova');
       return sleep(65000).then(function(){return callClaude(sys,usr,ws,attempt+1);});
     }
     if(!r.ok)return r.json().then(function(e){throw new Error(r.status+': '+(e.error&&e.error.message||'Errore'));});
     return r.json();
   }).then(function(data){
     var txt='';(data.content||[]).forEach(function(b){if(b.type==='text')txt+=b.text;});
-    return{text:txt,data:data};
+    return{text:txt};
   });
 }
 
-/*
-==========================================================
-v5.0 — ARCHITETTURA 2-STEP: SEARCH SEPARATO DA JSON
-==========================================================
-Il problema precedente: con web_search=true + richiesta JSON,
-il modello a volte diceva "non posso accedere a siti esterni"
-oppure restituiva JSON con tutti 0 senza cercare nulla.
-
-SOLUZIONE: due chiamate separate:
-  Step A (web_search=true): "Cerca e dimmi tutto in testo libero"
-  Step B (web_search=false): "Dato questo testo, dammi il JSON"
-
-Questo funziona perché:
-- Step A: il modello cerca liberamente senza vincoli di formato
-- Step B: il modello formatta senza distrazioni dalla ricerca
-==========================================================
-*/
-
-/* STEP 1a: Cerca COT in testo libero */
-function searchCOT(){
-  var sys='You are a financial research assistant. Use web search to find data and report everything you find in plain text. Be thorough and include all numbers you find.';
-  var usr='Search https://www.cftc.gov/dea/futures/financial_lf.htm and find the "Traders in Financial Futures - Futures Only" data for these 3 contracts:\n'+
-    '1. NASDAQ MINI #209742\n2. S&P 500 Consolidated #13874+\n3. DJIA x$5 #124603\n\n'+
-    'Report date of the data. For each contract report:\n'+
-    '- Open Interest\n'+
-    '- Positions row: Asset Manager Long, Asset Manager Short, Leveraged Funds Long, Leveraged Funds Short\n'+
-    '- Changes row (week over week changes): Asset Manager Long change, Asset Manager Short change, Leveraged Funds Long change, Leveraged Funds Short change, Open Interest change\n\n'+
-    'Just report the raw numbers you find. Plain text only.';
-  return callClaude(sys,usr,true);
-}
-
-/* STEP 1b: Formatta COT in JSON */
-function formatCOT(searchText){
-  var sys='You are a JSON formatter. Convert research data into a valid JSON object. Return ONLY the JSON, no other text.';
-  var usr='Here is CFTC COT research data:\n\n'+searchText+'\n\n'+
-    'Extract the numbers and return this JSON (calculate Net = Long - Short for each category):\n'+
-    '{"reportDate":"","nq":{"leveragedFundsLong":0,"leveragedFundsShort":0,"leveragedFundsNet":0,"assetManagerLong":0,"assetManagerShort":0,"assetManagerNet":0,"openInterest":0,"weeklyChangeLFLong":0,"weeklyChangeLFShort":0,"weeklyChangeLFNet":0,"weeklyChangeAMLong":0,"weeklyChangeAMShort":0,"changeOI":0,"signal":"bearish","lfPctOI":0.0},"es":{"leveragedFundsLong":0,"leveragedFundsShort":0,"leveragedFundsNet":0,"assetManagerLong":0,"assetManagerShort":0,"assetManagerNet":0,"openInterest":0,"weeklyChangeLFLong":0,"weeklyChangeLFShort":0,"weeklyChangeLFNet":0,"weeklyChangeAMLong":0,"weeklyChangeAMShort":0,"changeOI":0,"signal":"bearish","lfPctOI":0.0},"ym":{"leveragedFundsLong":0,"leveragedFundsShort":0,"leveragedFundsNet":0,"assetManagerLong":0,"assetManagerShort":0,"assetManagerNet":0,"openInterest":0,"weeklyChangeLFLong":0,"weeklyChangeLFShort":0,"weeklyChangeLFNet":0,"weeklyChangeAMLong":0,"weeklyChangeAMShort":0,"changeOI":0,"signal":"bearish","lfPctOI":0.0},"cotAnalysis":""}\n'+
-    'signal = "bearish" if leveragedFundsNet < 0, "bullish" if > 0\n'+
-    'lfPctOI = (leveragedFundsShort / openInterest * 100) rounded to 1 decimal\n'+
-    'cotAnalysis = 2-3 sentences Italian summary of cross-index positioning\n'+
-    'ONLY JSON, no other text.';
-  return callClaude(sys,usr,false);
-}
-
-/* STEP 4a: Cerca News in testo libero */
 function searchNews(){
-  var sys='You are a financial news researcher. Use web search to find economic calendar data and report what you find in plain text. Be specific about dates, times, and values.';
-  var usr='Today is '+DS+' ('+DS2+'). Search the economic calendar on investing.com for US HIGH IMPACT events (3-star, red) scheduled for:\n'+
-    '- TODAY '+DS2+'\n'+
-    '- TOMORROW and up to '+FRI2+'\n\n'+
-    'Look specifically for: PCE, CPI, NFP, Jobless Claims, ISM Manufacturing/Services, GDP, Retail Sales, Durable Goods, FOMC minutes or meetings, Fed speeches, EIA Crude Oil inventories, PPI.\n\n'+
-    'For each event found, report: event name, exact date, time in ET and CET, previous value with units, forecast/consensus value, actual value if already released.\n'+
-    'Also report any active geopolitical risk affecting US markets (Iran, tariffs, Fed policy debate, etc).\n\n'+
-    'Plain text only. If you find no events, say so explicitly.';
+  var sys='Financial news researcher. Search the web and report findings in plain text. Be thorough.';
+  var usr='Today is '+DS+' ('+DS2+'). Search investing.com/economic-calendar for US HIGH IMPACT (3-star/red) events.\n\n'+
+    'Find events for TODAY '+DS2+' and from tomorrow through '+FRI2+'.\n'+
+    'Types: PCE, CPI, NFP, Jobless Claims, ISM, GDP, Retail Sales, Durable Goods, FOMC minutes, Fed speeches, EIA Crude Oil, PPI, Consumer Confidence.\n\n'+
+    'For each event report: name, date, time ET and CET, previous value with units, forecast, actual if already released.\n'+
+    'Also report any active geopolitical risks (Iran, tariffs, Fed debate).\n'+
+    'Plain text only, report everything you find.';
   return callClaude(sys,usr,true);
 }
 
-/* STEP 4b: Formatta News in JSON */
-function formatNews(searchText){
-  var sys='You are a JSON formatter. Convert economic calendar research into valid JSON. Return ONLY the JSON.';
-  var usr='Here is economic calendar research data:\n\n'+searchText+'\n\n'+
-    'Today is '+DS+' ('+DS2+'). Convert into this JSON:\n'+
-    '{"todayEvents":[{"name":"","date":"","timeCET":"","timeET":"","previous":"","forecast":"","actual":"","analysisIT":"","scenarioPositive":"","scenarioNegative":""}],"weekEvents":[{"name":"","date":"","timeCET":"","timeET":"","previous":"","forecast":"","actual":"","analysisIT":"","scenarioPositive":"","scenarioNegative":""}],"noEventsToday":false,"geopoliticalAlert":""}\n\n'+
-    'todayEvents: ONLY events for today '+DS2+'\n'+
-    'weekEvents: events from tomorrow up to '+FRI2+'\n'+
-    'noEventsToday: true only if genuinely no 3-star US events today\n'+
-    'For each event:\n'+
-    '- analysisIT: max 35 words Italian explaining market relevance\n'+
-    '- scenarioPositive: max 12 words Italian — NQ movement if better than expected\n'+
-    '- scenarioNegative: max 12 words Italian — NQ movement if worse than expected\n'+
-    '- geopoliticalAlert: Italian sentence about active risks, or empty string\n'+
-    'ONLY JSON, no other text.';
+function formatNews(txt){
+  var sys='JSON formatter. Return ONLY valid JSON, no other text.';
+  var usr='Convert this economic calendar data to JSON:\n\n'+txt+'\n\n'+
+    'Today='+DS2+'. todayEvents=events for today only. weekEvents=events from tomorrow '+TMR+' through '+FRI2+'.\n'+
+    'noEventsToday=true only if genuinely no 3-star US events today.\n'+
+    '{"todayEvents":[{"name":"","date":"","timeCET":"","timeET":"","previous":"","forecast":"","actual":"","analysisIT":"","scenarioPositive":"","scenarioNegative":""}],"weekEvents":[{"name":"","date":"","timeCET":"","timeET":"","previous":"","forecast":"","actual":"","analysisIT":"","scenarioPositive":"","scenarioNegative":""}],"noEventsToday":false,"geopoliticalAlert":""}\n'+
+    'analysisIT max 35 words Italian. scenarioPositive/Negative max 12 words Italian NQ reaction. ONLY JSON.';
   return callClaude(sys,usr,false);
 }
 
-/* FED */
 function callFED(){
-  var sys='You are a financial analyst. Return ONLY valid JSON, no other text.';
-  var usr='Provide current Fed macro data as of '+DS+'. Return ONLY this JSON:\n'+
-    '{"currentRate":"","nextFOMCDate":"","holdProbabilityNext":"","hikeProbability2026":"","cpiHeadline":"","cpiCore":"","pceCore":"","unemployment":"","nfpLast":"","ismPricesPaid":"","importPrices":"","fedStance":"","outlookNQ":"","keyRisks":""}';
-  return callClaude(sys,usr,false);
+  return callClaude('Return ONLY valid JSON, no other text.',
+    'Current Fed macro data as of '+DS+':\n{"currentRate":"","nextFOMCDate":"","holdProbabilityNext":"","hikeProbability2026":"","cpiHeadline":"","cpiCore":"","pceCore":"","unemployment":"","nfpLast":"","ismPricesPaid":"","importPrices":"","fedStance":"","outlookNQ":"","keyRisks":""}',
+    false);
 }
 
-/* SINTESI */
-function callSyntesis(ps){
+function callSyn(ps){
   var r=OPT.r||0,sup=OPT.sup||0,s=OPT.s||0;
   var nq=COT.nq||{},es=COT.es||{},ym=COT.ym||{};
   var ev0=(NEWS.todayEvents&&NEWS.todayEvents[0])||{};
-  var sys='You are an NQ Nasdaq professional trader. Return ONLY valid JSON, no other text.';
-  var usr='Generate operational synthesis for TODAY '+DS+'. ONLY JSON.\n'+
-    'COT NQ: LF='+(nq.leveragedFundsNet||'ND')+' AM='+(nq.assetManagerNet||'ND')+' signal='+(nq.signal||'ND')+'\n'+
+  return callClaude('NQ professional trader. Return ONLY valid JSON, no other text.',
+    'Synthesis TODAY '+DS+'. ONLY JSON.\n'+
+    'COT NQ LF='+(nq.leveragedFundsNet||'ND')+' AM='+(nq.assetManagerNet||'ND')+' signal='+(nq.signal||'ND')+'\n'+
     'COT ES signal='+(es.signal||'ND')+' YM signal='+(ym.signal||'ND')+'\n'+
-    'NQ levels: Settlement='+(s||'ND')+' R='+(r||'ND')+' Support='+(sup||'ND')+'\n'+
+    'NQ: S='+(s||'ND')+' R='+(r||'ND')+' Sup='+(sup||'ND')+'\n'+
     'News today: '+((NEWS.todayEvents&&NEWS.todayEvents.length)||0)+' events'+(ev0.name?' — '+ev0.name+' '+ev0.timeCET:'')+'\n'+
     'Geo: '+(NEWS.geopoliticalAlert||'none')+'\n'+
     'FED: '+(FED.currentRate||'ND')+' hold='+(FED.holdProbabilityNext||'ND')+' hike='+(FED.hikeProbability2026||'ND')+'\n'+
-    'Psychology: yesterday='+(ps.ieri||'ND')+' state='+(ps.stato||'ND')+' week='+(ps.settimana||'ND')+' bias='+(ps.bias||'ND')+'\n\n'+
+    'Psico: ieri='+(ps.ieri||'ND')+' stato='+(ps.stato||'ND')+' settimana='+(ps.settimana||'ND')+' bias='+(ps.bias||'ND')+'\n\n'+
     '{"bias":"","biasReason":"","scenarios":[{"name":"","probability":"","descriptionIT":"","entryZone":"","target1":0,"target2":0,"stopLoss":0,"triggerIT":""},{"name":"","probability":"","descriptionIT":"","entryZone":"","target1":0,"target2":0,"stopLoss":0,"triggerIT":""},{"name":"","probability":"","descriptionIT":"","entryZone":"","target1":0,"target2":0,"stopLoss":0,"triggerIT":""}],"psychWarnings":["","","",""],"keyLevels":{"r2":0,"r1":'+r+',"pivot":'+s+',"s1":'+sup+',"s2":0,"s3":0}}\n'+
-    'bias e.g. "SHORT / CAUTELOSO". biasReason 50 words Italian citing COT+options+news+FED. 3 Italian scenarios with realistic NQ levels. 4 psychWarnings max 18 words each based on psychological state.';
-  return callClaude(sys,usr,false);
+    'bias e.g. "SHORT/CAUTELOSO". biasReason 50 Italian words. 3 realistic NQ scenarios Italian. 4 psychWarnings max 18 words.',
+    false);
 }
 
-/* COUNTDOWN */
-function countdown(secs,cdId,secId,barId){
-  return new Promise(function(resolve){
-    var cd=document.getElementById(cdId),se=document.getElementById(secId);
-    if(cd)cd.style.display='block';
-    var left=secs;
-    if(se)se.textContent=left;
-    var iv=setInterval(function(){
-      left--;
-      if(se)se.textContent=left;
-      if(barId){var f=document.getElementById(barId);if(f)f.style.width=((secs-left)/secs*100)+'%';}
-      if(left<=0){clearInterval(iv);if(cd)cd.style.display='none';resolve();}
-    },1000);
-  });
-}
-
-/* GENERATE */
+/* ================================================================
+   GENERATE — v7.0
+   COT: browser fetch (zero token) → cache → display
+   News: 2-step (search + format) — unica web_search
+   FED + Sintesi: no web_search
+   Totale token API: ~2-3K (1 web_search per news + 2 format calls)
+   429: impossibile con 1 sola web_search
+   ================================================================ */
 function generate(){
   if(!getKey()){document.getElementById('apibanner').style.display='block';return;}
   var btn=document.getElementById('gbtn');
@@ -538,46 +592,39 @@ function generate(){
   COT={};NEWS={};FED={};SYN={};RAW={};
   var ps=getPS();
 
-  /* STEP 1a — COT search */
-  prog(1,'run','Ricerca su cftc.gov...');
-  searchCOT()
-  .then(function(res){
-    RAW.cotSearch=res.text;
-    prog(1,'ok','Dati trovati ('+res.text.length+' chars) — formattazione...');
-    /* STEP 1b — COT format */
-    prog(2,'run');
-    return formatCOT(res.text);
-  })
-  .then(function(res){
-    RAW.cotFormat=res.text;
-    COT=pJSON(res.text);
-    var nq=COT.nq||{};
-    var ok=!COT._err&&nq.openInterest&&nq.openInterest!==0;
-    prog(2,'ok',ok?'COT al '+COT.reportDate+' · NQ LF='+Number(nq.leveragedFundsNet).toLocaleString('it-IT'):'Formato parziale — vedi Debug');
-  })
-  .catch(function(e){COT={nq:{_err:e.message},es:{},ym:{}};RAW.cotErr=e.message;prog(1,'err',e.message.substring(0,70));prog(2,'err','');})
+  /* STEP 1 — COT via browser fetch CFTC (zero API) */
+  prog(1,'run','Fetch cftc.gov via proxy CORS...');
+  var cotPromise;
+  var cached=loadCotCache();
+  if(cached){
+    COT=cached;
+    RAW.cotSource='Cache localStorage (settimana corrente)';
+    prog(1,'ok','COT dalla cache · '+cached.reportDate+' · NQ LF='+(Number(cached.nq.leveragedFundsNet)>0?'+':'')+Number(cached.nq.leveragedFundsNet).toLocaleString('it-IT'));
+    cotPromise=Promise.resolve();
+  } else {
+    cotPromise=fetchCOT().then(function(data){
+      COT=data;
+      saveCotCache(data);
+      var nq=data.nq||{};
+      var ok=!nq._err&&nq.openInterest>0;
+      prog(1,'ok',ok?'CFTC al '+data.reportDate+' · NQ LF='+(Number(nq.leveragedFundsNet)>0?'+':'')+Number(nq.leveragedFundsNet).toLocaleString('it-IT')+' · salvato in cache':'Dati parziali — vedi Debug');
+    }).catch(function(e){
+      COT={nq:{_err:e.message},es:{},ym:{}};
+      RAW.cotErr=e.message;
+      prog(1,'err',e.message.substring(0,80));
+    });
+  }
 
+  cotPromise
   /* STEP 2 — Opzioni */
-  .then(function(){prog(3,'run');calcOpt();renderOptDetail();return sleep(300);})
-  .then(function(){prog(3,'ok');})
+  .then(function(){prog(2,'run');calcOpt();renderOptDetail();prog(2,'ok');})
 
-  /* STEP 3 — Countdown 65s */
-  .then(function(){
-    prog(4,'wt','Attesa 65s per azzerare rate limit output tokens...');
-    return countdown(65,'cd4','cds','p4');
-  })
-  .then(function(){prog(4,'ok','Rate limit azzerato');})
-
-  /* STEP 4a — News search */
-  .then(function(){
-    prog(5,'run','Ricerca su investing.com/economic-calendar...');
-    return searchNews();
-  })
+  /* STEP 3a — News search */
+  .then(function(){prog(3,'run','Ricerca su investing.com...');return searchNews();})
   .then(function(res){
     RAW.newsSearch=res.text;
-    prog(5,'ok','Dati trovati ('+res.text.length+' chars) — formattazione...');
-    /* STEP 4b — News format */
-    prog(6,'run');
+    prog(3,'ok','Trovati '+res.text.length+' chars');
+    prog(4,'run');
     return formatNews(res.text);
   })
   .then(function(res){
@@ -585,21 +632,20 @@ function generate(){
     NEWS=pJSON(res.text);
     var n=(NEWS.todayEvents&&NEWS.todayEvents.length)||0;
     var w=(NEWS.weekEvents&&NEWS.weekEvents.length)||0;
-    prog(6,'ok',NEWS._err?'Formato fallito — vedi Debug':'Oggi: '+n+' eventi · Settimana: '+w);
+    prog(4,'ok',NEWS._err?'Errore parsing — vedi Debug':'Oggi: '+n+' · Settimana: '+w);
   })
-  .catch(function(e){NEWS={_err:e.message};RAW.newsErr=e.message;prog(5,'err',e.message.substring(0,70));prog(6,'err','');})
+  .catch(function(e){NEWS={_err:e.message};RAW.newsErr=e.message;prog(3,'err',e.message.substring(0,70));prog(4,'err','');})
 
-  /* STEP 5 — FED */
-  .then(function(){prog(7,'run');return callFED();})
-  .then(function(res){RAW.fed=res.text;FED=pJSON(res.text);prog(7,'ok',FED._err?'Errore':FED.currentRate+' · hold '+FED.holdProbabilityNext);return sleep(8000);})
-  .catch(function(e){FED={_err:e.message};prog(7,'err',e.message.substring(0,50));return sleep(8000);})
+  /* STEP 4 — FED */
+  .then(function(){prog(5,'run');return callFED();})
+  .then(function(res){RAW.fed=res.text;FED=pJSON(res.text);prog(5,'ok',FED._err?'Errore':FED.currentRate+' · hold '+FED.holdProbabilityNext);return sleep(7000);})
+  .catch(function(e){FED={_err:e.message};prog(5,'err',e.message.substring(0,50));return sleep(7000);})
 
-  /* STEP 6 — Sintesi */
-  .then(function(){prog(8,'run');return callSyntesis(ps);})
-  .then(function(res){RAW.syn=res.text;SYN=pJSON(res.text);prog(8,'ok',SYN._err?'Errore':'Bias: '+SYN.bias);})
-  .catch(function(e){SYN={_err:e.message};prog(8,'err',e.message.substring(0,50));})
+  /* STEP 5 — Sintesi */
+  .then(function(){prog(6,'run');return callSyn(ps);})
+  .then(function(res){RAW.syn=res.text;SYN=pJSON(res.text);prog(6,'ok',SYN._err?'Errore':'Bias: '+SYN.bias);})
+  .catch(function(e){SYN={_err:e.message};prog(6,'err',e.message.substring(0,50));})
 
-  /* FINALE */
   .then(function(){
     renderAll(ps);renderDebug();
     document.getElementById('sdot').className='sdot ok';
@@ -611,16 +657,18 @@ function generate(){
 /* DEBUG */
 function renderDebug(){
   var out='';
-  out+='<details class="dbg" open><summary>Step 1a — COT Search raw ('+((RAW.cotSearch||'').length)+' chars)</summary><pre>'+esc((RAW.cotSearch||RAW.cotErr||'(vuoto)').substring(0,5000))+'</pre></details>';
-  out+='<details class="dbg"'+(COT._err?' open':'')+'><summary>'+(COT._err?'x ':'v ')+'Step 1b — COT Format</summary><pre>'+esc((RAW.cotFormat||'').substring(0,3000))+'</pre></details>';
-  out+='<details class="dbg" open><summary>Step 4a — News Search raw ('+((RAW.newsSearch||'').length)+' chars)</summary><pre>'+esc((RAW.newsSearch||RAW.newsErr||'(vuoto)').substring(0,5000))+'</pre></details>';
-  out+='<details class="dbg"'+(NEWS._err?' open':'')+'><summary>'+(NEWS._err?'x ':'v ')+'Step 4b — News Format</summary><pre>'+esc((RAW.newsFormat||'').substring(0,3000))+'</pre></details>';
-  out+='<details class="dbg"><summary>Step 5 — FED</summary><pre>'+esc((RAW.fed||'').substring(0,2000))+'</pre></details>';
-  out+='<details class="dbg"><summary>Step 6 — Sintesi</summary><pre>'+esc((RAW.syn||'').substring(0,3000))+'</pre></details>';
+  out+='<details class="dbg" open><summary>Step 1 — COT fetch ('+( RAW.cotSource||RAW.cotProxy||'—')+')</summary><pre>';
+  out+=esc(JSON.stringify({nq:COT.nq,es:COT.es,ym:COT.ym,reportDate:COT.reportDate},null,2).substring(0,3000));
+  if(RAW.cotRaw)out+='\n\n--- Raw CFTC (primi 500 chars) ---\n'+esc(RAW.cotRaw);
+  out+='</pre></details>';
+  out+='<details class="dbg" open><summary>Step 3a — News Search ('+((RAW.newsSearch||'').length)+' chars)</summary><pre>'+esc((RAW.newsSearch||RAW.newsErr||'(vuoto)').substring(0,5000))+'</pre></details>';
+  out+='<details class="dbg"'+(NEWS._err?' open':'')+'><summary>'+(NEWS._err?'x ':'v ')+'Step 3b — News Format</summary><pre>'+esc((RAW.newsFormat||'').substring(0,3000))+'</pre></details>';
+  out+='<details class="dbg"><summary>Step 4 — FED</summary><pre>'+esc((RAW.fed||'').substring(0,2000))+'</pre></details>';
+  out+='<details class="dbg"><summary>Step 5 — Sintesi</summary><pre>'+esc((RAW.syn||'').substring(0,3000))+'</pre></details>';
   document.getElementById('dbgp').innerHTML=out;
 }
 
-/* RENDER ALL */
+/* RENDER */
 function renderAll(ps){renderOv(ps);renderCOT();renderNews();renderFED();}
 
 function renderOv(ps){
@@ -635,27 +683,19 @@ function renderOv(ps){
     '<div class="mc"><div class="lb">Supporto MM</div><div class="vl dn">'+(OPT.sup?fmt(OPT.sup):'—')+'</div><div class="sb">S-C-P</div></div>'+
     '<div class="mc"><div class="lb">Fed Rate</div><div class="vl" style="font-size:13px">'+(FED.currentRate||'—')+'</div><div class="sb">'+(FED.holdProbabilityNext?'Hold '+FED.holdProbabilityNext:'')+'</div></div>'+
     '<div class="mc"><div class="lb">COT NQ</div><div class="vl" style="margin-top:3px">'+sbadge(nq.signal)+'</div><div class="sb">LF '+(nq.leveragedFundsNet!=null?(Number(nq.leveragedFundsNet)>0?'+':'')+Number(nq.leveragedFundsNet).toLocaleString('it-IT'):'—')+'</div></div>';
-
   var wl=SYN.psychWarnings;
-  document.getElementById('ovpsych').innerHTML=(wl&&wl.length)?
-    '<div style="font-size:13px;font-weight:700;margin-bottom:7px;margin-top:3px">Avvertenze Psicologiche</div><ul class="psyl">'+wl.map(function(w){return'<li>'+w+'</li>';}).join('')+'</ul>':'';
-
-  document.getElementById('ovbias').innerHTML=
-    '<div style="margin-bottom:11px"><div style="display:flex;align-items:center;gap:9px;margin-bottom:7px"><span class="bdg '+bc+'" style="font-size:12px;padding:3px 13px">BIAS: '+b+'</span></div>'+
-    '<div style="font-size:13px;color:var(--tx2);line-height:1.7">'+(SYN.biasReason||'')+'</div></div>';
-
+  document.getElementById('ovpsych').innerHTML=(wl&&wl.length)?'<div style="font-size:13px;font-weight:700;margin-bottom:7px;margin-top:3px">Avvertenze Psicologiche</div><ul class="psyl">'+wl.map(function(w){return'<li>'+w+'</li>';}).join('')+'</ul>':'';
+  document.getElementById('ovbias').innerHTML='<div style="margin-bottom:11px"><div style="display:flex;align-items:center;gap:9px;margin-bottom:7px"><span class="bdg '+bc+'" style="font-size:12px;padding:3px 13px">BIAS: '+b+'</span></div><div style="font-size:13px;color:var(--tx2);line-height:1.7">'+(SYN.biasReason||'')+'</div></div>';
   var sc=SYN.scenarios||[];
   document.getElementById('ovscen').innerHTML=sc.length?sc.map(function(s,i){
     var cc=i===0?'brr':i===2?'bgg':'baa';
     return'<div class="so"><div class="soh"><span class="son">'+(s.name||'Scenario '+(i+1))+'</span><span class="bdg '+cc+'">'+(s.probability||'')+'</span></div>'+
     '<div class="sod">'+(s.descriptionIT||'')+'</div><div class="sotr">Trigger: '+(s.triggerIT||'')+'</div>'+
-    '<div class="sols">'+
-    '<div class="sli"><span class="lb">Entry Zone</span><span class="vl">'+(s.entryZone||'—')+'</span></div>'+
+    '<div class="sols"><div class="sli"><span class="lb">Entry Zone</span><span class="vl">'+(s.entryZone||'—')+'</span></div>'+
     '<div class="sli"><span class="lb">Target 1</span><span class="vl up">'+(s.target1?fmt(s.target1,0):'—')+'</span></div>'+
     '<div class="sli"><span class="lb">Target 2</span><span class="vl up">'+(s.target2?fmt(s.target2,0):'—')+'</span></div>'+
     '<div class="sli"><span class="lb">Stop Loss</span><span class="vl dn">'+(s.stopLoss?fmt(s.stopLoss,0):'—')+'</span></div></div></div>';
   }).join(''):'<div class="al aw">Scenari non disponibili.</div>';
-
   var kl=SYN.keyLevels||{};
   if(!kl.pivot&&OPT.s)kl.pivot=OPT.s;if(!kl.r1&&OPT.r)kl.r1=OPT.r;if(!kl.s1&&OPT.sup)kl.s1=OPT.sup;
   renderLvChart(kl);
@@ -681,8 +721,8 @@ function renderLvChart(kl){
 function renderCOT(){
   var el=document.getElementById('cotc'),cot=COT,nq=cot.nq||{};
   if(nq._err){
-    el.innerHTML='<div class="al ae">Errore: '+nq._err+'</div>'+
-      '<div class="al ai">Controlla il tab Debug — Step 1a mostra la risposta raw della ricerca. Se il testo contiene i dati ma il format ha fallito, i dati ci sono ma il parsing JSON è andato storto.</div>';
+    el.innerHTML='<div class="al ae">Fetch CFTC fallito: '+nq._err+'</div>'+
+      '<div class="al aw">Controlla il tab Debug. Il proxy CORS potrebbe essere temporaneamente non disponibile. Riprova tra qualche minuto.</div>';
     return;
   }
   function det(label,d){
@@ -691,11 +731,10 @@ function renderCOT(){
     var lfL=Number(d.leveragedFundsLong)||0,lfS=Number(d.leveragedFundsShort)||0;
     var amL=Number(d.assetManagerLong)||0,amS=Number(d.assetManagerShort)||0;
     var oi=Number(d.openInterest)||0;
-    var chLFL=Number(d.weeklyChangeLFLong)||0,chLFS=Number(d.weeklyChangeLFShort)||0;
-    var chLFN=Number(d.weeklyChangeLFNet)||(chLFL-chLFS);
+    var chLFL=Number(d.weeklyChangeLFLong)||0,chLFS=Number(d.weeklyChangeLFShort)||0,chLFN=chLFL-chLFS;
     var chAML=Number(d.weeklyChangeAMLong)||0,chAMS=Number(d.weeklyChangeAMShort)||0;
     var chOI=Number(d.changeOI)||0;
-    var lfPct=Number(d.lfPctOI)||(oi>0?(lfS/oi*100):0);
+    var lfPct=oi>0?(lfS/oi*100):0;
     return'<div class="card">'+
       '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:11px"><span style="font-size:13px;font-weight:700">'+label+'</span>'+sbadge(d.signal)+'</div>'+
       '<div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:11px">'+
@@ -718,39 +757,33 @@ function renderCOT(){
       '<div class="dr"><span class="dk">Change Open Interest</span><span class="dv">'+sgn(chOI)+'</span></div>'+
       '</div>';
   }
+  var es=cot.es||{},ym=cot.ym||{};
   el.innerHTML=
-    (cot.reportDate?'<div class="al ai">CFTC.gov · Futures Only · dati al <strong>'+cot.reportDate+'</strong></div>':'')+
+    '<div class="al as">CFTC.gov · Futures Only · dati al <strong>'+cot.reportDate+'</strong> · Scaricato via browser (zero costo API)</div>'+
     '<div class="cg3">'+
     ['nq','es','ym'].map(function(k){
       var d=cot[k]||{};var lf=Number(d.leveragedFundsNet)||0;
-      var chN=Number(d.weeklyChangeLFNet)||0;
+      var chN=Number(d.weeklyChangeLFNet)||(Number(d.weeklyChangeLFLong)-Number(d.weeklyChangeLFShort))||0;
       var chStr=chN!==0?' <span style="font-size:10px;color:'+(chN>0?'var(--gr)':'var(--rd)')+';">'+(chN>0?'+':'')+chN.toLocaleString('it-IT')+'</span>':'';
-      var lfPct=Number(d.lfPctOI)||(Number(d.openInterest)>0?(Math.abs(Number(d.leveragedFundsShort))/Number(d.openInterest)*100):0);
+      var oi=Number(d.openInterest)||0;
+      var lfPct=oi>0?(Math.abs(Number(d.leveragedFundsShort))/oi*100):0;
       return'<div class="ci"><div class="cin">'+k.toUpperCase()+' LF Net</div>'+
         '<div class="civ '+(lf<0?'dn':'up')+'">'+(lf>0?'+':'')+lf.toLocaleString('it-IT')+'</div>'+
-        '<div class="cis" style="display:flex;justify-content:space-between;align-items:center">'+
-        '<span class="'+(lf<0?'dn':'up')+'">'+(lf<0?'NET SHORT':'NET LONG')+'</span>'+chStr+'</div>'+
-        '<div style="font-size:10px;color:var(--tx3);margin-top:3px">LF% OI short: '+lfPct.toFixed(1)+'%</div></div>';
+        '<div class="cis" style="display:flex;justify-content:space-between"><span class="'+(lf<0?'dn':'up')+'">'+(lf<0?'NET SHORT':'NET LONG')+'</span>'+chStr+'</div>'+
+        '<div style="font-size:10px;color:var(--tx3);margin-top:2px">LF%OI: '+lfPct.toFixed(1)+'%</div></div>';
     }).join('')+
-    ['nq','es','ym'].map(function(k){
-      var d=cot[k]||{};var am=Number(d.assetManagerNet)||0;
-      return'<div class="ci"><div class="cin">'+k.toUpperCase()+' AM Net</div>'+
-        '<div class="civ '+(am>0?'up':'dn')+'">'+(am>0?'+':'')+am.toLocaleString('it-IT')+'</div>'+
-        '<div class="cis '+(am>0?'up':'dn')+'">'+(am>0?'NET LONG':'NET SHORT')+'</div></div>';
-    }).join('')+
+    ['nq','es','ym'].map(function(k){var d=cot[k]||{};var am=Number(d.assetManagerNet)||0;return'<div class="ci"><div class="cin">'+k.toUpperCase()+' AM Net</div><div class="civ '+(am>0?'up':'dn')+'">'+(am>0?'+':'')+am.toLocaleString('it-IT')+'</div><div class="cis '+(am>0?'up':'dn')+'">'+(am>0?'NET LONG':'NET SHORT')+'</div></div>';}).join('')+
     '</div>'+
-    '<div class="card"><div class="ct">LF Net vs AM Net (assoluto)</div><div style="position:relative;height:190px"><canvas id="cotch"></canvas></div></div>'+
-    (cot.cotAnalysis?'<div class="ins" style="font-size:12px;color:var(--tx2);line-height:1.7;margin-bottom:13px"><strong style="color:var(--tx)">Analisi integrata:</strong> '+cot.cotAnalysis+'</div>':'')+
-    '<div style="height:1px;background:var(--bd);margin:13px 0"></div>'+
+    '<div class="card"><div class="ct">LF Net vs AM Net</div><div style="position:relative;height:185px"><canvas id="cotch"></canvas></div></div>'+
     '<div class="ctbs"><button class="ctb on" onclick="ctab(\'nq\',this)">NQ #209742</button><button class="ctb" onclick="ctab(\'es\',this)">ES #13874+</button><button class="ctb" onclick="ctab(\'ym\',this)">YM #124603</button></div>'+
     '<div class="cpan on" id="cp-nq">'+det('E-mini Nasdaq-100 · CME · #209742',nq)+'</div>'+
-    '<div class="cpan" id="cp-es">'+det('S&P 500 Consolidated · CME · #13874+',cot.es)+'</div>'+
-    '<div class="cpan" id="cp-ym">'+det('DJIA x$5 · CBOT · #124603',cot.ym)+'</div>';
+    '<div class="cpan" id="cp-es">'+det('S&P 500 Consolidated · CME · #13874+',es)+'</div>'+
+    '<div class="cpan" id="cp-ym">'+det('DJIA x$5 · CBOT · #124603',ym)+'</div>';
   setTimeout(function(){
     var ctx=document.getElementById('cotch');if(!ctx)return;
     new Chart(ctx,{type:'bar',data:{labels:['NQ','ES÷10','YM'],datasets:[
-      {label:'AM Net',data:[Math.abs((cot.nq&&cot.nq.assetManagerNet)||0),Math.abs((cot.es&&cot.es.assetManagerNet)||0)/10,Math.abs((cot.ym&&cot.ym.assetManagerNet)||0)],backgroundColor:'rgba(34,197,94,.7)',borderRadius:4},
-      {label:'LF Net abs',data:[Math.abs((cot.nq&&cot.nq.leveragedFundsNet)||0),Math.abs((cot.es&&cot.es.leveragedFundsNet)||0)/10,Math.abs((cot.ym&&cot.ym.leveragedFundsNet)||0)],backgroundColor:'rgba(239,68,68,.7)',borderRadius:4}
+      {label:'AM Net',data:[Math.abs(nq.assetManagerNet||0),Math.abs(es.assetManagerNet||0)/10,Math.abs(ym.assetManagerNet||0)],backgroundColor:'rgba(34,197,94,.7)',borderRadius:4},
+      {label:'LF Net abs',data:[Math.abs(nq.leveragedFundsNet||0),Math.abs(es.leveragedFundsNet||0)/10,Math.abs(ym.leveragedFundsNet||0)],backgroundColor:'rgba(239,68,68,.7)',borderRadius:4}
     ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#909090',font:{size:11}}}},
       scales:{x:{ticks:{color:'#909090'},grid:{color:'#1c1c1c'}},y:{ticks:{color:'#505050',font:{size:10},callback:function(v){return v>=1000?(v/1000).toFixed(0)+'K':v;}},grid:{color:'#1c1c1c'}}}}});
   },150);
@@ -764,20 +797,20 @@ function ctab(n,b){
 
 function renderNews(){
   var el=document.getElementById('nwsc'),news=NEWS;
-  if(!news||news._err){el.innerHTML='<div class="al ae">Errore: '+(news&&news._err||'dati mancanti')+'</div><div class="al aw">Controlla il tab Debug — Step 4a mostra la risposta raw della ricerca news.</div>';return;}
+  if(!news||news._err){el.innerHTML='<div class="al ae">Errore: '+(news&&news._err||'dati mancanti')+'</div><div class="al aw">Controlla il tab Debug — Step 3a mostra la risposta raw della ricerca.</div>';return;}
   function ec(ev){
     return'<div class="nc"><div class="nh"><div><div class="nn">'+ev.name+'</div><div class="nt">'+ev.date+' · '+ev.timeCET+' ('+ev.timeET+')</div></div><span class="bdg brr">★★★</span></div>'+
     ((ev.previous||ev.forecast||ev.actual)?'<table class="dtbl"><thead><tr><th>Precedente</th><th>Atteso</th><th>Attuale</th></tr></thead><tbody><tr><td>'+(ev.previous||'—')+'</td><td>'+(ev.forecast||'—')+'</td><td class="'+(ev.actual?'up':'')+'">'+(ev.actual||'—')+'</td></tr></tbody></table>':'')+
     (ev.analysisIT?'<div class="ins" style="font-size:12px;color:var(--tx2);line-height:1.6;margin-bottom:9px">'+ev.analysisIT+'</div>':'')+
-    ((ev.scenarioPositive||ev.scenarioNegative)?'<div class="sg"><div class="sbul"><div class="sl">Migliore — NQ</div><div class="st">'+(ev.scenarioPositive||'—')+'</div></div><div class="sneu"><div class="sl">In linea</div><div class="st">Reazione contenuta</div></div><div class="sbea"><div class="sl">Peggiore — NQ</div><div class="st">'+(ev.scenarioNegative||'—')+'</div></div></div>':'')+
+    ((ev.scenarioPositive||ev.scenarioNegative)?'<div class="sg"><div class="sbul"><div class="sl">Migliore NQ</div><div class="st">'+(ev.scenarioPositive||'—')+'</div></div><div class="sneu"><div class="sl">In linea</div><div class="st">Reazione contenuta</div></div><div class="sbea"><div class="sl">Peggiore NQ</div><div class="st">'+(ev.scenarioNegative||'—')+'</div></div></div>':'')+
     '</div>';
   }
   var tevs=news.todayEvents||[],wevs=news.weekEvents||[];
-  var h='<div style="font-size:14px;font-weight:700;margin-bottom:3px">News Macro US Oggi — '+DS2+'</div><div style="font-size:12px;color:var(--tx2);margin-bottom:13px">Solo eventi ★★★ US</div>';
+  var h='<div style="font-size:14px;font-weight:700;margin-bottom:3px">News Macro US Oggi — '+DS2+'</div><div style="font-size:12px;color:var(--tx2);margin-bottom:13px">Solo ★★★ US</div>';
   h+=(news.noEventsToday||tevs.length===0)?'<div class="al ai">Nessun evento 3 stelle US per oggi.</div>':tevs.map(ec).join('');
   if(news.geopoliticalAlert)h+='<div class="al aw" style="margin-top:5px"><strong>Alert geopolitico:</strong> '+news.geopoliticalAlert+'</div>';
   h+='<div style="height:1px;background:var(--bd);margin:14px 0"></div>';
-  h+='<div style="font-size:14px;font-weight:700;margin-bottom:3px">Radar Settimana — '+TMR+' → '+FRI+'</div><div style="font-size:12px;color:var(--tx2);margin-bottom:13px">Tutti gli eventi ★★★ US</div>';
+  h+='<div style="font-size:14px;font-weight:700;margin-bottom:3px">Radar Settimana — '+TMR+' → '+FRI+'</div><div style="font-size:12px;color:var(--tx2);margin-bottom:13px">Tutti gli ★★★ US</div>';
   h+=wevs.length===0?'<div class="al ai">Nessun evento 3 stelle per il resto della settimana.</div>':
     wevs.map(function(ev){
       return'<div class="wc"><div class="wd">'+ev.date+'</div>'+
